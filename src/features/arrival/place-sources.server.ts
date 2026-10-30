@@ -65,7 +65,12 @@ async function wikiJson(url: string): Promise<unknown> {
     signal: AbortSignal.timeout(8_000),
   });
   if (!res.ok) throw new Error(`Wikipedia ${res.status}`);
-  return res.json();
+  const data = await res.json() as { error?: { code?: string; info?: string } };
+  if (data.error) {
+    console.error(`[Arrival HTTP] Wikipedia status=200 API_ERROR ${data.error.code}`);
+    throw new Error(`Wikipedia ${data.error.code}: ${data.error.info}`);
+  }
+  return data;
 }
 
 async function wikipediaSights(
@@ -142,7 +147,9 @@ export async function searchArrivalPlaces(
   if (category === "transport") return overpassFallback(category, lat, lon, radiusM);
   try {
     if (category === "food") return await nominatimFood(lat, lon, radiusM);
-    const primary = await wikipediaSights(lang, lat, lon, radiusM);
+    let primary: Place[];
+    try { primary = await wikipediaSights(lang, lat, lon, radiusM); }
+    catch (error) { if (lang === "ro") return await wikipediaSights("en", lat, lon, radiusM); throw error; }
     if (lang !== "ro" || primary.length >= 10) return primary;
     try {
       return mergeSightLanguages(primary, await wikipediaSights("en", lat, lon, radiusM));
