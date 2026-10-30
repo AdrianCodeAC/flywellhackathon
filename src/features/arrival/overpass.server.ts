@@ -44,9 +44,17 @@ const KEEP_TAGS = [
   "wikidata",
 ];
 
-export function buildOverpassQuery(category: OverpassCategory, lat: number, lon: number, radiusM: number): string {
+export function buildOverpassQuery(
+  category: OverpassCategory,
+  lat: number,
+  lon: number,
+  radiusM: number,
+): string {
   const around = `(around:${Math.round(radiusM)},${lat.toFixed(5)},${lon.toFixed(5)})`;
-  const parts = FILTERS[category].flatMap((f) => [`node${f}["name"]${around};`, `way${f}["name"]${around};`]);
+  const parts = FILTERS[category].flatMap((f) => [
+    `node${f}["name"]${around};`,
+    `way${f}["name"]${around};`,
+  ]);
   return `[out:json][timeout:12];(${parts.join("")});out center tags 60;`;
 }
 
@@ -78,7 +86,11 @@ export function parseOverpass(elements: OverpassElement[], lat: number, lon: num
       distance: Math.round(distanceMeters([lat, lon], [pLat, pLon])),
       tags,
     };
-    if (tags["cuisine"]) place.cuisine = tags["cuisine"].split(";").map((c) => c.trim().replace(/_/g, " ")).join(", ");
+    if (tags["cuisine"])
+      place.cuisine = tags["cuisine"]
+        .split(";")
+        .map((c) => c.trim().replace(/_/g, " "))
+        .join(", ");
     if (tags["opening_hours"]) place.openingHours = tags["opening_hours"];
     const phone = (tags["phone"] || tags["contact:phone"])?.split(";")[0]?.trim();
     if (phone) place.phone = phone;
@@ -108,13 +120,17 @@ export async function raceMirrors(
             "User-Agent": "ArrivalAssistant/1.0 (travel helper web app)",
           },
           body: `data=${encodeURIComponent(query)}`,
-          signal: controllers[i]!.signal,
+          signal: controllers[i]?.signal ?? null,
         });
         if (!res.ok) throw new Error(`${url} ${res.status}`);
         const data = (await res.json()) as { elements?: OverpassElement[]; remark?: string };
         if (!Array.isArray(data.elements)) throw new Error(`${url} bad body`);
         // A timeout inside Overpass comes back as 200 with a "remark" and partial data.
-        if (data.remark && /timed out|runtime error/i.test(data.remark) && data.elements.length === 0) {
+        if (
+          data.remark &&
+          /timed out|runtime error/i.test(data.remark) &&
+          data.elements.length === 0
+        ) {
           throw new Error(`${url} ${data.remark}`);
         }
         controllers.forEach((c, j) => j !== i && c.abort());
@@ -134,10 +150,18 @@ export async function searchPlaces(
   radiusM: number,
   fetchImpl: typeof fetch = fetch,
 ): Promise<{ places: Place[]; radiusM: number }> {
-  let places = parseOverpass(await raceMirrors(buildOverpassQuery(category, lat, lon, radiusM), fetchImpl), lat, lon);
-  if (places.length < MIN_RESULTS) {
+  let places = parseOverpass(
+    await raceMirrors(buildOverpassQuery(category, lat, lon, radiusM), fetchImpl),
+    lat,
+    lon,
+  );
+  if (category === "food" && places.length < MIN_RESULTS) {
     const wider = radiusM * 2;
-    places = parseOverpass(await raceMirrors(buildOverpassQuery(category, lat, lon, wider), fetchImpl), lat, lon);
+    places = parseOverpass(
+      await raceMirrors(buildOverpassQuery(category, lat, lon, wider), fetchImpl),
+      lat,
+      lon,
+    );
     return { places, radiusM: wider };
   }
   return { places, radiusM };

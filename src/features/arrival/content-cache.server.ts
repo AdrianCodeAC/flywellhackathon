@@ -7,6 +7,7 @@
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 async function readRow(key: string, ttlMs: number): Promise<string | undefined> {
+  try {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data } = await supabaseAdmin
     .from("content_cache")
@@ -16,13 +17,16 @@ async function readRow(key: string, ttlMs: number): Promise<string | undefined> 
   if (!data) return undefined;
   if (Date.now() - new Date(data.created_at).getTime() > ttlMs) return undefined;
   return data.value;
+  } catch { return undefined; }
 }
 
 async function writeRow(key: string, value: string): Promise<void> {
+  try {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   await supabaseAdmin
     .from("content_cache")
     .upsert({ cache_key: key, value, created_at: new Date().toISOString() });
+  } catch { /* A cache outage must not hide freshly fetched content. */ }
 }
 
 /** Saved text for a key, or `load()` once and save it. Failures are not cached. */

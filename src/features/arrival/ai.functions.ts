@@ -4,6 +4,8 @@
  */
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { answerSchema, parseAssistantAnswer, type AssistantAnswer } from "./assistant-schema";
+export type { AssistantAnswer } from "./assistant-schema";
 
 const askInput = z.object({
   question: z.string().min(1).max(500),
@@ -16,16 +18,6 @@ const askInput = z.object({
   context: z.string().max(12_000),
 });
 
-const answerSchema = z.object({
-  text: z.string(),
-  places: z.array(z.object({ name: z.string(), lat: z.number(), lon: z.number() })),
-});
-
-export interface AssistantAnswer {
-  text: string;
-  places: { name: string; lat: number; lon: number }[];
-}
-
 function instructions(lang: "en" | "ro"): string {
   const language = lang === "ro" ? "Romanian" : "English";
   return (
@@ -34,16 +26,16 @@ function instructions(lang: "en" | "ro"): string {
     "When recommending specific places, prefer places from the provided data; only add a place you are confident about " +
     "when the data does not cover the question. " +
     `Always respond in ${language}.` +
-    (lang === "ro"
-      ? " Use correct Romanian diacritics (ă, â, î, ș, ț with comma below)."
-      : "") +
+    (lang === "ro" ? " Use correct Romanian diacritics (ă, â, î, ș, ț with comma below)." : "") +
     " Return an object with: text — your answer; places — up to 5 recommended places, each with name, lat and lon " +
     "taken from the provided data, or an empty list when you are not recommending a specific location."
   );
 }
 
 function prompt(data: z.infer<typeof askInput>): string {
-  const turns = data.history.map((h) => `${h.role === "user" ? "Traveller" : "Assistant"}: ${h.content}`).join("\n");
+  const turns = data.history
+    .map((h) => `${h.role === "user" ? "Traveller" : "Assistant"}: ${h.content}`)
+    .join("\n");
   return [
     "Context:",
     data.context,
@@ -60,8 +52,5 @@ export const askAssistant = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<AssistantAnswer> => {
     const { askObject } = await import("./ai.server");
     const answer = await askObject(answerSchema, instructions(data.lang), prompt(data));
-    const places = answer.places
-      .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon) && Math.abs(p.lat) <= 90 && Math.abs(p.lon) <= 180)
-      .slice(0, 5);
-    return { text: answer.text.trim(), places };
+    return parseAssistantAnswer(answer);
   });

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, Landmark, MapPin, Navigation } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistance } from "./map-links";
 import { distanceMeters, rankSights } from "./place-utils";
@@ -44,6 +45,8 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
   const [loading, setLoading] = useState(true);
   const [slow, setSlow] = useState(false);
   const [error, setError] = useState(false);
+  const [summaryError, setSummaryError] = useState(false);
+  const [summaryAttempt, setSummaryAttempt] = useState(0);
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
@@ -87,13 +90,15 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
       setSummaries({});
       return;
     }
+    setSummaries({});
+    setSummaryError(false);
     fetchSummaries(top, i18n.language)
       .then((s) => !cancelled && setSummaries(s))
-      .catch(() => {});
+      .catch(() => !cancelled && setSummaryError(true));
     return () => {
       cancelled = true;
     };
-  }, [ranked, i18n.language]);
+  }, [ranked, i18n.language, summaryAttempt]);
 
   const shown = useMemo(() => {
     const group = filter === "all" ? null : GROUPS[filter];
@@ -102,7 +107,7 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
         ...p,
         // Distances on the card are measured from the airport, not the centre.
         distance: Math.round(distanceMeters([airport.lat, airport.lon], [p.lat, p.lon])),
-        description: summaries[p.id] ?? p.description,
+        ...(summaries[p.id] ? { description: summaries[p.id] } : {}),
       }))
       .filter((p) => !group || group.includes(p.kind))
       .slice(0, 30);
@@ -116,27 +121,52 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
 
       <div className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1">
         {FILTERS.map((f) => (
-          <button key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)} className={chip(filter === f)}>
+          <Button
+            variant="outline"
+            key={f}
+            type="button"
+            aria-pressed={filter === f}
+            onClick={() => setFilter(f)}
+            className={chip(filter === f)}
+          >
             {t(`visit.${f}`)}
-          </button>
+          </Button>
         ))}
       </div>
 
+      {summaryError && (
+        <p role="alert" className="mt-3 text-sm">
+          {t("visit.summaryError")}{" "}
+          <Button
+            variant="link"
+            className="min-h-11"
+            onClick={() => setSummaryAttempt((n) => n + 1)}
+          >
+            {t("common.retry")}
+          </Button>
+        </p>
+      )}
       <div className="mt-4 flex flex-col gap-2.5">
         {error && (
-          <div role="alert" className="rounded-xl border p-4 text-sm">
+          <div role="alert" className="rounded-lg border p-4 text-sm">
             {t("common.error")}{" "}
-            <button type="button" onClick={retry} className="min-h-11 font-medium text-primary underline">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={retry}
+              className="min-h-11 font-medium text-primary underline"
+            >
               {t("common.retry")}
-            </button>
+            </Button>
           </div>
         )}
         {result?.stale && (
           <p className="text-xs text-muted-foreground">
             {t("common.savedEarlier", {
-              date: new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium", timeStyle: "short" }).format(
-                result.fetchedAt,
-              ),
+              date: new Intl.DateTimeFormat(i18n.language, {
+                dateStyle: "medium",
+                timeStyle: "short",
+              }).format(result.fetchedAt),
             })}
           </p>
         )}
@@ -149,13 +179,13 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
                 </p>
               )}
               {Array.from({ length: 5 }, (_, i) => (
-                <Skeleton key={i} className="h-28 w-full rounded-xl" />
+                <Skeleton key={i} className="h-28 w-full rounded-lg" />
               ))}
             </>
           )
         ) : shown.length === 0 ? (
           loading ? null : (
-            <div className="flex flex-col items-center gap-2 rounded-xl border p-8 text-center text-sm text-muted-foreground">
+            <div className="flex flex-col items-center gap-2 rounded-lg border p-8 text-center text-sm text-muted-foreground">
               <Landmark className="h-6 w-6" />
               {t("visit.empty")}
             </div>
@@ -167,14 +197,15 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur">
         <div className="mx-auto max-w-xl">
-          <button
+          <Button
+            variant="outline"
             type="button"
             onClick={onBack}
-            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border bg-card text-base font-medium active:bg-accent"
+            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border bg-card text-base font-medium active:bg-accent"
           >
             <ArrowLeft className="h-5 w-5" />
             {t("common.back")}
-          </button>
+          </Button>
         </div>
       </div>
     </section>
@@ -184,7 +215,7 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
 function VisitCard({ place, onShowRoute }: { place: Place; onShowRoute: (p: Place) => void }) {
   const { t, i18n } = useTranslation();
   return (
-    <article className="rounded-xl border bg-card p-3.5">
+    <article className="rounded-lg border bg-card p-3.5">
       <h3 className="font-semibold">{place.name}</h3>
       <p className="text-sm text-muted-foreground">{t(`category.${place.kind}`)}</p>
       {place.description && (
@@ -194,14 +225,15 @@ function VisitCard({ place, onShowRoute }: { place: Place; onShowRoute: (p: Plac
         <MapPin className="h-3.5 w-3.5" />
         {place.distance !== undefined && formatDistance(place.distance, i18n.language)}
       </div>
-      <button
+      <Button
+        variant="outline"
         type="button"
         onClick={() => onShowRoute(place)}
         className="mt-3 flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border px-3 text-sm font-medium active:bg-accent"
       >
         <Navigation className="h-4 w-4" />
         {t("common.showRoute")}
-      </button>
+      </Button>
     </article>
   );
 }

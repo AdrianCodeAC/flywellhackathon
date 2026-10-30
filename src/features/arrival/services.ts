@@ -7,9 +7,17 @@ import { overpassKey, rankSights } from "./place-utils";
 import { getOverpassPlaces } from "./overpass.functions";
 import { getPlaceSummaries, getTransportGuide, type TransportGuide } from "./guides.functions";
 import { askAssistant, type AssistantAnswer } from "./ai.functions";
+import tzLookup from "tz-lookup";
 import i18n from "@/lib/i18n";
 
-type RawAirport = [iata: string, name: string, city: string, country: string, lat: number, lon: number];
+type RawAirport = [
+  iata: string,
+  name: string,
+  city: string,
+  country: string,
+  lat: number,
+  lon: number,
+];
 
 let airportsPromise: Promise<Airport[]> | null = null;
 
@@ -95,13 +103,19 @@ interface NominatimHit {
 
 // Nominatim's usage policy: at most one request per second.
 let lastNominatimAt = 0;
+let nominatimQueue: Promise<unknown> = Promise.resolve();
 
 async function nominatimFetch(url: string): Promise<Response> {
-  const wait = Math.max(0, 1000 - (Date.now() - lastNominatimAt));
-  if (wait) await new Promise((r) => setTimeout(r, wait));
-  lastNominatimAt = Date.now();
-  // The browser sends Referer automatically, which is what Nominatim identifies us by.
-  return fetch(url, { headers: { Accept: "application/json" } });
+  const pending = nominatimQueue
+    .catch(() => {})
+    .then(async () => {
+      const wait = Math.max(0, 1000 - (Date.now() - lastNominatimAt));
+      if (wait) await new Promise((r) => setTimeout(r, wait));
+      lastNominatimAt = Date.now();
+      return fetch(url, { headers: { Accept: "application/json" } });
+    });
+  nominatimQueue = pending;
+  return pending;
 }
 
 function toPlace(hit: NominatimHit, i: number): Place {
@@ -130,12 +144,14 @@ export async function geocodeNominatim(query: string, countryCode?: string): Pro
  * country beats searching "{city} center", which matches places literally named
  * "Lisbon Center" in the United States.
  */
-export async function geocodeCityCenter(city: string, countryCode?: string): Promise<Place | undefined> {
+export async function geocodeCityCenter(
+  city: string,
+  countryCode?: string,
+): Promise<Place | undefined> {
   const rows = await geocodeNominatim(city, countryCode);
   const best = rows.find((r) => r.tags?.["category"] === "administrative") ?? rows[0];
   return best;
 }
-
 
 // ---- Cache: memory + localStorage, 24h ----
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -148,7 +164,8 @@ export async function cached<T>(key: string, load: () => Promise<T>, ttlMs = DAY
   const mem = memCache.get(key);
   if (mem && now - mem.at < ttlMs) return mem.value as T;
   try {
-    const raw = typeof localStorage !== "undefined" ? localStorage.getItem(CACHE_PREFIX + key) : null;
+    const raw =
+      typeof localStorage !== "undefined" ? localStorage.getItem(CACHE_PREFIX + key) : null;
     if (raw) {
       const hit = JSON.parse(raw) as { at: number; value: T };
       if (now - hit.at < ttlMs) {
@@ -183,7 +200,9 @@ export function clearMemoryCache() {
 
 /** City centre, cached per city for 24h. */
 export function getCityCenter(city: string, countryCode?: string): Promise<Place | undefined> {
-  return cached(`center:${countryCode ?? ""}:${city.toLowerCase()}`, () => geocodeCityCenter(city, countryCode));
+  return cached(`center:${countryCode ?? ""}:${city.toLowerCase()}`, () =>
+    geocodeCityCenter(city, countryCode),
+  );
 }
 
 export { distanceMeters } from "./place-utils";
@@ -256,7 +275,9 @@ export function fetchOverpassPlaces(
           /* storage full */
         }
       }
-      return value.stale && local && local.fetchedAt > value.fetchedAt ? { ...local, stale: true } : value;
+      return value.stale && local && local.fetchedAt > value.fetchedAt
+        ? { ...local, stale: true }
+        : value;
     })
     .finally(() => overpassInflight.delete(key));
   overpassInflight.set(key, p);
@@ -266,7 +287,10 @@ export function fetchOverpassPlaces(
 export const FOOD_RADIUS = { airport: 1500, center: 1200 } as const;
 
 /** Resolves the search point for the food list's two areas. */
-export async function foodOrigin(airport: Airport, area: "airport" | "center"): Promise<[number, number]> {
+export async function foodOrigin(
+  airport: Airport,
+  area: "airport" | "center",
+): Promise<[number, number]> {
   if (area === "airport") return [airport.lat, airport.lon];
   const c = await getCityCenter(airport.city, airport.countryCode);
   if (!c) throw new Error("No city center");
@@ -316,7 +340,7 @@ export function prefetchSights(airport: Airport) {
     .then(([lat, lon]) => fetchOverpassPlaces("sights", lat, lon, SIGHTS_RADIUS))
     .then(({ places }) => {
       const ranked = rankSights(places).slice(0, 10);
-      return fetchSummaries(ranked, i18nLanguage());
+      return fetchSummaries(ranked, i18n.language);
     })
     .catch(() => {});
 }
@@ -345,14 +369,10 @@ export interface AssistantContext {
   stations?: Place[];
 }
 
-/** Rough local clock at the destination, from its longitude. */
-export function destinationClock(lon: number, date = new Date()): string {
-  const offsetHours = Math.round(lon / 15);
-  const local = new Date(date.getTime() + offsetHours * 3_600_000);
-  const hh = String(local.getUTCHours()).padStart(2, "0");
-  const mm = String(local.getUTCMinutes()).padStart(2, "0");
-  const day = local.toLocaleDateString("en-GB", { weekday: "long", timeZone: "UTC" });
-  return `${day} ${hh}:${mm} (UTC${offsetHours >= 0 ? "+" : ""}${offsetHours}, approximate)`;
+/** Destination clock with the airport's IANA time zone, including daylight saving. */
+export function destinationClock(lon: number, date = new Date(), lat = 0): string {
+  const timeZone = tzLookup(lat, lon);
+  return `${new Intl.DateTimeFormat("en-GB", { weekday: "long", hour: "2-digit", minute: "2-digit", timeZone }).format(date)} (${timeZone})`;
 }
 
 function contextLine(p: Place): string {
@@ -369,7 +389,7 @@ export function buildAssistantContext(ctx: AssistantContext): string {
   const lines = [
     `Airport: ${ctx.airport.iata} — ${ctx.airport.name}, ${ctx.airport.city}, ${ctx.airport.country}`,
     `Airport coordinates: lat=${ctx.airport.lat}, lon=${ctx.airport.lon}`,
-    `Local time at the destination: ${destinationClock(ctx.airport.lon)}`,
+    `Local time at the destination: ${destinationClock(ctx.airport.lon, new Date(), ctx.airport.lat)}`,
     `Answer language: ${ctx.lang === "ro" ? "Romanian" : "English"}`,
   ];
   const section = (title: string, places?: Place[]) => {
@@ -393,4 +413,3 @@ export function askAI(
     data: { question, history, lang: lang === "ro" ? "ro" : "en", context },
   });
 }
-
