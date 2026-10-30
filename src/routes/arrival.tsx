@@ -6,7 +6,7 @@ import { AirportSearch } from "@/features/arrival/AirportSearch";
 import { ArrivalActionSheet } from "@/features/arrival/ArrivalActionSheet";
 import { useTranslation } from "react-i18next";
 import { AppHeader } from "@/features/arrival/AppHeader";
-import { getCityCenter as geocodeCityCenter, getAirportByIata } from "@/features/arrival/services";
+import { prefetchFood, getCityCenter as geocodeCityCenter, getAirportByIata } from "@/features/arrival/services";
 import type { Airport } from "@/features/arrival/types";
 
 // Leaflet is browser-only, so the map module is loaded on demand.
@@ -65,6 +65,7 @@ function ArrivalPage() {
       .then((a) => {
         if (cancelled || !a) return;
         setAirport(a);
+        prefetchFood(a);
         if (iata) setSheetOpen(true);
       })
       .catch(() => {});
@@ -75,6 +76,7 @@ function ArrivalPage() {
 
   const select = (a: Airport) => {
     setAirport(a);
+    prefetchFood(a);
     localStorage.setItem(STORAGE_KEY, a.iata);
     setSheetOpen(true);
     navigate({ search: { iata: a.iata }, replace: true });
