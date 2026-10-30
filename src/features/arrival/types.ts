@@ -15,6 +15,8 @@ export type PlaceKind =
   | "fast_food"
   | "cafe"
   | "museum"
+  | "church"
+  | "park"
   | "attraction"
   | "monument"
   | "castle"
@@ -38,6 +40,8 @@ export interface Place {
   phone?: string;
   openNow?: boolean;
   description?: string;
+  thumbnail?: string;
+  articleUrl?: string;
   wikipedia?: string;
   wikidata?: string;
   tags?: Record<string, string>;
