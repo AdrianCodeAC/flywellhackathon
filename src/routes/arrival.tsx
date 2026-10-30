@@ -4,7 +4,7 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { AirportSearch } from "@/features/arrival/AirportSearch";
 import { ArrivalActionSheet } from "@/features/arrival/ArrivalActionSheet";
-import { geocodeNominatim, getAirportByIata } from "@/features/arrival/services";
+import { geocodeCityCenter, getAirportByIata } from "@/features/arrival/services";
 import type { Airport } from "@/features/arrival/types";
 
 // Leaflet is browser-only, so the map module is loaded on demand.
@@ -87,8 +87,7 @@ function ArrivalPage() {
     setFinding(true);
     setFindError(null);
     try {
-      const hits = await geocodeNominatim(`${airport.city} center`);
-      const hit = hits[0];
+      const hit = await geocodeCityCenter(airport.city, airport.countryCode);
       if (!hit) {
         setFindError("Couldn't find the city center — try again.");
         return;
