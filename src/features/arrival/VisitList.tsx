@@ -4,25 +4,25 @@ import { ArrowLeft, Landmark, MapPin, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistance } from "./map-links";
-import { distanceMeters, rankSights } from "./place-utils";
+import { distanceMeters } from "./place-utils";
 import {
   SIGHTS_RADIUS,
   fetchOverpassPlaces,
-  fetchSummaries,
   peekPlaces,
   sightsOrigin,
   type PlacesResult,
 } from "./services";
 import type { Airport, Place } from "./types";
 
-type Filter = "all" | "museums" | "monuments" | "viewpoints" | "other";
-const FILTERS: Filter[] = ["all", "museums", "monuments", "viewpoints", "other"];
+type Filter = "all" | "museums" | "churches" | "parks" | "monuments" | "other";
+const FILTERS: Filter[] = ["all", "museums", "churches", "parks", "monuments", "other"];
 
 const GROUPS: Record<Exclude<Filter, "all">, Place["kind"][]> = {
-  museums: ["museum", "gallery"],
-  monuments: ["monument", "castle"],
-  viewpoints: ["viewpoint"],
-  other: ["attraction", "other"],
+  museums: ["museum"],
+  churches: ["church"],
+  parks: ["park"],
+  monuments: ["monument"],
+  other: ["other"],
 };
 
 interface VisitListProps {
@@ -41,12 +41,9 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
   const { t, i18n } = useTranslation();
   const [filter, setFilter] = useState<Filter>("all");
   const [result, setResult] = useState<PlacesResult | null>(null);
-  const [summaries, setSummaries] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [slow, setSlow] = useState(false);
   const [error, setError] = useState(false);
-  const [summaryError, setSummaryError] = useState(false);
-  const [summaryAttempt, setSummaryAttempt] = useState(0);
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
@@ -59,10 +56,10 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
 
     (async () => {
       const [lat, lon] = await sightsOrigin(airport);
-      const saved = peekPlaces("sights", lat, lon, SIGHTS_RADIUS);
+      const saved = peekPlaces("sights", lat, lon, SIGHTS_RADIUS, i18n.language);
       if (saved && !cancelled) setResult({ ...saved, stale: !saved.fresh });
       if (saved?.fresh) return;
-      const fresh = await fetchOverpassPlaces("sights", lat, lon, SIGHTS_RADIUS);
+      const fresh = await fetchOverpassPlaces("sights", lat, lon, SIGHTS_RADIUS, i18n.language);
       if (!cancelled) {
         setResult(fresh);
         if (fresh.stale) setError(true);
@@ -78,40 +75,19 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
       cancelled = true;
       clearTimeout(slowTimer);
     };
-  }, [airport, attempt]);
-
-  const ranked = useMemo(() => (result ? rankSights(result.places) : []), [result]);
-
-  // Summaries for the top ten places that have a Wikipedia article.
-  useEffect(() => {
-    let cancelled = false;
-    const top = ranked.filter((p) => p.wikipedia || p.wikidata).slice(0, 10);
-    if (top.length === 0) {
-      setSummaries({});
-      return;
-    }
-    setSummaries({});
-    setSummaryError(false);
-    fetchSummaries(top, i18n.language)
-      .then((s) => !cancelled && setSummaries(s))
-      .catch(() => !cancelled && setSummaryError(true));
-    return () => {
-      cancelled = true;
-    };
-  }, [ranked, i18n.language, summaryAttempt]);
+  }, [airport, attempt, i18n.language]);
 
   const shown = useMemo(() => {
     const group = filter === "all" ? null : GROUPS[filter];
-    return ranked
+    return (result?.places ?? [])
       .map((p): Place => ({
         ...p,
         // Distances on the card are measured from the airport, not the centre.
         distance: Math.round(distanceMeters([airport.lat, airport.lon], [p.lat, p.lon])),
-        ...(summaries[p.id] ? { description: summaries[p.id] } : {}),
       }))
       .filter((p) => !group || group.includes(p.kind))
       .slice(0, 30);
-  }, [ranked, filter, summaries, airport.lat, airport.lon]);
+  }, [result, filter, airport.lat, airport.lon]);
 
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
@@ -134,18 +110,6 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
         ))}
       </div>
 
-      {summaryError && (
-        <p role="alert" className="mt-3 text-sm">
-          {t("visit.summaryError")}{" "}
-          <Button
-            variant="link"
-            className="min-h-11"
-            onClick={() => setSummaryAttempt((n) => n + 1)}
-          >
-            {t("common.retry")}
-          </Button>
-        </p>
-      )}
       <div className="mt-4 flex flex-col gap-2.5">
         {error && (
           <div role="alert" className="rounded-lg border p-4 text-sm">
@@ -216,10 +180,36 @@ function VisitCard({ place, onShowRoute }: { place: Place; onShowRoute: (p: Plac
   const { t, i18n } = useTranslation();
   return (
     <article className="rounded-lg border bg-card p-3.5">
-      <h3 className="font-semibold">{place.name}</h3>
-      <p className="text-sm text-muted-foreground">{t(`category.${place.kind}`)}</p>
-      {place.description && (
-        <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{place.description}</p>
+      <div className="flex gap-3">
+        {place.thumbnail ? (
+          <img
+            src={place.thumbnail}
+            alt=""
+            loading="lazy"
+            className="h-20 w-20 shrink-0 rounded-md bg-muted object-cover"
+          />
+        ) : (
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
+            <Landmark />
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <h3 className="break-words font-semibold">{place.name}</h3>
+          <p className="text-sm text-muted-foreground">{t(`category.${place.kind}`)}</p>
+          {place.description && (
+            <p className="mt-2 text-sm text-muted-foreground">{place.description}</p>
+          )}
+        </div>
+      </div>
+      {place.articleUrl && (
+        <a
+          href={place.articleUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex min-h-11 items-center text-xs text-primary underline"
+        >
+          {t("visit.source")}
+        </a>
       )}
       <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
         <MapPin className="h-3.5 w-3.5" />

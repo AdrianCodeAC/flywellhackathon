@@ -34,6 +34,7 @@ export function createLovableAiGatewayRunIdFetch(initialRunId?: string) {
 
       try {
         const response = await fetch(input, { ...init, headers });
+      console.info(`[Arrival HTTP] ai.gateway.lovable.dev status=${response.status}`);
         publishRunId(response.headers.get(LOVABLE_AIG_RUN_ID_HEADER) ?? undefined);
         return response;
       } catch (error) {

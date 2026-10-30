@@ -83,7 +83,9 @@
     "station": "Gară",
     "bus_stop": "Stație de autobuz",
     "ai": "Sugestie",
-    "other": "Loc"
+    "other": "Loc",
+    "church": "Biserică",
+    "park": "Parc"
   },
   "meta": {
     "title": "Asistent de sosire — Abia ai aterizat? Începe aici",
@@ -102,10 +104,12 @@
     "all": "Toate",
     "museums": "Muzee",
     "monuments": "Monumente",
-    "viewpoints": "Puncte de belvedere",
     "other": "Altele",
     "empty": "Niciun obiectiv nu se potrivește cu acest filtru.",
-    "summaryError": "Descrierile nu sunt disponibile acum."
+    "summaryError": "Descrierile nu sunt disponibile acum.",
+    "churches": "Biserici",
+    "parks": "Parcuri",
+    "source": "Wikipedia · CC BY-SA"
   },
   "ride": {
     "title": "Ai nevoie de transport?",

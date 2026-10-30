@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { overpassKey } from "./place-utils";
+import { sourceCacheKey } from "./place-sources";
 import type { Place } from "./types";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -10,6 +10,7 @@ const input = z.object({
   lat: z.number().min(-90).max(90),
   lon: z.number().min(-180).max(180),
   radiusM: z.number().int().min(300).max(10_000),
+  lang: z.enum(["en", "ro"]).default("en"),
 });
 
 export interface OverpassResult {
@@ -28,8 +29,8 @@ export const getOverpassPlaces = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => input.parse(d))
   .handler(async ({ data }): Promise<OverpassResult> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { searchPlaces } = await import("./overpass.server");
-    const key = overpassKey(data.category, data.lat, data.lon, data.radiusM);
+    const { searchArrivalPlaces } = await import("./place-sources.server");
+    const key = sourceCacheKey(data.category, data.lat, data.lon, data.radiusM, data.lang);
 
     const { data: row } = await supabaseAdmin
       .from("overpass_cache")
@@ -42,18 +43,24 @@ export const getOverpassPlaces = createServerFn({ method: "POST" })
     }
 
     try {
-      const { places, radiusM } = await searchPlaces(data.category, data.lat, data.lon, data.radiusM);
+      const places = await searchArrivalPlaces(
+        data.category,
+        data.lat,
+        data.lon,
+        data.radiusM,
+        data.lang,
+      );
       const now = new Date();
       await supabaseAdmin.from("overpass_cache").upsert({
         cache_key: key,
         places: places as unknown as never,
-        radius_m: radiusM,
+        radius_m: data.radiusM,
         created_at: now.toISOString(),
       });
       return { places, fetchedAt: now.getTime(), stale: false };
     } catch (e) {
-      console.error("Overpass mirrors failed", key, e);
+      console.error("Arrival place sources failed", key, e);
       if (row) return { places: row.places as unknown as Place[], fetchedAt: rowAt, stale: true };
-      throw new Error("All map data servers are busy");
+      throw new Error("Place data is unavailable right now");
     }
   });

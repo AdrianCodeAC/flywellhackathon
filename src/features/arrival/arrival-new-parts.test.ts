@@ -72,3 +72,46 @@ it("searches sights within the specified 10 km without widening", async () => {
 it("uses Bucharest's real winter local time", () => {
   expect(destinationClock(26.1, new Date("2026-10-30T19:15:00Z"), 44.57)).toContain("21:15");
 });
+
+import { areaViewbox, categorizeSight, foodSearchUrl, parseFoodHits } from "./place-sources";
+it("builds the requested bounded Nominatim food search", () => {
+  const url = new URL(foodSearchUrl("fast food", 44.3, 23.8, 1200));
+  expect(url.searchParams.get("q")).toBe("fast food");
+  expect(url.searchParams.get("limit")).toBe("40");
+  expect(url.searchParams.get("bounded")).toBe("1");
+  expect(url.searchParams.get("extratags")).toBe("1");
+  expect(url.searchParams.get("viewbox")).toBe(areaViewbox(44.3, 23.8, 1200));
+});
+it("accepts null Nominatim extratags", () => {
+  const out = parseFoodHits(
+    [
+      {
+        osm_type: "node",
+        osm_id: 1,
+        name: "Bistro",
+        type: "restaurant",
+        lat: "44.3",
+        lon: "23.8",
+        extratags: null,
+      },
+    ],
+    "restaurant",
+    44.3,
+    23.8,
+  );
+  expect(out[0]).toMatchObject({ name: "Bistro", kind: "restaurant" });
+});
+it("maps the requested Romanian and English sight categories", () => {
+  expect(categorizeSight("Muzeul de Artă")).toBe("museum");
+  expect(categorizeSight("Biserica Sfântul Dumitru")).toBe("church");
+  expect(categorizeSight("Central Park")).toBe("park");
+  expect(categorizeSight("Monumentul Eroilor")).toBe("monument");
+});
+
+import { DEFAULT_FOOD_AREA } from "./place-sources";
+it("defaults food searches to city center", () => {
+  expect(DEFAULT_FOOD_AREA).toBe("center");
+});
+it("uses an eight-second Overpass fallback query", () => {
+  expect(buildOverpassQuery("food", 44.3, 23.8, 1200, 8000)).toContain("[timeout:8]");
+});

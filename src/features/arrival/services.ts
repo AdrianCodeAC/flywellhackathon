@@ -3,7 +3,8 @@
  * Implemented: airports, OSRM routing, Nominatim geocoding. Others are stubs, filled in by later steps.
  */
 import type { Airport, Place, Route, RouteProfile } from "./types";
-import { overpassKey, rankSights } from "./place-utils";
+import { sourceCacheKey } from "./place-sources";
+import { loggedFetch } from "./external-http";
 import { getOverpassPlaces } from "./overpass.functions";
 import { getPlaceSummaries, getTransportGuide, type TransportGuide } from "./guides.functions";
 import { askAssistant, type AssistantAnswer } from "./ai.functions";
@@ -32,7 +33,7 @@ function countryName(code: string): string {
 /** Loads the bundled static airport dataset (IATA airports only). Cached after the first call. */
 export function loadAirports(): Promise<Airport[]> {
   if (!airportsPromise) {
-    airportsPromise = fetch("/data/airports.json")
+    airportsPromise = loggedFetch("/data/airports.json")
       .then((r) => {
         if (!r.ok) throw new Error(`Airport data failed: ${r.status}`);
         return r.json() as Promise<RawAirport[]>;
@@ -79,7 +80,7 @@ export async function fetchOsrmRoute(
   profile: RouteProfile = "driving",
 ): Promise<Route> {
   const url = `${OSRM_HOST}/route/v1/${profile}/${from[1]},${from[0]};${to[1]},${to[0]}?overview=full&geometries=geojson`;
-  const res = await fetch(url);
+  const res = await loggedFetch(url);
   if (!res.ok) throw new Error(`OSRM failed: ${res.status}`);
   const data = (await res.json()) as OsrmResponse;
   const best = data.routes?.[0];
@@ -99,6 +100,7 @@ interface NominatimHit {
   lon: string;
   category?: string;
   type?: string;
+  addresstype?: string;
 }
 
 // Nominatim's usage policy: at most one request per second.
@@ -112,7 +114,7 @@ async function nominatimFetch(url: string): Promise<Response> {
       const wait = Math.max(0, 1000 - (Date.now() - lastNominatimAt));
       if (wait) await new Promise((r) => setTimeout(r, wait));
       lastNominatimAt = Date.now();
-      return fetch(url, { headers: { Accept: "application/json" } });
+      return loggedFetch(url, { headers: { Accept: "application/json" } });
     });
   nominatimQueue = pending;
   return pending;
@@ -125,7 +127,11 @@ function toPlace(hit: NominatimHit, i: number): Place {
     kind: "other",
     lat: Number(hit.lat),
     lon: Number(hit.lon),
-    tags: { display_name: hit.display_name, category: hit.category ?? "" },
+    tags: {
+      display_name: hit.display_name,
+      category: hit.category ?? "",
+      addresstype: hit.addresstype ?? "",
+    },
   };
 }
 
@@ -149,7 +155,10 @@ export async function geocodeCityCenter(
   countryCode?: string,
 ): Promise<Place | undefined> {
   const rows = await geocodeNominatim(city, countryCode);
-  const best = rows.find((r) => r.tags?.["category"] === "administrative") ?? rows[0];
+  const best =
+    rows.find((r) => r.tags?.["addresstype"] === "city" || r.tags?.["addresstype"] === "town") ??
+    rows.find((r) => r.tags?.["category"] === "administrative") ??
+    rows[0];
   return best;
 }
 
@@ -200,7 +209,7 @@ export function clearMemoryCache() {
 
 /** City centre, cached per city for 24h. */
 export function getCityCenter(city: string, countryCode?: string): Promise<Place | undefined> {
-  return cached(`center:${countryCode ?? ""}:${city.toLowerCase()}`, () =>
+  return cached(`center-v2:${countryCode ?? ""}:${city.toLowerCase()}`, () =>
     geocodeCityCenter(city, countryCode),
   );
 }
@@ -221,8 +230,14 @@ const OVERPASS_DEVICE_PREFIX = "arrival-overpass:";
 const overpassMem = new Map<string, PlacesResult>();
 const overpassInflight = new Map<string, Promise<PlacesResult>>();
 
-function placesKey(category: OverpassCategory, lat: number, lon: number, radiusM: number) {
-  return overpassKey(category, lat, lon, radiusM);
+function placesKey(
+  category: OverpassCategory,
+  lat: number,
+  lon: number,
+  radiusM: number,
+  lang: string,
+) {
+  return sourceCacheKey(category, lat, lon, radiusM, lang);
 }
 
 /** Device copy (any age) for instant display; `fresh` = under 24h. */
@@ -231,8 +246,9 @@ export function peekPlaces(
   lat: number,
   lon: number,
   radiusM: number,
+  lang = i18n.language,
 ): (PlacesResult & { fresh: boolean }) | undefined {
-  const key = placesKey(category, lat, lon, radiusM);
+  const key = placesKey(category, lat, lon, radiusM, lang);
   let hit = overpassMem.get(key);
   if (!hit) {
     try {
@@ -257,13 +273,16 @@ export function fetchOverpassPlaces(
   lat: number,
   lon: number,
   radiusM: number,
+  lang = i18n.language,
 ): Promise<PlacesResult> {
-  const local = peekPlaces(category, lat, lon, radiusM);
+  const local = peekPlaces(category, lat, lon, radiusM, lang);
   if (local?.fresh) return Promise.resolve(local);
-  const key = placesKey(category, lat, lon, radiusM);
+  const key = placesKey(category, lat, lon, radiusM, lang);
   const pending = overpassInflight.get(key);
   if (pending) return pending;
-  const p = getOverpassPlaces({ data: { category, lat, lon, radiusM: Math.round(radiusM) } })
+  const p = getOverpassPlaces({
+    data: { category, lat, lon, radiusM: Math.round(radiusM), lang: lang === "ro" ? "ro" : "en" },
+  })
     .then((res) => {
       const value: PlacesResult = res;
       // Don't overwrite a newer device copy with an older stale server copy.
@@ -337,11 +356,7 @@ export function fetchSummaries(
 /** Warm the sights list and their summaries in the background. */
 export function prefetchSights(airport: Airport) {
   void sightsOrigin(airport)
-    .then(([lat, lon]) => fetchOverpassPlaces("sights", lat, lon, SIGHTS_RADIUS))
-    .then(({ places }) => {
-      const ranked = rankSights(places).slice(0, 10);
-      return fetchSummaries(ranked, i18n.language);
-    })
+    .then(([lat, lon]) => fetchOverpassPlaces("sights", lat, lon, SIGHTS_RADIUS, i18n.language))
     .catch(() => {});
 }
 

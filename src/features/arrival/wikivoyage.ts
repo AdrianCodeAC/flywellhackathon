@@ -1,3 +1,4 @@
+import { loggedFetch } from "./external-http";
 /**
  * Wikivoyage: read the city's "Get in -> By plane" advice and turn the wikitext
  * into plain, readable text. Parsing is pure so it can be tested without network.
@@ -11,11 +12,19 @@ function headingLevel(line: string): number {
 }
 
 function headingText(line: string): string {
-  return line.replace(/^=+\s*/, "").replace(/\s*=+\s*$/, "").trim().toLowerCase();
+  return line
+    .replace(/^=+\s*/, "")
+    .replace(/\s*=+\s*$/, "")
+    .trim()
+    .toLowerCase();
 }
 
 /** Body of `heading` (level 2), optionally only its `subheading` (level 3). */
-export function extractSection(wikitext: string, heading: string, subheading?: string): string | undefined {
+export function extractSection(
+  wikitext: string,
+  heading: string,
+  subheading?: string,
+): string | undefined {
   const lines = wikitext.split("\n");
   const want = heading.toLowerCase();
   const start = lines.findIndex((l) => headingLevel(l) === 2 && headingText(l) === want);
@@ -43,7 +52,12 @@ export function extractSection(wikitext: string, heading: string, subheading?: s
       break;
     }
   }
-  return block.slice(from + 1, to).join("\n").trim() || undefined;
+  return (
+    block
+      .slice(from + 1, to)
+      .join("\n")
+      .trim() || undefined
+  );
 }
 
 /** Wikitext -> readable prose: no templates, refs, markup or wiki links. */
@@ -67,7 +81,10 @@ export function cleanWikiText(src: string): string {
   t = t.replace(/~{3,}/g, "");
   t = t.replace(/^\s*[*#:;]+\s*/gm, "");
   t = t.replace(/<[^>]*>/g, " ");
-  t = t.replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&quot;/g, '"');
+  t = t
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"');
   t = t.replace(/[ \t]+/g, " ");
   t = t.replace(/ *\n */g, "\n");
   t = t.replace(/\n{2,}/g, "\n\n");
@@ -82,7 +99,10 @@ interface ParseResponse {
 /** The city's airport arrival advice, cleaned. Undefined when the page has none. */
 export async function fetchWikivoyageByPlane(city: string): Promise<string | undefined> {
   const url = `${WIKIVOYAGE_API}?action=parse&page=${encodeURIComponent(city)}&prop=wikitext&redirects=1&format=json&origin=*`;
-  const res = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "ArrivalAssistant/1.0 (travel helper)" }, signal: AbortSignal.timeout(8000) });
+  const res = await loggedFetch(url, {
+    headers: { Accept: "application/json", "User-Agent": "ArrivalAssistant/1.0 (travel helper)" },
+    signal: AbortSignal.timeout(8000),
+  });
   if (!res.ok) throw new Error(`Wikivoyage failed: ${res.status}`);
   const data = (await res.json()) as ParseResponse;
   if (data.error) return undefined;
