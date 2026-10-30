@@ -84,6 +84,8 @@ interface NominatimHit {
   display_name: string;
   lat: string;
   lon: string;
+  category?: string;
+  type?: string;
 }
 
 // Nominatim's usage policy: at most one request per second.
@@ -97,21 +99,38 @@ async function nominatimFetch(url: string): Promise<Response> {
   return fetch(url, { headers: { Accept: "application/json" } });
 }
 
-/** Geocodes a free-text query through Nominatim (max 1 request/second). */
-export async function geocodeNominatim(query: string): Promise<Place[]> {
-  const url = `${NOMINATIM_HOST}/search?q=${encodeURIComponent(query)}&format=jsonv2&limit=5`;
-  const res = await nominatimFetch(url);
-  if (!res.ok) throw new Error(`Nominatim failed: ${res.status}`);
-  const rows = (await res.json()) as NominatimHit[];
-  return rows.map((hit, i) => ({
+function toPlace(hit: NominatimHit, i: number): Place {
+  return {
     id: `nominatim-${hit.name ?? hit.display_name}-${i}`,
     name: hit.name || hit.display_name.split(",")[0] || hit.display_name,
-    kind: "other" as const,
+    kind: "other",
     lat: Number(hit.lat),
     lon: Number(hit.lon),
     tags: { display_name: hit.display_name },
-  }));
+  };
 }
+
+/** Geocodes a free-text query through Nominatim (max 1 request/second). */
+export async function geocodeNominatim(query: string, countryCode?: string): Promise<Place[]> {
+  const cc = countryCode ? `&countrycodes=${encodeURIComponent(countryCode.toLowerCase())}` : "";
+  const url = `${NOMINATIM_HOST}/search?q=${encodeURIComponent(query)}&format=jsonv2&limit=5${cc}`;
+  const res = await nominatimFetch(url);
+  if (!res.ok) throw new Error(`Nominatim failed: ${res.status}`);
+  const rows = (await res.json()) as NominatimHit[];
+  return rows.map(toPlace);
+}
+
+/**
+ * The city's own centre point. Geocoding the bare city name inside the airport's
+ * country beats searching "{city} center", which matches places literally named
+ * "Lisbon Center" in the United States.
+ */
+export async function geocodeCityCenter(city: string, countryCode?: string): Promise<Place | undefined> {
+  const rows = await geocodeNominatim(city, countryCode);
+  const best = rows.find((r) => r.tags?.category === "administrative") ?? rows[0];
+  return best;
+}
+
 
 const notYet = (name: string) => (): never => {
   throw new Error(`${name} is not implemented yet`);
