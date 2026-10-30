@@ -3,6 +3,8 @@
  * Implemented: airports, OSRM routing, Nominatim geocoding. Others are stubs, filled in by later steps.
  */
 import type { Airport, Place, Route, RouteProfile } from "./types";
+import { overpassKey } from "./place-utils";
+import { getOverpassPlaces } from "./overpass.functions";
 
 type RawAirport = [iata: string, name: string, city: string, country: string, lat: number, lon: number];
 
@@ -181,110 +183,100 @@ export function getCityCenter(city: string, countryCode?: string): Promise<Place
   return cached(`center:${countryCode ?? ""}:${city.toLowerCase()}`, () => geocodeCityCenter(city, countryCode));
 }
 
-export function distanceMeters(a: [number, number], b: [number, number]): number {
-  const R = 6371000;
-  const rad = Math.PI / 180;
-  const dLat = (b[0] - a[0]) * rad;
-  const dLon = (b[1] - a[1]) * rad;
-  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLon / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(h));
+export { distanceMeters } from "./place-utils";
+
+// ---- Overpass (via backend proxy with shared 24h cache) ----
+export type OverpassCategory = "food" | "sights" | "transport";
+
+export interface PlacesResult {
+  places: Place[];
+  fetchedAt: number;
+  /** Older copy shown because fresh data couldn't be loaded. */
+  stale: boolean;
 }
 
-// Public Overpass servers are often busy; try each in turn with a timeout.
-const OVERPASS_HOSTS = [
-  "https://overpass-api.de/api/interpreter",
-  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
-];
+const OVERPASS_DEVICE_PREFIX = "arrival-overpass:";
+const overpassMem = new Map<string, PlacesResult>();
+const overpassInflight = new Map<string, Promise<PlacesResult>>();
 
-async function overpassFetch(query: string): Promise<{ elements?: OverpassElement[] }> {
-  let lastError: unknown;
-  for (const host of OVERPASS_HOSTS) {
-    try {
-      const res = await fetch(host, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `data=${encodeURIComponent(query)}`,
-        signal: AbortSignal.timeout(20000),
-      });
-      if (!res.ok) throw new Error(`Overpass failed: ${res.status}`);
-      return (await res.json()) as { elements?: OverpassElement[] };
-    } catch (e) {
-      lastError = e;
-    }
-  }
-  throw lastError;
+function placesKey(category: OverpassCategory, lat: number, lon: number, radiusM: number) {
+  return overpassKey(category, lat, lon, radiusM);
 }
 
-interface OverpassElement {
-  type: string;
-  id: number;
-  lat?: number;
-  lon?: number;
-  center?: { lat: number; lon: number };
-  tags?: Record<string, string>;
-}
-
-function kindFromTags(t: Record<string, string>): Place["kind"] {
-  const a = t["amenity"];
-  if (a === "restaurant" || a === "fast_food" || a === "cafe") return a;
-  if (t["tourism"] === "museum") return "museum";
-  if (t["tourism"] === "gallery") return "gallery";
-  if (t["tourism"] === "viewpoint") return "viewpoint";
-  if (t["tourism"] === "attraction") return "attraction";
-  if (t["historic"] === "castle") return "castle";
-  if (t["historic"] === "monument") return "monument";
-  if (t["railway"] === "station" || t["public_transport"] === "station") return "station";
-  if (t["highway"] === "bus_stop") return "bus_stop";
-  return "other";
-}
-
-/**
- * Queries Overpass for named places around a point.
- * `selectors` are Overpass tag filters, e.g. `["amenity"~"^(restaurant|cafe)$"]`.
- * Results are sorted by distance and cached for 24h.
- */
-export function fetchOverpassPlaces(
+/** Device copy (any age) for instant display; `fresh` = under 24h. */
+export function peekPlaces(
+  category: OverpassCategory,
   lat: number,
   lon: number,
   radiusM: number,
-  selectors: string[],
-): Promise<Place[]> {
-  const key = `overpass:${lat.toFixed(3)},${lon.toFixed(3)}:${radiusM}:${selectors.join("|")}`;
-  return cached(key, async () => {
-    const body = selectors.map((s) => `nwr${s}["name"](around:${radiusM},${lat},${lon});`).join("");
-    const query = `[out:json][timeout:25];(${body});out center tags 800;`;
-    const data = await overpassFetch(query);
-    const places: Place[] = [];
-    for (const el of data.elements ?? []) {
-      const pLat = el.lat ?? el.center?.lat;
-      const pLon = el.lon ?? el.center?.lon;
-      const tags = el.tags ?? {};
-      const name = tags["name:en"] || tags["name"];
-      if (pLat === undefined || pLon === undefined || !name) continue;
-      const place: Place = {
-        id: `${el.type}/${el.id}`,
-        name,
-        kind: kindFromTags(tags),
-        lat: pLat,
-        lon: pLon,
-        distance: distanceMeters([lat, lon], [pLat, pLon]),
-        tags,
-      };
-      const cuisine = tags["cuisine"];
-      if (cuisine) place.cuisine = cuisine.split(";").map((c) => c.trim().replace(/_/g, " ")).join(", ");
-      if (tags["opening_hours"]) place.openingHours = tags["opening_hours"];
-      const phone = (tags["phone"] || tags["contact:phone"])?.split(";")[0]?.trim();
-      if (phone) place.phone = phone;
-      if (tags["wikipedia"]) place.wikipedia = tags["wikipedia"];
-      if (tags["wikidata"]) place.wikidata = tags["wikidata"];
-      places.push(place);
+): (PlacesResult & { fresh: boolean }) | undefined {
+  const key = placesKey(category, lat, lon, radiusM);
+  let hit = overpassMem.get(key);
+  if (!hit) {
+    try {
+      const raw = localStorage.getItem(OVERPASS_DEVICE_PREFIX + key);
+      if (raw) {
+        hit = JSON.parse(raw) as PlacesResult;
+        overpassMem.set(key, hit);
+      }
+    } catch {
+      /* ignore */
     }
-    return places.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
-  });
+  }
+  return hit ? { ...hit, fresh: Date.now() - hit.fetchedAt < DAY_MS } : undefined;
 }
 
-export const FOOD_SELECTORS = ['["amenity"~"^(restaurant|fast_food|cafe)$"]'];
+/**
+ * Places around a point. Fresh device copy → instant; otherwise asks the backend
+ * (shared cache, then a race across Overpass mirrors). Concurrent calls share one request.
+ */
+export function fetchOverpassPlaces(
+  category: OverpassCategory,
+  lat: number,
+  lon: number,
+  radiusM: number,
+): Promise<PlacesResult> {
+  const local = peekPlaces(category, lat, lon, radiusM);
+  if (local?.fresh) return Promise.resolve(local);
+  const key = placesKey(category, lat, lon, radiusM);
+  const pending = overpassInflight.get(key);
+  if (pending) return pending;
+  const p = getOverpassPlaces({ data: { category, lat, lon, radiusM: Math.round(radiusM) } })
+    .then((res) => {
+      const value: PlacesResult = res;
+      // Don't overwrite a newer device copy with an older stale server copy.
+      if (!value.stale || !local || value.fetchedAt > local.fetchedAt) {
+        overpassMem.set(key, value);
+        try {
+          localStorage.setItem(OVERPASS_DEVICE_PREFIX + key, JSON.stringify(value));
+        } catch {
+          /* storage full */
+        }
+      }
+      return value.stale && local && local.fetchedAt > value.fetchedAt ? { ...local, stale: true } : value;
+    })
+    .finally(() => overpassInflight.delete(key));
+  overpassInflight.set(key, p);
+  return p;
+}
 
+export const FOOD_RADIUS = { airport: 1500, center: 1200 } as const;
+
+/** Resolves the search point for the food list's two areas. */
+export async function foodOrigin(airport: Airport, area: "airport" | "center"): Promise<[number, number]> {
+  if (area === "airport") return [airport.lat, airport.lon];
+  const c = await getCityCenter(airport.city, airport.countryCode);
+  if (!c) throw new Error("No city center");
+  return [c.lat, c.lon];
+}
+
+/** Warm both food areas in the background as soon as an airport is chosen. */
+export function prefetchFood(airport: Airport) {
+  void fetchOverpassPlaces("food", airport.lat, airport.lon, FOOD_RADIUS.airport).catch(() => {});
+  void foodOrigin(airport, "center")
+    .then(([lat, lon]) => fetchOverpassPlaces("food", lat, lon, FOOD_RADIUS.center))
+    .catch(() => {});
+}
 const notYet = (name: string) => (): never => {
   throw new Error(`${name} is not implemented yet`);
 };
