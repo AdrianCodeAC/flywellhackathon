@@ -22,8 +22,16 @@ export function searchAirports(airports: Airport[], query: string, limit = 8): A
   return scored.slice(0, limit).map((x) => x.a);
 }
 
-export function formatAirport(a: Airport): string {
-  return `${a.iata} · ${a.name}, ${[a.city, a.country].filter(Boolean).join(", ")}`;
+export function formatAirport(a: Airport, locale?: string): string {
+  let country = a.country;
+  if (locale && a.countryCode) {
+    try {
+      country = new Intl.DisplayNames([locale], { type: "region" }).of(a.countryCode) ?? a.country;
+    } catch {
+      /* keep the stored English name */
+    }
+  }
+  return `${a.iata} · ${a.name}, ${[a.city, country].filter(Boolean).join(", ")}`;
 }
 
 /** The closest airport to a GPS position, with its distance in metres. */
