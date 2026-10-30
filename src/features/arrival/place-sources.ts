@@ -2,6 +2,7 @@ import type { Place } from "./types";
 import { distanceMeters } from "./place-utils";
 
 export const FOOD_CATEGORIES = ["restaurant", "fast food", "cafe"] as const;
+export const DEFAULT_FOOD_AREA = "center" as const;
 
 /** Nominatim wants left/top/right/bottom (west,north,east,south). */
 export function areaViewbox(lat: number, lon: number, radiusM: number): string {
@@ -59,5 +60,5 @@ export function mergeSightLanguages(primary: Place[], english: Place[]): Place[]
 }
 
 export function sourceCacheKey(category: "food" | "sights" | "transport", lat: number, lon: number, radiusM: number, lang: string): string {
-  return `sources-v3:${category}:${lat.toFixed(3)},${lon.toFixed(3)}:${Math.round(radiusM)}${category === "sights" ? `:${lang === "ro" ? "ro" : "en"}` : ""}`;
+  return `sources-v4:${category}:${lat.toFixed(3)},${lon.toFixed(3)}:${Math.round(radiusM)}${category === "sights" ? `:${lang === "ro" ? "ro" : "en"}` : ""}`;
 }

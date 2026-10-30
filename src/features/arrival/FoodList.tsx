@@ -6,6 +6,7 @@ import { formatDistance } from "./map-links";
 import { formatOpeningHours, isOpenNow } from "./opening-hours";
 import { FOOD_RADIUS, fetchOverpassPlaces, foodOrigin, peekPlaces, type PlacesResult } from "./services";
 import type { Airport, Place } from "./types";
+import { DEFAULT_FOOD_AREA } from "./place-sources";
 
 type Area = "airport" | "center";
 type Filter = "all" | "restaurant" | "fast_food" | "cafe";
@@ -24,7 +25,7 @@ const chip = (on: boolean) =>
 
 export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
   const { t, i18n } = useTranslation();
-  const [area, setArea] = useState<Area>("center");
+  const [area, setArea] = useState<Area>(DEFAULT_FOOD_AREA);
   const [filter, setFilter] = useState<Filter>("all");
   const [openOnly, setOpenOnly] = useState(false);
   const [result, setResult] = useState<PlacesResult | null>(null);

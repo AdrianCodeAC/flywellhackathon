@@ -186,10 +186,11 @@ function VisitCard({ place, onShowRoute }: { place: Place; onShowRoute: (p: Plac
       <h3 className="break-words font-semibold">{place.name}</h3>
       <p className="text-sm text-muted-foreground">{t(`category.${place.kind}`)}</p>
       {place.description && (
-        <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{place.description}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{place.description}</p>
       )}
         </div>
       </div>
+      {place.articleUrl && <a href={place.articleUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex min-h-11 items-center text-xs text-primary underline">{t("visit.source")}</a>}
       <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
         <MapPin className="h-3.5 w-3.5" />
         {place.distance !== undefined && formatDistance(place.distance, i18n.language)}

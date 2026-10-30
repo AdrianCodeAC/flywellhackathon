@@ -48,8 +48,12 @@ async function wikipediaSights(lang: "ro" | "en", lat: number, lon: number, radi
   const pages: Record<string, PageRow> = {};
   for (let i = 0; i < rows.length; i += 20) {
     const ids = rows.slice(i, i + 20).map((r) => r.pageid).join("%7C");
-    const details = await wikiJson(`${host}?action=query&prop=extracts%7Cpageimages%7Cpageprops&exintro=1&explaintext=1&exsentences=2&pithumbsize=200&pilimit=20&exlimit=20&pageids=${ids}&format=json&origin=*`) as { query?: { pages?: Record<string, PageRow> } };
-    Object.assign(pages, details.query?.pages ?? {});
+    try {
+      const details = await wikiJson(`${host}?action=query&prop=extracts%7Cpageimages%7Cpageprops&exintro=1&explaintext=1&exsentences=2&pithumbsize=200&pilimit=20&exlimit=20&pageids=${ids}&format=json&origin=*`) as { query?: { pages?: Record<string, PageRow> } };
+      Object.assign(pages, details.query?.pages ?? {});
+    } catch (error) {
+      console.warn(`[Arrival source] Wikipedia descriptions unavailable language=${lang}`, error);
+    }
   }
   return rows.map((row) => {
     const page = pages[String(row.pageid)];
@@ -68,7 +72,9 @@ export async function searchArrivalPlaces(category: "food" | "sights" | "transpo
   try {
     if (category === "food") return await nominatimFood(lat, lon, radiusM);
     const primary = await wikipediaSights(lang, lat, lon, radiusM);
-    return lang === "ro" && primary.length < 10 ? mergeSightLanguages(primary, await wikipediaSights("en", lat, lon, radiusM)) : primary;
+    if (lang !== "ro" || primary.length >= 10) return primary;
+    try { return mergeSightLanguages(primary, await wikipediaSights("en", lat, lon, radiusM)); }
+    catch (error) { if (primary.length) return primary; throw error; }
   } catch (error) {
     console.error(`[Arrival source] primary failed category=${category}`, error);
     return overpassFallback(category, lat, lon, radiusM);
