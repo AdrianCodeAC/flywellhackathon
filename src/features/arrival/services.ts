@@ -3,8 +3,11 @@
  * Implemented: airports, OSRM routing, Nominatim geocoding. Others are stubs, filled in by later steps.
  */
 import type { Airport, Place, Route, RouteProfile } from "./types";
-import { overpassKey } from "./place-utils";
+import { overpassKey, rankSights } from "./place-utils";
 import { getOverpassPlaces } from "./overpass.functions";
+import { getPlaceSummaries, getTransportGuide, type TransportGuide } from "./guides.functions";
+import { askAssistant, type AssistantAnswer } from "./ai.functions";
+import i18n from "@/lib/i18n";
 
 type RawAirport = [iata: string, name: string, city: string, country: string, lat: number, lon: number];
 
