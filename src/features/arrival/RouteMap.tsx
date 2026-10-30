@@ -1,5 +1,6 @@
 import { ArrowLeft, Clock, MapPin, Navigation } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import { fetchOsrmRoute } from "./services";
 import { appleMapsUrl, formatDistance, formatDuration, googleMapsUrl } from "./map-links";
@@ -28,6 +29,9 @@ function pin(color: string) {
 
 /** Shared full-screen map + route view. Loaded lazily — imports Leaflet. */
 export function RouteMap({ from, to, onBack }: RouteMapProps) {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
+  const [attempt, setAttempt] = useState(0);
   const hostRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const artRef = useRef<L.LayerGroup | null>(null);
@@ -67,7 +71,7 @@ export function RouteMap({ from, to, onBack }: RouteMapProps) {
       .catch(() => {
         if (!cancelled) {
           setRoute(null);
-          setError("Couldn't load this right now — retry");
+          setError("map.error");
         }
       })
       .finally(() => {
@@ -76,7 +80,7 @@ export function RouteMap({ from, to, onBack }: RouteMapProps) {
     return () => {
       cancelled = true;
     };
-  }, [from.lat, from.lon, to.lat, to.lon, profile]);
+  }, [from.lat, from.lon, to.lat, to.lon, profile, attempt]);
 
   // Draw markers + polyline.
   useEffect(() => {
@@ -100,90 +104,81 @@ export function RouteMap({ from, to, onBack }: RouteMapProps) {
 
   const showProfileToggle = !!route && route.distanceM < 3000;
 
+  const btn = "flex min-h-11 items-center justify-center gap-1.5 rounded-lg border px-3 text-sm font-medium active:bg-accent";
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background">
-      <div className="flex items-center gap-2 border-b px-3 py-3">
+      <div className="flex items-center gap-3 border-b px-3 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
         <button
           type="button"
           onClick={onBack}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border hover:bg-accent"
-          aria-label="Back"
+          className="flex h-12 shrink-0 items-center gap-1.5 rounded-xl border px-3 text-base font-semibold active:bg-accent"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-5 w-5" />
+          {t("map.back")}
         </button>
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold">
             {from.name} → {to.name}
           </p>
           <p className="truncate text-xs text-muted-foreground">
-            {loading ? "Finding the route…" : route ? `${formatDistance(route.distanceM)} · ${formatDuration(route.durationSec)}` : "No route found"}
+            {loading
+              ? t("map.finding")
+              : route
+                ? `${formatDistance(route.distanceM, lang)} · ${formatDuration(route.durationSec, lang)}`
+                : t("map.noRoute")}
           </p>
         </div>
       </div>
 
       <div ref={hostRef} className="min-h-0 flex-1" />
 
-      {error && (
-        <div className="border-t px-4 py-3">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-sm text-destructive">{error}</p>
-            <button
-              type="button"
-              onClick={() => setProfile((p) => p)}
-              className="shrink-0 rounded-md border px-3 py-1.5 text-sm hover:bg-accent"
-            >
-              Retry
+      <div className="border-t px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        {error && (
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <p className="text-sm text-destructive">{t(error)}</p>
+            <button type="button" onClick={() => setAttempt((n) => n + 1)} className={btn}>
+              {t("map.retry")}
             </button>
-          </div>
-        </div>
-      )}
-
-      <div className="border-t px-4 py-3">
-        {showProfileToggle && (
-          <div className="mb-3 inline-flex rounded-md border p-0.5">
-            {(["driving", "walking"] as const).map((p) => (
-              <button
-                key={p}
-                type="button"
-                onClick={() => setProfile(p)}
-                className={
-                  "rounded px-3 py-1 text-sm capitalize " +
-                  (profile === p ? "bg-primary text-primary-foreground" : "text-muted-foreground")
-                }
-              >
-                {p}
-              </button>
-            ))}
           </div>
         )}
 
-        <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1 text-sm text-muted-foreground">
+        <div className="mb-3 flex items-center gap-4 text-sm text-muted-foreground">
+          <span className="flex items-center gap-1" aria-label={t("map.distance")}>
             <MapPin className="h-4 w-4" />
-            {route ? formatDistance(route.distanceM) : "—"}
+            {route ? formatDistance(route.distanceM, lang) : "—"}
           </span>
-          <span className="flex items-center gap-1 text-sm text-muted-foreground">
+          <span className="flex items-center gap-1" aria-label={t("map.duration")}>
             <Clock className="h-4 w-4" />
-            {route ? formatDuration(route.durationSec) : "—"}
+            {route ? formatDuration(route.durationSec, lang) : "—"}
           </span>
-          <div className="ml-auto flex gap-2">
-            <a
-              href={googleMapsUrl(to, from)}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm hover:bg-accent"
-            >
-              <Navigation className="h-4 w-4" /> Google Maps
-            </a>
-            <a
-              href={appleMapsUrl(to, from)}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm hover:bg-accent"
-            >
-              <Navigation className="h-4 w-4" /> Apple Maps
-            </a>
-          </div>
+          {showProfileToggle && (
+            <div className="ml-auto inline-flex rounded-lg border p-0.5">
+              {(["driving", "walking"] as const).map((p) => (
+                <button
+                  key={p}
+                  type="button"
+                  aria-pressed={profile === p}
+                  onClick={() => setProfile(p)}
+                  className={
+                    "min-h-10 rounded-md px-3 text-sm " +
+                    (profile === p ? "bg-primary text-primary-foreground" : "text-muted-foreground")
+                  }
+                >
+                  {t(`map.${p}`)}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <a href={googleMapsUrl(to, from)} target="_blank" rel="noreferrer" className={btn}>
+            <Navigation className="h-4 w-4" /> {t("map.google")}
+          </a>
+          <a href={appleMapsUrl(to, from)} target="_blank" rel="noreferrer" className={btn}>
+            <Navigation className="h-4 w-4" /> {t("map.apple")}
+          </a>
         </div>
       </div>
     </div>
