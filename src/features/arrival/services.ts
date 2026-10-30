@@ -261,19 +261,21 @@ export function fetchOverpassPlaces(
       const tags = el.tags ?? {};
       const name = tags["name:en"] || tags["name"];
       if (pLat === undefined || pLon === undefined || !name) continue;
-      places.push({
+      const place: Place = {
         id: `${el.type}/${el.id}`,
         name,
         kind: kindFromTags(tags),
         lat: pLat,
         lon: pLon,
         distance: distanceMeters([lat, lon], [pLat, pLon]),
-        cuisine: tags["cuisine"]?.split(";").map((c) => c.trim().replace(/_/g, " ")).join(", "),
-        openingHours: tags["opening_hours"],
-        wikipedia: tags["wikipedia"],
-        wikidata: tags["wikidata"],
         tags,
-      });
+      };
+      const cuisine = tags["cuisine"];
+      if (cuisine) place.cuisine = cuisine.split(";").map((c) => c.trim().replace(/_/g, " ")).join(", ");
+      if (tags["opening_hours"]) place.openingHours = tags["opening_hours"];
+      if (tags["wikipedia"]) place.wikipedia = tags["wikipedia"];
+      if (tags["wikidata"]) place.wikidata = tags["wikidata"];
+      places.push(place);
     }
     return places.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
   });

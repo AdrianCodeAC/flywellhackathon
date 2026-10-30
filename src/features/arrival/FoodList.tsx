@@ -60,7 +60,10 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
     if (!places) return [];
     const now = new Date();
     return places
-      .map((p) => ({ ...p, openNow: isOpenNow(p.openingHours, now) }))
+      .map((p): Place => {
+        const openNow = isOpenNow(p.openingHours, now);
+        return openNow === undefined ? p : { ...p, openNow };
+      })
       .filter((p) => (filter === "all" || p.kind === filter) && (!openOnly || p.openNow === true))
       .slice(0, 30);
   }, [places, filter, openOnly]);
