@@ -80,3 +80,26 @@ describe("geocodeCityCenter", () => {
     expect(url).not.toContain("center");
   });
 });
+
+describe("cached", async () => {
+  const { cached, clearMemoryCache } = await import("./services");
+  it("reuses a stored result within 24h and reloads after", async () => {
+    const store = new Map<string, string>();
+    vi.stubGlobal("localStorage", {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => void store.set(k, v),
+      removeItem: (k: string) => void store.delete(k),
+    });
+    let calls = 0;
+    const load = async () => ++calls;
+    expect(await cached("k", load)).toBe(1);
+    clearMemoryCache();
+    expect(await cached("k", load)).toBe(1); // from localStorage
+    const realNow = Date.now;
+    Date.now = () => realNow() + 25 * 3600 * 1000;
+    clearMemoryCache();
+    expect(await cached("k", load)).toBe(2);
+    Date.now = realNow;
+    vi.unstubAllGlobals();
+  });
+});
