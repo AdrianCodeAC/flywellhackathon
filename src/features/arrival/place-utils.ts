@@ -23,6 +23,16 @@ export function kindFromTags(t: Record<string, string>): Place["kind"] {
   return "other";
 }
 
+/** Places that have a Wikipedia article come first, then nearest. */
+export function rankSights(places: Place[]): Place[] {
+  return [...places].sort((a, b) => {
+    const hasA = a.wikipedia || a.wikidata ? 0 : 1;
+    const hasB = b.wikipedia || b.wikidata ? 0 : 1;
+    if (hasA !== hasB) return hasA - hasB;
+    return (a.distance ?? 0) - (b.distance ?? 0);
+  });
+}
+
 /** Shared cache key: ~100 m grid + category + radius. */
 export function overpassKey(category: string, lat: number, lon: number, radiusM: number): string {
   return `${category}:${lat.toFixed(3)},${lon.toFixed(3)}:${Math.round(radiusM)}`;
