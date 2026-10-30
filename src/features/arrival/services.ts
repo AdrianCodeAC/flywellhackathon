@@ -127,7 +127,7 @@ export async function geocodeNominatim(query: string, countryCode?: string): Pro
  */
 export async function geocodeCityCenter(city: string, countryCode?: string): Promise<Place | undefined> {
   const rows = await geocodeNominatim(city, countryCode);
-  const best = rows.find((r) => r.tags?.category === "administrative") ?? rows[0];
+  const best = rows.find((r) => r.tags?.["category"] === "administrative") ?? rows[0];
   return best;
 }
 
