@@ -4,11 +4,14 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { AirportSearch } from "@/features/arrival/AirportSearch";
 import { ArrivalActionSheet } from "@/features/arrival/ArrivalActionSheet";
-import { FoodList } from "@/features/arrival/FoodList";
-import { geocodeCityCenter, getAirportByIata } from "@/features/arrival/services";
+import { useTranslation } from "react-i18next";
+import { AppHeader } from "@/features/arrival/AppHeader";
+import { getCityCenter as geocodeCityCenter, getAirportByIata } from "@/features/arrival/services";
 import type { Airport } from "@/features/arrival/types";
 
 // Leaflet is browser-only, so the map module is loaded on demand.
+// Each section is loaded on demand too.
+const FoodList = lazy(() => import("@/features/arrival/FoodList").then((m) => ({ default: m.FoodList })));
 const RouteMap = lazy(() => import("@/features/arrival/RouteMap").then((m) => ({ default: m.RouteMap })));
 
 const STORAGE_KEY = "arrival-assistant:airport";
@@ -45,6 +48,7 @@ function ArrivalPage() {
   const { iata } = Route.useSearch();
   const navigate = Route.useNavigate();
   const hydrated = useHydrated();
+  const { t } = useTranslation();
   const [airport, setAirport] = useState<Airport | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [section, setSection] = useState<"food" | null>(null);
@@ -92,21 +96,23 @@ function ArrivalPage() {
     try {
       const hit = await geocodeCityCenter(airport.city, airport.countryCode);
       if (!hit) {
-        setFindError("Couldn't find the city center — try again.");
+        setFindError("test.findError");
         return;
       }
       setTarget({ lat: hit.lat, lon: hit.lon, name: hit.name });
     } catch {
-      setFindError("Couldn't find the city center — try again.");
+      setFindError("test.findError");
     } finally {
       setFinding(false);
     }
   };
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-xl px-4 py-8 sm:py-16">
-      <h1 className="text-3xl font-bold tracking-tight">Arrival Assistant</h1>
-      <p className="mt-2 text-muted-foreground">Just landed? Tell us where, and we'll help with the rest.</p>
+    <>
+    <AppHeader />
+    <main className="mx-auto min-h-dvh w-full max-w-xl px-4 pt-6 pb-[max(2rem,env(safe-area-inset-bottom))] sm:pt-12">
+      <h1 className="text-3xl font-bold tracking-tight">{t("app.title")}</h1>
+      <p className="mt-2 text-muted-foreground">{t("app.tagline")}</p>
 
       <div className="mt-8">
         <AirportSearch selected={airport} onSelect={select} onClear={clear} />
@@ -118,15 +124,16 @@ function ArrivalPage() {
             type="button"
             onClick={routeToCityCenter}
             disabled={finding}
-            className="rounded-md border px-4 py-2 text-sm hover:bg-accent disabled:opacity-60"
+            className="min-h-11 rounded-md border px-4 text-sm active:bg-accent disabled:opacity-60"
           >
-            {finding ? "Finding the city center…" : "Route to city center"}
+            {finding ? t("test.finding") : t("test.routeToCenter")}
           </button>
-          {findError && <p className="mt-2 text-sm text-destructive">{findError}</p>}
+          {findError && <p className="mt-2 text-sm text-destructive">{t(findError)}</p>}
         </div>
       )}
 
-      {airport && section === "food" && (
+      {hydrated && airport && section === "food" && (
+        <Suspense fallback={null}>
         <FoodList
           airport={airport}
           onBack={() => {
@@ -135,6 +142,7 @@ function ArrivalPage() {
           }}
           onShowRoute={(p) => setTarget({ lat: p.lat, lon: p.lon, name: p.name })}
         />
+        </Suspense>
       )}
 
       <ArrivalActionSheet
@@ -157,5 +165,6 @@ function ArrivalPage() {
         </Suspense>
       )}
     </main>
+    </>
   );
 }
