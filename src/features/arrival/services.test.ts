@@ -21,7 +21,7 @@ describe("fetchOsrmRoute", () => {
 
     await fetchOsrmRoute([38.77, -9.13], [38.72, -9.14], "walking");
 
-    const url = fetchMock.mock.calls[0][0] as string;
+    const url = fetchMock.mock.calls[0]![0] as string;
     expect(url).toContain("/route/v1/walking/");
     expect(url).toContain("-9.13,38.77;-9.14,38.72");
   });

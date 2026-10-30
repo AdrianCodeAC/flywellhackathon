@@ -105,7 +105,7 @@ export async function geocodeNominatim(query: string): Promise<Place[]> {
   const rows = (await res.json()) as NominatimHit[];
   return rows.map((hit, i) => ({
     id: `nominatim-${hit.name ?? hit.display_name}-${i}`,
-    name: hit.name || hit.display_name.split(",")[0],
+    name: hit.name || hit.display_name.split(",")[0] || hit.display_name,
     kind: "other" as const,
     lat: Number(hit.lat),
     lon: Number(hit.lon),

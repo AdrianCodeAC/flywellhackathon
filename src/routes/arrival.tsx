@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { ClientOnly, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useHydrated } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { AirportSearch } from "@/features/arrival/AirportSearch";
@@ -43,6 +43,7 @@ interface Target {
 function ArrivalPage() {
   const { iata } = Route.useSearch();
   const navigate = Route.useNavigate();
+  const hydrated = useHydrated();
   const [airport, setAirport] = useState<Airport | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [target, setTarget] = useState<Target | null>(null);
@@ -125,19 +126,15 @@ function ArrivalPage() {
 
       <ArrivalActionSheet open={sheetOpen && !!airport} city={airport?.city ?? ""} onOpenChange={setSheetOpen} />
 
-      <ClientOnly>
-        {() =>
-          target && airport ? (
-            <Suspense fallback={null}>
-              <RouteMap
-                from={{ lat: airport.lat, lon: airport.lon, name: `${airport.iata} ${airport.city}` }}
-                to={target}
-                onBack={() => setTarget(null)}
-              />
-            </Suspense>
-          ) : null
-        }
-      </ClientOnly>
+      {hydrated && target && airport && (
+        <Suspense fallback={null}>
+          <RouteMap
+            from={{ lat: airport.lat, lon: airport.lon, name: `${airport.iata} ${airport.city}` }}
+            to={target}
+            onBack={() => setTarget(null)}
+          />
+        </Suspense>
+      )}
     </main>
   );
 }
