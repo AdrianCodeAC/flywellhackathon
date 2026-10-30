@@ -99,8 +99,8 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
             role="tab"
             aria-selected={area === a}
             onClick={() => setArea(a)}
-            className={`min-h-11 rounded-md px-2 py-1.5 font-medium leading-tight transition-colors ${
-              area === a ? "bg-background shadow-sm" : "text-muted-foreground"
+             className={`h-auto min-h-11 whitespace-normal rounded-md border-0 px-2 py-2 font-medium leading-tight shadow-none transition-colors ${
+               area === a ? "bg-background text-primary shadow-sm" : "bg-transparent text-muted-foreground"
             }`}
           >
             {a === "airport" ? t("food.nearAirport") : t("food.inCenter", { city: airport.city })}
