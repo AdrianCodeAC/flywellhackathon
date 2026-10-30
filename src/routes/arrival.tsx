@@ -6,13 +6,20 @@ import { AirportSearch } from "@/features/arrival/AirportSearch";
 import { ArrivalActionSheet } from "@/features/arrival/ArrivalActionSheet";
 import { useTranslation } from "react-i18next";
 import { AppHeader } from "@/features/arrival/AppHeader";
-import { prefetchFood, getCityCenter as geocodeCityCenter, getAirportByIata } from "@/features/arrival/services";
+import { prefetchFood, prefetchSights, getAirportByIata } from "@/features/arrival/services";
+import { Button } from "@/components/ui/button";
+import type { ArrivalSection } from "@/features/arrival/ArrivalActionSheet";
+import type { ArrivalMessage } from "@/features/arrival/AskAI";
 import type { Airport } from "@/features/arrival/types";
 
 // Leaflet is browser-only, so the map module is loaded on demand.
 // Each section is loaded on demand too.
 const FoodList = lazy(() => import("@/features/arrival/FoodList").then((m) => ({ default: m.FoodList })));
 const RouteMap = lazy(() => import("@/features/arrival/RouteMap").then((m) => ({ default: m.RouteMap })));
+
+const VisitList = lazy(() => import("@/features/arrival/VisitList").then((m) => ({ default: m.VisitList })));
+const RideOptions = lazy(() => import("@/features/arrival/RideOptions").then((m) => ({ default: m.RideOptions })));
+const AskAI = lazy(() => import("@/features/arrival/AskAI").then((m) => ({ default: m.AskAI })));
 
 const STORAGE_KEY = "arrival-assistant:airport";
 
@@ -51,10 +58,9 @@ function ArrivalPage() {
   const { t } = useTranslation();
   const [airport, setAirport] = useState<Airport | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [section, setSection] = useState<"food" | null>(null);
+  const [section, setSection] = useState<ArrivalSection | null>(null);
   const [target, setTarget] = useState<Target | null>(null);
-  const [finding, setFinding] = useState(false);
-  const [findError, setFindError] = useState<string | null>(null);
+  const [messages, setMessages] = useState<ArrivalMessage[]>([]);
 
   // Initial airport: URL param wins, then localStorage.
   useEffect(() => {
@@ -66,6 +72,7 @@ function ArrivalPage() {
         if (cancelled || !a) return;
         setAirport(a);
         prefetchFood(a);
+        prefetchSights(a);
         if (iata) setSheetOpen(true);
       })
       .catch(() => {});
@@ -75,8 +82,10 @@ function ArrivalPage() {
   }, [iata]);
 
   const select = (a: Airport) => {
+    if (airport?.iata !== a.iata) setMessages([]);
     setAirport(a);
     prefetchFood(a);
+        prefetchSights(a);
     localStorage.setItem(STORAGE_KEY, a.iata);
     setSheetOpen(true);
     navigate({ search: { iata: a.iata }, replace: true });
@@ -90,25 +99,6 @@ function ArrivalPage() {
     navigate({ search: { iata: "" }, replace: true });
   };
 
-  // Temporary check that the shared map + routing works end to end.
-  const routeToCityCenter = async () => {
-    if (!airport || finding) return;
-    setFinding(true);
-    setFindError(null);
-    try {
-      const hit = await geocodeCityCenter(airport.city, airport.countryCode);
-      if (!hit) {
-        setFindError("test.findError");
-        return;
-      }
-      setTarget({ lat: hit.lat, lon: hit.lon, name: hit.name });
-    } catch {
-      setFindError("test.findError");
-    } finally {
-      setFinding(false);
-    }
-  };
-
   return (
     <>
     <AppHeader />
@@ -120,19 +110,7 @@ function ArrivalPage() {
         <AirportSearch selected={airport} onSelect={select} onClear={clear} />
       </div>
 
-      {airport && (
-        <div className="mt-6">
-          <button
-            type="button"
-            onClick={routeToCityCenter}
-            disabled={finding}
-            className="min-h-11 rounded-md border px-4 text-sm active:bg-accent disabled:opacity-60"
-          >
-            {finding ? t("test.finding") : t("test.routeToCenter")}
-          </button>
-          {findError && <p className="mt-2 text-sm text-destructive">{t(findError)}</p>}
-        </div>
-      )}
+      {airport && !section && <Button variant="outline" onClick={() => setSheetOpen(true)} className="mt-6 min-h-12 w-full">{t("sheet.openOptions")}</Button>}
 
       {hydrated && airport && section === "food" && (
         <Suspense fallback={null}>
@@ -146,6 +124,12 @@ function ArrivalPage() {
         />
         </Suspense>
       )}
+
+      {hydrated && airport && <Suspense fallback={null}>
+        {section === "visit" && <VisitList airport={airport} onBack={() => { setSection(null); setSheetOpen(true); }} onShowRoute={setTarget} />}
+        {section === "ride" && <RideOptions airport={airport} onBack={() => { setSection(null); setSheetOpen(true); }} onShowRoute={setTarget} />}
+        {section === "ask" && <AskAI airport={airport} messages={messages} onMessages={setMessages} onBack={() => { setSection(null); setSheetOpen(true); }} onShowRoute={setTarget} />}
+      </Suspense>}
 
       <ArrivalActionSheet
         open={sheetOpen && !!airport}

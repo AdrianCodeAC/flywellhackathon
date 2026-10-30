@@ -23,7 +23,7 @@ export function extractSection(wikitext: string, heading: string, subheading?: s
 
   let end = lines.length;
   for (let i = start + 1; i < lines.length; i++) {
-    const level = headingLevel(lines[i]!);
+    const level = headingLevel(lines[i] ?? "");
     if (level > 0 && level <= 2) {
       end = i;
       break;
@@ -37,7 +37,7 @@ export function extractSection(wikitext: string, heading: string, subheading?: s
   if (from < 0) return undefined;
   let to = block.length;
   for (let i = from + 1; i < block.length; i++) {
-    const level = headingLevel(block[i]!);
+    const level = headingLevel(block[i] ?? "");
     if (level > 0 && level <= 3) {
       to = i;
       break;

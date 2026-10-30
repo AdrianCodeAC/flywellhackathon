@@ -22,7 +22,6 @@
   "sheet": {
     "title": "Welcome to {{city}}! What do you need?",
     "subtitle": "Pick one and we'll take it from there.",
-    "comingSoon": "Coming soon",
     "food": "Hungry?",
     "foodHint": "Food nearby",
     "ride": "Need a ride?",
@@ -35,11 +34,6 @@
     "close": "Close",
     "yourDestination": "your destination",
     "openOptions": "What do you need?"
-  },
-  "test": {
-    "routeToCenter": "Route to city center",
-    "finding": "Finding the city center…",
-    "findError": "Couldn't find the city center — try again."
   },
   "map": {
     "back": "Back",
@@ -94,5 +88,55 @@
   "meta": {
     "title": "Arrival Assistant — Just landed? Start here",
     "description": "Pick the airport you landed at and find food, rides and sights nearby."
+  },
+  "common": {
+    "back": "Back to options",
+    "showRoute": "Show route",
+    "error": "Couldn't load this source right now.",
+    "retry": "Retry",
+    "stillSearching": "Still searching…",
+    "savedEarlier": "Saved earlier ({{date}})"
+  },
+  "visit": {
+    "title": "What to visit?",
+    "all": "All",
+    "museums": "Museums",
+    "monuments": "Monuments",
+    "viewpoints": "Viewpoints",
+    "other": "Other",
+    "empty": "No sights match this filter.",
+    "summaryError": "Descriptions are unavailable right now."
+  },
+  "ride": {
+    "title": "Need a ride?",
+    "destination": "Destination",
+    "center": "{{city}} center",
+    "to": "To: {{name}}",
+    "searching": "Finding destinations…",
+    "searchError": "Destination search failed. Please try typing again.",
+    "uber": "Uber",
+    "bolt": "Bolt",
+    "taxi": "Taxi",
+    "openUber": "Open Uber",
+    "openBolt": "Open Bolt",
+    "boltNote": "Enter your destination in Bolt; this link cannot fill it in.",
+    "estimate": "Estimate",
+    "estimateNote": "Illustrative rate assumptions, not a live quote. Airport fees, traffic and local tariffs may change the fare. Confirm with the driver.",
+    "public": "Public transport",
+    "noGuide": "No airport transport guide is available for this city.",
+    "guideSource": "Wikivoyage · CC BY-SA",
+    "stations": "Stations and stops near the airport",
+    "noStations": "No nearby named stations or stops found."
+  },
+  "ask": {
+    "title": "Ask anything",
+    "dinner": "Cheap dinner open late",
+    "oldTown": "Fastest way to the old town",
+    "fourHours": "What can I do in 4 hours?",
+    "placeholder": "Ask about {{city}}…",
+    "thinking": "Thinking…",
+    "send": "Send question",
+    "scrollDown": "Latest message",
+    "error": "The assistant could not answer right now."
   }
 }

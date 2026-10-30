@@ -22,7 +22,6 @@
   "sheet": {
     "title": "Bine ai venit în {{city}}! De ce ai nevoie?",
     "subtitle": "Alege ceva și ne ocupăm noi de rest.",
-    "comingSoon": "În curând",
     "food": "Ți-e foame?",
     "foodHint": "Mâncare în apropiere",
     "ride": "Ai nevoie de transport?",
@@ -35,11 +34,6 @@
     "close": "Închide",
     "yourDestination": "destinația ta",
     "openOptions": "De ce ai nevoie?"
-  },
-  "test": {
-    "routeToCenter": "Traseu spre centru",
-    "finding": "Căutăm centrul orașului…",
-    "findError": "Nu am găsit centrul orașului — încearcă din nou."
   },
   "map": {
     "back": "Înapoi",
@@ -94,5 +88,55 @@
   "meta": {
     "title": "Asistent de sosire — Abia ai aterizat? Începe aici",
     "description": "Alege aeroportul la care ai aterizat și găsește mâncare, transport și obiective în apropiere."
+  },
+  "common": {
+    "back": "Înapoi la opțiuni",
+    "showRoute": "Arată traseul",
+    "error": "Nu am putut încărca această sursă acum.",
+    "retry": "Reîncearcă",
+    "stillSearching": "Încă căutăm…",
+    "savedEarlier": "Salvat mai devreme ({{date}})"
+  },
+  "visit": {
+    "title": "Ce să vizitezi?",
+    "all": "Toate",
+    "museums": "Muzee",
+    "monuments": "Monumente",
+    "viewpoints": "Puncte de belvedere",
+    "other": "Altele",
+    "empty": "Niciun obiectiv nu se potrivește cu acest filtru.",
+    "summaryError": "Descrierile nu sunt disponibile acum."
+  },
+  "ride": {
+    "title": "Ai nevoie de transport?",
+    "destination": "Destinație",
+    "center": "Centrul orașului {{city}}",
+    "to": "Spre: {{name}}",
+    "searching": "Căutăm destinații…",
+    "searchError": "Căutarea destinației nu a reușit. Încearcă să scrii din nou.",
+    "uber": "Uber",
+    "bolt": "Bolt",
+    "taxi": "Taxi",
+    "openUber": "Deschide Uber",
+    "openBolt": "Deschide Bolt",
+    "boltNote": "Introdu destinația în Bolt; acest link nu o poate completa.",
+    "estimate": "Estimare",
+    "estimateNote": "Tarife orientative presupuse, nu o ofertă live. Taxele de aeroport, traficul și tarifele locale pot schimba prețul. Confirmă cu șoferul.",
+    "public": "Transport public",
+    "noGuide": "Nu există un ghid de transport de la aeroport pentru acest oraș.",
+    "guideSource": "Wikivoyage · CC BY-SA",
+    "stations": "Gări și stații lângă aeroport",
+    "noStations": "Nu am găsit gări sau stații cu nume în apropiere."
+  },
+  "ask": {
+    "title": "Întreabă orice",
+    "dinner": "Cină ieftină până târziu",
+    "oldTown": "Cel mai rapid drum spre centrul vechi",
+    "fourHours": "Ce pot face în 4 ore?",
+    "placeholder": "Întreabă despre {{city}}…",
+    "thinking": "Ne gândim…",
+    "send": "Trimite întrebarea",
+    "scrollDown": "Ultimul mesaj",
+    "error": "Asistentul nu a putut răspunde acum."
   }
 }

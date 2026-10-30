@@ -95,13 +95,17 @@ interface NominatimHit {
 
 // Nominatim's usage policy: at most one request per second.
 let lastNominatimAt = 0;
+let nominatimQueue: Promise<unknown> = Promise.resolve();
 
 async function nominatimFetch(url: string): Promise<Response> {
-  const wait = Math.max(0, 1000 - (Date.now() - lastNominatimAt));
-  if (wait) await new Promise((r) => setTimeout(r, wait));
-  lastNominatimAt = Date.now();
-  // The browser sends Referer automatically, which is what Nominatim identifies us by.
-  return fetch(url, { headers: { Accept: "application/json" } });
+  const pending = nominatimQueue.catch(() => {}).then(async () => {
+    const wait = Math.max(0, 1000 - (Date.now() - lastNominatimAt));
+    if (wait) await new Promise((r) => setTimeout(r, wait));
+    lastNominatimAt = Date.now();
+    return fetch(url, { headers: { Accept: "application/json" } });
+  });
+  nominatimQueue = pending;
+  return pending;
 }
 
 function toPlace(hit: NominatimHit, i: number): Place {
@@ -316,7 +320,7 @@ export function prefetchSights(airport: Airport) {
     .then(([lat, lon]) => fetchOverpassPlaces("sights", lat, lon, SIGHTS_RADIUS))
     .then(({ places }) => {
       const ranked = rankSights(places).slice(0, 10);
-      return fetchSummaries(ranked, i18nLanguage());
+      return fetchSummaries(ranked, i18n.language);
     })
     .catch(() => {});
 }
