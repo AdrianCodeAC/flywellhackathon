@@ -11,3 +11,7 @@
 - [ ] Sections 4-6 (rides, visit, AI) — must follow sections 8+9 (RO Wikipedia via wikidata, AI translation of Wikivoyage, AI answers in selected language)
 - [ ] Remove the temporary "Route to city center" test button once section 4 is in
 - [ ] Finish the rest of Arrival Assistant per uploaded brief (Now_finish_the_rest...md)
+  - [ ] A: VisitList (Overpass via proxy, Wikipedia RO/EN summaries, prefetch)
+  - [ ] B: RideOptions (Nominatim destination, Uber/Bolt/Taxi estimate, Wikivoyage + AI RO translation, stations) + remove test button
+  - [ ] C: AskAI (backend AI, context, places cards, persistent chat)
+  - [ ] D: Cleanup, all 4 cards live, per-source errors, tests, EN/RO 375px review
