@@ -22,3 +22,5 @@
 
 - Food uses bounded Nominatim category searches and sights use language-keyed Wikipedia GeoSearch, with versioned 24h device/shared caches and Overpass only after primary-source failure. Why: live Overpass capacity is unreliable.
 - Nominatim calls are serialized at one-second intervals within each running service instance; public deployment needs a centralized queue for a cross-instance guarantee. Why: the public provider limit applies across users.
+
+- Shared arrival option tiles live in ArrivalOptions and are reused on the page and in the dialog; travel visual roles are centralized in styles.css. Why: keeps navigation styling consistent without changing data services.

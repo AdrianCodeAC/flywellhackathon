@@ -20,3 +20,5 @@
 - [x] Measure CRA and BGY food and sights in EN/RO through the live app.
 
 - [x] Default food area to city center.
+
+- [x] Creative visual redesign: shared theme, arrival page, search and options, phone/desktop EN/RO verification.
