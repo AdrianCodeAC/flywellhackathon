@@ -184,7 +184,30 @@ export function distanceMeters(a: [number, number], b: [number, number]): number
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-const OVERPASS_HOST = "https://overpass-api.de/api/interpreter";
+// Public Overpass servers are often busy; try each in turn with a timeout.
+const OVERPASS_HOSTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+];
+
+async function overpassFetch(query: string): Promise<{ elements?: OverpassElement[] }> {
+  let lastError: unknown;
+  for (const host of OVERPASS_HOSTS) {
+    try {
+      const res = await fetch(host, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `data=${encodeURIComponent(query)}`,
+        signal: AbortSignal.timeout(20000),
+      });
+      if (!res.ok) throw new Error(`Overpass failed: ${res.status}`);
+      return (await res.json()) as { elements?: OverpassElement[] };
+    } catch (e) {
+      lastError = e;
+    }
+  }
+  throw lastError;
+}
 
 interface OverpassElement {
   type: string;
@@ -223,14 +246,8 @@ export function fetchOverpassPlaces(
   const key = `overpass:${lat.toFixed(3)},${lon.toFixed(3)}:${radiusM}:${selectors.join("|")}`;
   return cached(key, async () => {
     const body = selectors.map((s) => `nwr${s}["name"](around:${radiusM},${lat},${lon});`).join("");
-    const query = `[out:json][timeout:25];(${body});out center tags 300;`;
-    const res = await fetch(OVERPASS_HOST, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `data=${encodeURIComponent(query)}`,
-    });
-    if (!res.ok) throw new Error(`Overpass failed: ${res.status}`);
-    const data = (await res.json()) as { elements?: OverpassElement[] };
+    const query = `[out:json][timeout:25];(${body});out center tags 800;`;
+    const data = await overpassFetch(query);
     const places: Place[] = [];
     for (const el of data.elements ?? []) {
       const pLat = el.lat ?? el.center?.lat;
