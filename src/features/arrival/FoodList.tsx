@@ -1,22 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Clock, MapPin, Navigation, UtensilsCrossed } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { ArrowLeft, Clock, MapPin, Navigation, Phone, UtensilsCrossed } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistance } from "./map-links";
-import { isOpenNow } from "./opening-hours";
+import { formatOpeningHours, isOpenNow } from "./opening-hours";
 import { FOOD_SELECTORS, fetchOverpassPlaces, getCityCenter } from "./services";
 import type { Airport, Place } from "./types";
 
 type Area = "airport" | "center";
 type Filter = "all" | "restaurant" | "fast_food" | "cafe";
-
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "restaurant", label: "Restaurants" },
-  { id: "fast_food", label: "Fast food" },
-  { id: "cafe", label: "Cafés" },
-];
-
-const KIND_LABEL: Record<string, string> = { restaurant: "Restaurant", fast_food: "Fast food", cafe: "Café" };
+const FILTERS: Filter[] = ["all", "restaurant", "fast_food", "cafe"];
 
 interface FoodListProps {
   airport: Airport;
@@ -24,7 +17,13 @@ interface FoodListProps {
   onShowRoute: (place: Place) => void;
 }
 
+const chip = (on: boolean) =>
+  `flex min-h-11 shrink-0 items-center rounded-full border px-4 text-sm transition-colors ${
+    on ? "border-primary bg-primary text-primary-foreground" : "active:bg-accent"
+  }`;
+
 export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
+  const { t } = useTranslation();
   const [area, setArea] = useState<Area>("airport");
   const [filter, setFilter] = useState<Filter>("all");
   const [openOnly, setOpenOnly] = useState(false);
@@ -71,18 +70,8 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
   return (
-    <section className="mt-6">
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={onBack}
-          aria-label="Back"
-          className="flex h-9 w-9 items-center justify-center rounded-md border hover:bg-accent"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </button>
-        <h2 className="text-xl font-semibold">Hungry?</h2>
-      </div>
+    <section className="mt-6 pb-24">
+      <h2 className="text-xl font-semibold">{t("food.title")}</h2>
 
       <div className="mt-4 grid grid-cols-2 rounded-lg bg-muted p-1 text-sm" role="tablist">
         {(["airport", "center"] as const).map((a) => (
@@ -92,80 +81,79 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
             role="tab"
             aria-selected={area === a}
             onClick={() => setArea(a)}
-            className={`truncate rounded-md px-3 py-2 font-medium transition-colors ${
+            className={`min-h-11 rounded-md px-2 py-1.5 font-medium leading-tight transition-colors ${
               area === a ? "bg-background shadow-sm" : "text-muted-foreground"
             }`}
           >
-            {a === "airport" ? "Near the airport" : `In ${airport.city} center`}
+            {a === "airport" ? t("food.nearAirport") : t("food.inCenter", { city: airport.city })}
           </button>
         ))}
       </div>
 
       <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
         {FILTERS.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            aria-pressed={filter === f.id}
-            onClick={() => setFilter(f.id)}
-            className={`shrink-0 rounded-full border px-3 py-1.5 text-sm transition-colors ${
-              filter === f.id ? "border-primary bg-primary text-primary-foreground" : "hover:bg-accent"
-            }`}
-          >
-            {f.label}
+          <button key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)} className={chip(filter === f)}>
+            {t(`food.${f}`)}
           </button>
         ))}
-        <button
-          type="button"
-          aria-pressed={openOnly}
-          onClick={() => setOpenOnly((v) => !v)}
-          className={`shrink-0 rounded-full border px-3 py-1.5 text-sm transition-colors ${
-            openOnly ? "border-primary bg-primary text-primary-foreground" : "hover:bg-accent"
-          }`}
-        >
-          Open now
+        <button type="button" aria-pressed={openOnly} onClick={() => setOpenOnly((v) => !v)} className={chip(openOnly)}>
+          {t("food.openNow")}
         </button>
       </div>
 
       <div className="mt-4 flex flex-col gap-2.5">
         {error ? (
           <div className="rounded-xl border p-4 text-sm">
-            Couldn't load this right now —{" "}
-            <button type="button" onClick={retry} className="font-medium text-primary underline">
-              retry
+            {t("food.error")}{" "}
+            <button type="button" onClick={retry} className="min-h-11 font-medium text-primary underline">
+              {t("food.retry")}
             </button>
           </div>
         ) : !places ? (
-          Array.from({ length: 5 }, (_, i) => <Skeleton key={i} className="h-24 w-full rounded-xl" />)
+          Array.from({ length: 5 }, (_, i) => <Skeleton key={i} className="h-28 w-full rounded-xl" />)
         ) : shown.length === 0 ? (
           <div className="flex flex-col items-center gap-2 rounded-xl border p-8 text-center text-sm text-muted-foreground">
             <UtensilsCrossed className="h-6 w-6" />
-            {filter === "all" && !openOnly
-              ? "No food spots found around here. Try the other area."
-              : "Nothing matches this filter. Try another one."}
+            {filter === "all" && !openOnly ? t("food.emptyAll") : t("food.emptyFilter")}
           </div>
         ) : (
           shown.map((p) => <FoodCard key={p.id} place={p} onShowRoute={onShowRoute} />)
         )}
+      </div>
+
+      {/* Sticky one-handed action at the bottom of the screen. */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur">
+        <div className="mx-auto max-w-xl">
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border bg-card text-base font-medium active:bg-accent"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            {t("food.back")}
+          </button>
+        </div>
       </div>
     </section>
   );
 }
 
 function FoodCard({ place, onShowRoute }: { place: Place; onShowRoute: (p: Place) => void }) {
+  const { t, i18n } = useTranslation();
+  const action = "flex min-h-11 items-center justify-center gap-1.5 rounded-lg border px-3 text-sm font-medium active:bg-accent";
   return (
     <article className="rounded-xl border bg-card p-3.5">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <h3 className="truncate font-semibold">{place.name}</h3>
           <p className="text-sm text-muted-foreground">
-            {KIND_LABEL[place.kind] ?? "Food"}
+            {t(`category.${place.kind}`)}
             {place.cuisine ? ` · ${place.cuisine}` : ""}
           </p>
         </div>
         {place.openNow && (
           <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-            Open now
+            {t("food.openNow")}
           </span>
         )}
       </div>
@@ -173,24 +161,33 @@ function FoodCard({ place, onShowRoute }: { place: Place; onShowRoute: (p: Place
         {place.distance !== undefined && (
           <span className="flex items-center gap-1">
             <MapPin className="h-3.5 w-3.5" />
-            {formatDistance(place.distance)}
+            {formatDistance(place.distance, i18n.language)}
           </span>
         )}
         {place.openingHours && (
-          <span className="flex min-w-0 items-center gap-1">
+          <span className="flex min-w-0 items-center gap-1" aria-label={t("food.hours")}>
             <Clock className="h-3.5 w-3.5 shrink-0" />
-            <span className="truncate">{place.openingHours}</span>
+            <span className="break-words">
+              {formatOpeningHours(place.openingHours, i18n.language, {
+                alwaysOpen: t("food.alwaysOpen"),
+                closed: t("food.closed"),
+              })}
+            </span>
           </span>
         )}
       </div>
-      <button
-        type="button"
-        onClick={() => onShowRoute(place)}
-        className="mt-3 flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-accent"
-      >
-        <Navigation className="h-3.5 w-3.5" />
-        Show route
-      </button>
+      <div className={`mt-3 grid gap-2 ${place.phone ? "grid-cols-2" : "grid-cols-1"}`}>
+        <button type="button" onClick={() => onShowRoute(place)} className={action}>
+          <Navigation className="h-4 w-4" />
+          {t("food.showRoute")}
+        </button>
+        {place.phone && (
+          <a href={`tel:${place.phone.replace(/[^\d+]/g, "")}`} className={action}>
+            <Phone className="h-4 w-4" />
+            {t("food.call")}
+          </a>
+        )}
+      </div>
     </article>
   );
 }
