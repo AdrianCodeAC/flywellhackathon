@@ -45,8 +45,12 @@ async function wikipediaSights(lang: "ro" | "en", lat: number, lon: number, radi
   const geo = await wikiJson(`${host}?action=query&list=geosearch&gscoord=${lat}%7C${lon}&gsradius=${radiusM}&gslimit=50&format=json&origin=*`) as { query?: { geosearch?: GeoRow[] } };
   const rows = geo.query?.geosearch ?? [];
   if (!rows.length) return [];
-  const details = await wikiJson(`${host}?action=query&prop=extracts%7Cpageimages%7Cpageprops&exintro=1&explaintext=1&exsentences=2&pithumbsize=200&pilimit=50&exlimit=50&pageids=${rows.map((r) => r.pageid).join("%7C")}&format=json&origin=*`) as { query?: { pages?: Record<string, PageRow> } };
-  const pages = details.query?.pages ?? {};
+  const pages: Record<string, PageRow> = {};
+  for (let i = 0; i < rows.length; i += 20) {
+    const ids = rows.slice(i, i + 20).map((r) => r.pageid).join("%7C");
+    const details = await wikiJson(`${host}?action=query&prop=extracts%7Cpageimages%7Cpageprops&exintro=1&explaintext=1&exsentences=2&pithumbsize=200&pilimit=20&exlimit=20&pageids=${ids}&format=json&origin=*`) as { query?: { pages?: Record<string, PageRow> } };
+    Object.assign(pages, details.query?.pages ?? {});
+  }
   return rows.map((row) => {
     const page = pages[String(row.pageid)];
     const description = page?.extract?.trim();

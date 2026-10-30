@@ -59,5 +59,5 @@ export function mergeSightLanguages(primary: Place[], english: Place[]): Place[]
 }
 
 export function sourceCacheKey(category: "food" | "sights" | "transport", lat: number, lon: number, radiusM: number, lang: string): string {
-  return `sources-v2:${category}:${lat.toFixed(3)},${lon.toFixed(3)}:${Math.round(radiusM)}${category === "sights" ? `:${lang === "ro" ? "ro" : "en"}` : ""}`;
+  return `sources-v3:${category}:${lat.toFixed(3)},${lon.toFixed(3)}:${Math.round(radiusM)}${category === "sights" ? `:${lang === "ro" ? "ro" : "en"}` : ""}`;
 }
