@@ -12,3 +12,6 @@
 ## Rules
 - Arrival Assistant lives in src/features/arrival (types, single services.ts for all external APIs, components); route is src/routes/arrival.tsx. Why: spec requires one reusable service layer.
 - Airport dataset is a compact static file at public/data/airports.json ([iata,name,city,countryISO,lat,lon]), fetched lazily. Why: keeps the JS bundle small while staying keyless/offline-friendly.
+- All visible Arrival text comes from src/locales/{en,ro}.json via react-i18next (src/lib/i18n.ts); i18n starts in "en" and the saved/phone language is applied in AppHeader's effect after hydration. Why: avoids SSR hydration mismatches.
+- Offline/PWA: vite-plugin-pwa generateSW writes sw.js into dist/client; registration only via src/lib/pwa-register.ts (refuses dev/preview/iframe). Manifest is hand-written in public/manifest.webmanifest. Why: preview safety and SSR has no index.html.
+- Formatting helpers (formatDistance/formatDuration/formatOpeningHours) take a locale and use Intl. Why: spec requires locale-aware output.
