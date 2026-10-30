@@ -1,0 +1,96 @@
+{
+  "app": {
+    "title": "Asistent de sosire",
+    "tagline": "Abia ai aterizat? Spune-ne unde și te ajutăm cu restul.",
+    "language": "Limbă",
+    "offline": "Ești offline — îți arătăm rezultatele salvate.",
+    "skip": "Sari la conținut"
+  },
+  "search": {
+    "label": "Unde ai aterizat?",
+    "placeholder": "Cod, nume de aeroport sau oraș (ex. OTP)",
+    "loadError": "Nu am putut încărca aeroporturile — reîncarcă pagina.",
+    "noMatch": "Niciun aeroport nu se potrivește cu „{{query}}”.",
+    "change": "Schimbă aeroportul",
+    "useLocation": "Folosește locația mea",
+    "locating": "Te căutăm…",
+    "locationDenied": "Nu îți putem vedea locația. Permite accesul la locație din setările telefonului sau scrie aeroportul.",
+    "locationUnavailable": "Telefonul nu ți-a găsit locația. Încearcă din nou sau scrie aeroportul.",
+    "locationUnsupported": "Acest browser nu poate trimite locația. Scrie aeroportul.",
+    "nearest": "Cel mai apropiat aeroport: {{airport}} ({{distance}})"
+  },
+  "sheet": {
+    "title": "Bine ai venit în {{city}}! De ce ai nevoie?",
+    "subtitle": "Alege ceva și ne ocupăm noi de rest.",
+    "comingSoon": "În curând",
+    "food": "Ți-e foame?",
+    "foodHint": "Mâncare în apropiere",
+    "ride": "Ai nevoie de transport?",
+    "rideHint": "Taxi, autobuz, aplicații",
+    "visit": "Ce să vizitezi?",
+    "visitHint": "Obiective și muzee",
+    "ask": "Întreabă orice",
+    "askHint": "Întreabă despre {{city}}",
+    "askPlaceholder": "Întreabă orice despre {{city}}…",
+    "close": "Închide",
+    "yourDestination": "destinația ta",
+    "openOptions": "De ce ai nevoie?"
+  },
+  "test": {
+    "routeToCenter": "Traseu spre centru",
+    "finding": "Căutăm centrul orașului…",
+    "findError": "Nu am găsit centrul orașului — încearcă din nou."
+  },
+  "map": {
+    "back": "Înapoi",
+    "finding": "Căutăm traseul…",
+    "noRoute": "Niciun traseu găsit",
+    "error": "Nu am putut încărca acum",
+    "retry": "Reîncearcă",
+    "driving": "Cu mașina",
+    "walking": "Pe jos",
+    "google": "Google Maps",
+    "apple": "Apple Maps",
+    "distance": "Distanță",
+    "duration": "Durată"
+  },
+  "food": {
+    "title": "Ți-e foame?",
+    "back": "Înapoi la opțiuni",
+    "nearAirport": "Lângă aeroport",
+    "inCenter": "În centrul orașului {{city}}",
+    "all": "Toate",
+    "restaurant": "Restaurante",
+    "fast_food": "Fast-food",
+    "cafe": "Cafenele",
+    "openNow": "Deschis acum",
+    "error": "Nu am putut încărca acum —",
+    "retry": "reîncearcă",
+    "emptyAll": "Nu am găsit localuri prin zonă. Încearcă cealaltă zonă.",
+    "emptyFilter": "Nimic nu se potrivește cu filtrul. Încearcă altul.",
+    "showRoute": "Arată traseul",
+    "call": "Sună",
+    "hours": "Program",
+    "alwaysOpen": "Deschis non-stop",
+    "closed": "închis"
+  },
+  "category": {
+    "restaurant": "Restaurant",
+    "fast_food": "Fast-food",
+    "cafe": "Cafenea",
+    "museum": "Muzeu",
+    "attraction": "Atracție",
+    "monument": "Monument",
+    "castle": "Castel",
+    "viewpoint": "Punct de belvedere",
+    "gallery": "Galerie",
+    "station": "Gară",
+    "bus_stop": "Stație de autobuz",
+    "ai": "Sugestie",
+    "other": "Loc"
+  },
+  "meta": {
+    "title": "Asistent de sosire — Abia ai aterizat? Începe aici",
+    "description": "Alege aeroportul la care ai aterizat și găsește mâncare, transport și obiective în apropiere."
+  }
+}

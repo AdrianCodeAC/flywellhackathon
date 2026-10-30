@@ -1,0 +1,96 @@
+{
+  "app": {
+    "title": "Arrival Assistant",
+    "tagline": "Just landed? Tell us where, and we'll help with the rest.",
+    "language": "Language",
+    "offline": "You're offline — showing saved results.",
+    "skip": "Skip to content"
+  },
+  "search": {
+    "label": "Where did you land?",
+    "placeholder": "Airport code, name or city (e.g. LIS)",
+    "loadError": "Couldn't load airports right now — please refresh.",
+    "noMatch": "No airports match \"{{query}}\".",
+    "change": "Change airport",
+    "useLocation": "Use my location",
+    "locating": "Finding you…",
+    "locationDenied": "We can't see your location. Allow location access in your phone settings, or type the airport instead.",
+    "locationUnavailable": "Your phone couldn't find your location. Try again, or type the airport.",
+    "locationUnsupported": "This browser can't share your location. Type the airport instead.",
+    "nearest": "Nearest airport: {{airport}} ({{distance}})"
+  },
+  "sheet": {
+    "title": "Welcome to {{city}}! What do you need?",
+    "subtitle": "Pick one and we'll take it from there.",
+    "comingSoon": "Coming soon",
+    "food": "Hungry?",
+    "foodHint": "Food nearby",
+    "ride": "Need a ride?",
+    "rideHint": "Taxi, bus, app",
+    "visit": "What to visit?",
+    "visitHint": "Sights & museums",
+    "ask": "Ask anything",
+    "askHint": "Ask about {{city}}",
+    "askPlaceholder": "Ask anything about {{city}}…",
+    "close": "Close",
+    "yourDestination": "your destination",
+    "openOptions": "What do you need?"
+  },
+  "test": {
+    "routeToCenter": "Route to city center",
+    "finding": "Finding the city center…",
+    "findError": "Couldn't find the city center — try again."
+  },
+  "map": {
+    "back": "Back",
+    "finding": "Finding the route…",
+    "noRoute": "No route found",
+    "error": "Couldn't load this right now",
+    "retry": "Retry",
+    "driving": "Driving",
+    "walking": "Walking",
+    "google": "Google Maps",
+    "apple": "Apple Maps",
+    "distance": "Distance",
+    "duration": "Duration"
+  },
+  "food": {
+    "title": "Hungry?",
+    "back": "Back to options",
+    "nearAirport": "Near the airport",
+    "inCenter": "In {{city}} center",
+    "all": "All",
+    "restaurant": "Restaurants",
+    "fast_food": "Fast food",
+    "cafe": "Cafés",
+    "openNow": "Open now",
+    "error": "Couldn't load this right now —",
+    "retry": "retry",
+    "emptyAll": "No food spots found around here. Try the other area.",
+    "emptyFilter": "Nothing matches this filter. Try another one.",
+    "showRoute": "Show route",
+    "call": "Call",
+    "hours": "Opening hours",
+    "alwaysOpen": "Open 24/7",
+    "closed": "closed"
+  },
+  "category": {
+    "restaurant": "Restaurant",
+    "fast_food": "Fast food",
+    "cafe": "Café",
+    "museum": "Museum",
+    "attraction": "Attraction",
+    "monument": "Monument",
+    "castle": "Castle",
+    "viewpoint": "Viewpoint",
+    "gallery": "Gallery",
+    "station": "Station",
+    "bus_stop": "Bus stop",
+    "ai": "Suggested",
+    "other": "Place"
+  },
+  "meta": {
+    "title": "Arrival Assistant — Just landed? Start here",
+    "description": "Pick the airport you landed at and find food, rides and sights nearby."
+  }
+}
