@@ -14,7 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      overpass_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          places: Json
+          radius_m: number
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          places: Json
+          radius_m: number
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          places?: Json
+          radius_m?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
