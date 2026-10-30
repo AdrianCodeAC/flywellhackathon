@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WifiOff } from "lucide-react";
 import { LANGUAGES, setLanguage, syncClientLanguage, type Language } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
 
 /** Sticky header: always-visible EN/RO switcher plus the offline banner. */
 export function AppHeader() {
@@ -46,18 +47,18 @@ export function LanguageSwitcher() {
   return (
     <div role="group" aria-label={t("app.language")} className="inline-flex shrink-0 rounded-lg border p-0.5">
       {LANGUAGES.map((l) => (
-        <button
+        <Button variant="ghost"
           key={l}
           type="button"
           lang={l}
           aria-pressed={current === l}
           onClick={() => setLanguage(l)}
-          className={`min-h-10 min-w-11 rounded-md px-2.5 text-sm font-semibold uppercase ${
+          className={`min-h-11 min-w-11 rounded-md px-2.5 text-sm font-semibold uppercase ${
             current === l ? "bg-primary text-primary-foreground" : "text-muted-foreground"
           }`}
         >
           {l}
-        </button>
+        </Button>
       ))}
     </div>
   );
