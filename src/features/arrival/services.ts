@@ -277,12 +277,117 @@ export function prefetchFood(airport: Airport) {
     .then(([lat, lon]) => fetchOverpassPlaces("food", lat, lon, FOOD_RADIUS.center))
     .catch(() => {});
 }
-const notYet = (name: string) => (): never => {
-  throw new Error(`${name} is not implemented yet`);
-};
+// ---- Sights (What to visit?) ----
+/** 10 km around the city centre, per the spec. */
+export const SIGHTS_RADIUS = 10_000;
 
-// ---- Stubs (later steps) ----
-export const fetchWikivoyageGetIn: (city: string) => Promise<string> = notYet("fetchWikivoyageGetIn");
-export const fetchWikipediaSummary: (title: string) => Promise<string> = notYet("fetchWikipediaSummary");
-export const askAI: (question: string, context: unknown) => Promise<{ text: string; places: Place[] }> =
-  notYet("askAI");
+/** Sights are searched from the city centre, not the airport. */
+export async function sightsOrigin(airport: Airport): Promise<[number, number]> {
+  const c = await getCityCenter(airport.city, airport.countryCode);
+  if (!c) throw new Error("No city center");
+  return [c.lat, c.lon];
+}
+
+/**
+ * Summaries for the places that carry a wikipedia/wikidata tag, in the reader's
+ * language. Cached per language + set of places.
+ */
+export function fetchSummaries(
+  items: { id: string; wikipedia?: string; wikidata?: string }[],
+  lang: string,
+): Promise<Record<string, string>> {
+  const usable = items.filter((i) => i.wikipedia || i.wikidata);
+  if (usable.length === 0) return Promise.resolve({});
+  const key = `sum:${lang}:${usable
+    .map((i) => i.id)
+    .sort()
+    .join("|")}`;
+  return cached(key, () =>
+    getPlaceSummaries({ data: { items: usable.slice(0, 10), lang: lang === "ro" ? "ro" : "en" } }),
+  );
+}
+
+/** Warm the sights list and their summaries in the background. */
+export function prefetchSights(airport: Airport) {
+  void sightsOrigin(airport)
+    .then(([lat, lon]) => fetchOverpassPlaces("sights", lat, lon, SIGHTS_RADIUS))
+    .then(({ places }) => {
+      const ranked = rankSights(places).slice(0, 10);
+      return fetchSummaries(ranked, i18nLanguage());
+    })
+    .catch(() => {});
+}
+
+// ---- Transport (Need a ride?) ----
+/** Stations and bus stops around the airport. */
+export const STATION_RADIUS = 1_500;
+
+export function nearbyStations(airport: Airport): Promise<PlacesResult> {
+  return fetchOverpassPlaces("transport", airport.lat, airport.lon, STATION_RADIUS);
+}
+
+/** The city's airport-arrival advice, in the reader's language. */
+export function transportGuide(city: string, lang: string): Promise<TransportGuide> {
+  return cached(`guide:${lang}:${city.toLowerCase()}`, () =>
+    getTransportGuide({ data: { city, lang: lang === "ro" ? "ro" : "en" } }),
+  );
+}
+
+// ---- Ask anything (AI) ----
+export interface AssistantContext {
+  airport: Airport;
+  lang: string;
+  food?: Place[];
+  sights?: Place[];
+  stations?: Place[];
+}
+
+/** Rough local clock at the destination, from its longitude. */
+export function destinationClock(lon: number, date = new Date()): string {
+  const offsetHours = Math.round(lon / 15);
+  const local = new Date(date.getTime() + offsetHours * 3_600_000);
+  const hh = String(local.getUTCHours()).padStart(2, "0");
+  const mm = String(local.getUTCMinutes()).padStart(2, "0");
+  const day = local.toLocaleDateString("en-GB", { weekday: "long", timeZone: "UTC" });
+  return `${day} ${hh}:${mm} (UTC${offsetHours >= 0 ? "+" : ""}${offsetHours}, approximate)`;
+}
+
+function contextLine(p: Place): string {
+  const bits = [p.name, `lat=${p.lat}`, `lon=${p.lon}`];
+  if (p.kind !== "other") bits.push(p.kind);
+  if (p.distance !== undefined) bits.push(`${Math.round(p.distance / 100) / 10} km away`);
+  if (p.cuisine) bits.push(p.cuisine);
+  if (p.openingHours) bits.push(`hours: ${p.openingHours}`);
+  return `- ${bits.join(", ")}`;
+}
+
+/** Plain-text brief handed to the AI function with every question. */
+export function buildAssistantContext(ctx: AssistantContext): string {
+  const lines = [
+    `Airport: ${ctx.airport.iata} — ${ctx.airport.name}, ${ctx.airport.city}, ${ctx.airport.country}`,
+    `Airport coordinates: lat=${ctx.airport.lat}, lon=${ctx.airport.lon}`,
+    `Local time at the destination: ${destinationClock(ctx.airport.lon)}`,
+    `Answer language: ${ctx.lang === "ro" ? "Romanian" : "English"}`,
+  ];
+  const section = (title: string, places?: Place[]) => {
+    if (!places || places.length === 0) return;
+    lines.push("", `${title}:`, ...places.slice(0, 15).map(contextLine));
+  };
+  section("Food already found", ctx.food);
+  section("Sights already found", ctx.sights);
+  section("Stations and stops near the airport", ctx.stations);
+  return lines.join("\n");
+}
+
+/** Ask the assistant. Only ever called through the backend function. */
+export function askAI(
+  question: string,
+  history: { role: "user" | "assistant"; content: string }[],
+  context: string,
+  lang: string,
+): Promise<AssistantAnswer> {
+  return askAssistant({
+    data: { question, history, lang: lang === "ro" ? "ro" : "en", context },
+  });
+}
+
