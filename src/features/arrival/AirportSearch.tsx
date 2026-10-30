@@ -134,21 +134,14 @@ export function AirportSearch({ selected, onSelect, onClear }: AirportSearchProp
           {locating ? <Loader2 className="h-5 w-5 animate-spin" /> : <LocateFixed className="h-5 w-5" />}
         </button>
       </div>
-      <button
-        type="button"
-        onClick={useMyLocation}
-        disabled={locating}
-        className="mt-1 min-h-11 text-sm font-medium text-primary underline-offset-4 active:underline disabled:opacity-60"
-      >
-        {locating ? t("search.locating") : t("search.useLocation")}
-      </button>
-      {geoMessage && <p className="text-sm text-muted-foreground">{t(geoMessage)}</p>}
+      {locating && <p className="mt-2 text-sm text-muted-foreground">{t("search.locating")}</p>}
+      {geoMessage && <p className="mt-2 text-sm text-muted-foreground">{t(geoMessage)}</p>}
       {error && <p className="mt-2 text-sm text-destructive">{t("search.loadError")}</p>}
       {results.length > 0 && (
         <ul
           id={listId}
           role="listbox"
-          className="absolute top-[4.75rem] z-20 max-h-80 w-full overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
+          className="absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
         >
           {results.map((a, i) => (
             <li
