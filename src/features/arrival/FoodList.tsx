@@ -7,14 +7,13 @@ import { FOOD_SELECTORS, fetchOverpassPlaces, getCityCenter } from "./services";
 import type { Airport, Place } from "./types";
 
 type Area = "airport" | "center";
-type Filter = "all" | "restaurant" | "fast_food" | "cafe" | "open";
+type Filter = "all" | "restaurant" | "fast_food" | "cafe";
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "All" },
   { id: "restaurant", label: "Restaurants" },
   { id: "fast_food", label: "Fast food" },
   { id: "cafe", label: "Cafés" },
-  { id: "open", label: "Open now" },
 ];
 
 const KIND_LABEL: Record<string, string> = { restaurant: "Restaurant", fast_food: "Fast food", cafe: "Café" };
@@ -28,6 +27,7 @@ interface FoodListProps {
 export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
   const [area, setArea] = useState<Area>("airport");
   const [filter, setFilter] = useState<Filter>("all");
+  const [openOnly, setOpenOnly] = useState(false);
   const [places, setPlaces] = useState<Place[] | null>(null);
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -61,13 +61,9 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
     const now = new Date();
     return places
       .map((p) => ({ ...p, openNow: isOpenNow(p.openingHours, now) }))
-      .filter((p) => {
-        if (filter === "all") return true;
-        if (filter === "open") return p.openNow === true;
-        return p.kind === filter;
-      })
+      .filter((p) => (filter === "all" || p.kind === filter) && (!openOnly || p.openNow === true))
       .slice(0, 30);
-  }, [places, filter]);
+  }, [places, filter, openOnly]);
 
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
@@ -116,6 +112,16 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
             {f.label}
           </button>
         ))}
+        <button
+          type="button"
+          aria-pressed={openOnly}
+          onClick={() => setOpenOnly((v) => !v)}
+          className={`shrink-0 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+            openOnly ? "border-primary bg-primary text-primary-foreground" : "hover:bg-accent"
+          }`}
+        >
+          Open now
+        </button>
       </div>
 
       <div className="mt-4 flex flex-col gap-2.5">
@@ -131,7 +137,7 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
         ) : shown.length === 0 ? (
           <div className="flex flex-col items-center gap-2 rounded-xl border p-8 text-center text-sm text-muted-foreground">
             <UtensilsCrossed className="h-6 w-6" />
-            {filter === "all"
+            {filter === "all" && !openOnly
               ? "No food spots found around here. Try the other area."
               : "Nothing matches this filter. Try another one."}
           </div>
