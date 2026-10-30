@@ -136,6 +136,7 @@ export async function geocodeCityCenter(city: string, countryCode?: string): Pro
 const DAY_MS = 24 * 60 * 60 * 1000;
 const memCache = new Map<string, { at: number; value: unknown }>();
 const CACHE_PREFIX = "arrival-cache:";
+const inflight = new Map<string, Promise<unknown>>();
 
 export async function cached<T>(key: string, load: () => Promise<T>, ttlMs = DAY_MS): Promise<T> {
   const now = Date.now();
@@ -154,7 +155,12 @@ export async function cached<T>(key: string, load: () => Promise<T>, ttlMs = DAY
   } catch {
     /* ignore bad cache entries */
   }
-  const value = await load();
+  // Share one in-flight request between callers asking for the same key.
+  const pending = inflight.get(key) as Promise<T> | undefined;
+  if (pending) return pending;
+  const promise = load().finally(() => inflight.delete(key));
+  inflight.set(key, promise);
+  const value = await promise;
   const entry = { at: now, value };
   memCache.set(key, entry);
   try {
