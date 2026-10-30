@@ -2,6 +2,7 @@ import { ArrowLeft, Clock, MapPin, Navigation } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import L from "leaflet";
+import { LanguageSwitcher } from "./AppHeader";
 import { fetchOsrmRoute } from "./services";
 import { appleMapsUrl, formatDistance, formatDuration, googleMapsUrl } from "./map-links";
 import type { Route, RouteProfile } from "./types";
@@ -117,7 +118,7 @@ export function RouteMap({ from, to, onBack }: RouteMapProps) {
           <ArrowLeft className="h-5 w-5" />
           {t("map.back")}
         </button>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold">
             {from.name} → {to.name}
           </p>
@@ -129,6 +130,7 @@ export function RouteMap({ from, to, onBack }: RouteMapProps) {
                 : t("map.noRoute")}
           </p>
         </div>
+        <LanguageSwitcher />
       </div>
 
       <div ref={hostRef} className="min-h-0 flex-1" />

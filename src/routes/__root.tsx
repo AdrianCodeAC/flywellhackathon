@@ -12,7 +12,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { syncClientLanguage } from "../lib/i18n";
 import { registerAppServiceWorker } from "../lib/pwa-register";
 
 function NotFoundComponent() {
@@ -119,7 +118,6 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   useEffect(() => {
-    syncClientLanguage();
     registerAppServiceWorker();
   }, []);
 
