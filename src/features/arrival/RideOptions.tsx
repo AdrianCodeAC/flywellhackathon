@@ -93,8 +93,8 @@ export function RideOptions({ airport, onBack, onShowRoute }: { airport: Airport
       <Input id="ride-destination" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={destination?.name ?? t("ride.center", { city: airport.city })} className="mt-2 min-h-12 text-base" autoComplete="off" />
       {sourceError("destination")}
       {searching && <p role="status" className="mt-2 text-sm text-muted-foreground">{t("ride.searching")}</p>}
-      {errors.search && <p role="alert" className="mt-2 text-sm text-destructive">{t("ride.searchError")}</p>}
-      {hits.length > 0 && <ul className="mt-2 divide-y rounded-lg border bg-card">{hits.map((p) => <li key={p.id}><Button variant="ghost" className="h-auto min-h-12 w-full justify-start whitespace-normal px-3 py-3 text-left" onClick={() => { setDestination(p); setQuery(""); setHits([]); }}>{p.tags?.display_name ?? p.name}</Button></li>)}</ul>}
+      {errors["search"] && <p role="alert" className="mt-2 text-sm text-destructive">{t("ride.searchError")}</p>}
+      {hits.length > 0 && <ul className="mt-2 divide-y rounded-lg border bg-card">{hits.map((p) => <li key={p.id}><Button variant="ghost" className="h-auto min-h-12 w-full justify-start whitespace-normal px-3 py-3 text-left" onClick={() => { setDestination(p); setQuery(""); setHits([]); }}>{p.tags?.["display_name"] ?? p.name}</Button></li>)}</ul>}
       {destination && <p className="mt-2 break-words text-sm text-muted-foreground">{t("ride.to", { name: destination.name })}</p>}
 
       <div className="mt-5 flex flex-col gap-3">

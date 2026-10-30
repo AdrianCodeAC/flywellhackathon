@@ -34,8 +34,8 @@ export function AskAI({ airport, messages, onMessages, onBack, onShowRoute }: { 
       const center = await getCityCenter(airport.city, airport.countryCode).catch(() => undefined);
       const food = peekPlaces("food", airport.lat, airport.lon, FOOD_RADIUS.airport)?.places ?? [];
       const centerFood = center ? peekPlaces("food", center.lat, center.lon, FOOD_RADIUS.center)?.places ?? [] : [];
-      const sights = center ? peekPlaces("sights", center.lat, center.lon, SIGHTS_RADIUS)?.places : undefined;
-      const stations = peekPlaces("transport", airport.lat, airport.lon, STATION_RADIUS)?.places;
+      const sights = center ? peekPlaces("sights", center.lat, center.lon, SIGHTS_RADIUS)?.places ?? [] : [];
+      const stations = peekPlaces("transport", airport.lat, airport.lon, STATION_RADIUS)?.places ?? [];
       const answer = await askAI(question.trim(), messages.slice(-12).map((m) => ({ role: m.role, content: m.parts.map((p) => p.text).join("\n").slice(0, 4000) })), buildAssistantContext({ airport, lang, food: [...food, ...centerFood], sights, stations }), lang);
       onMessages([...next, { id: crypto.randomUUID(), role: "assistant", parts: [{ type: "text", text: answer.text }], places: answer.places }]);
     } catch (e) {

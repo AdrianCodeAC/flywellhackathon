@@ -65,6 +65,9 @@ export function cleanWikiText(src: string): string {
   t = t.replace(/'{2,}/g, "");
   t = t.replace(/^\s*=+\s*[^\n]*?=+\s*$/gm, " ");
   t = t.replace(/~{3,}/g, "");
+  t = t.replace(/^\s*[*#:;]+\s*/gm, "");
+  t = t.replace(/<[^>]*>/g, " ");
+  t = t.replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&quot;/g, '"');
   t = t.replace(/[ \t]+/g, " ");
   t = t.replace(/ *\n */g, "\n");
   t = t.replace(/\n{2,}/g, "\n\n");
@@ -79,7 +82,7 @@ interface ParseResponse {
 /** The city's airport arrival advice, cleaned. Undefined when the page has none. */
 export async function fetchWikivoyageByPlane(city: string): Promise<string | undefined> {
   const url = `${WIKIVOYAGE_API}?action=parse&page=${encodeURIComponent(city)}&prop=wikitext&redirects=1&format=json&origin=*`;
-  const res = await fetch(url, { headers: { Accept: "application/json" } });
+  const res = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "ArrivalAssistant/1.0 (travel helper)" }, signal: AbortSignal.timeout(8000) });
   if (!res.ok) throw new Error(`Wikivoyage failed: ${res.status}`);
   const data = (await res.json()) as ParseResponse;
   if (data.error) return undefined;

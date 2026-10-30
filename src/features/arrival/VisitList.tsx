@@ -102,7 +102,7 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
         ...p,
         // Distances on the card are measured from the airport, not the centre.
         distance: Math.round(distanceMeters([airport.lat, airport.lon], [p.lat, p.lon])),
-        description: summaries[p.id] ?? p.description,
+        ...(summaries[p.id] ? { description: summaries[p.id] } : {}),
       }))
       .filter((p) => !group || group.includes(p.kind))
       .slice(0, 30);

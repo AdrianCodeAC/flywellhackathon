@@ -35,7 +35,8 @@ export const getPlaceSummaries = createServerFn({ method: "POST" })
     await Promise.all(
       data.items.map(async (item) => {
         try {
-          const qid = item.wikidata?.trim();
+          const rawId = item.wikidata?.trim().toUpperCase();
+          const qid = rawId && /^Q[1-9]\d*$/.test(rawId) ? rawId : undefined;
           const links = qid
             ? await cachedJson(`wd:${qid}`, 30 * DAY_MS, () => fetchWikidataSitelinks(qid))
             : undefined;
