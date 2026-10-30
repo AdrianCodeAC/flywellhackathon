@@ -4,6 +4,8 @@
  */
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { answerSchema, parseAssistantAnswer, type AssistantAnswer } from "./assistant-schema";
+export type { AssistantAnswer } from "./assistant-schema";
 
 const askInput = z.object({
   question: z.string().min(1).max(500),
@@ -15,16 +17,6 @@ const askInput = z.object({
   /** Airport, city, local time and the places already loaded, as plain text. */
   context: z.string().max(12_000),
 });
-
-const answerSchema = z.object({
-  text: z.string(),
-  places: z.array(z.object({ name: z.string(), lat: z.number(), lon: z.number() })),
-});
-
-export interface AssistantAnswer {
-  text: string;
-  places: { name: string; lat: number; lon: number }[];
-}
 
 function instructions(lang: "en" | "ro"): string {
   const language = lang === "ro" ? "Romanian" : "English";
@@ -60,8 +52,5 @@ export const askAssistant = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<AssistantAnswer> => {
     const { askObject } = await import("./ai.server");
     const answer = await askObject(answerSchema, instructions(data.lang), prompt(data));
-    const places = answer.places
-      .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon) && Math.abs(p.lat) <= 90 && Math.abs(p.lon) <= 180)
-      .slice(0, 5);
-    return { text: answer.text.trim(), places };
+    return parseAssistantAnswer(answer);
   });
