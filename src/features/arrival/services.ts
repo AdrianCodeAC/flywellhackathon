@@ -106,7 +106,7 @@ function toPlace(hit: NominatimHit, i: number): Place {
     kind: "other",
     lat: Number(hit.lat),
     lon: Number(hit.lon),
-    tags: { display_name: hit.display_name },
+    tags: { display_name: hit.display_name, category: hit.category ?? "" },
   };
 }
 
