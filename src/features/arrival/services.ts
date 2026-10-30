@@ -132,13 +132,162 @@ export async function geocodeCityCenter(city: string, countryCode?: string): Pro
 }
 
 
+// ---- Cache: memory + localStorage, 24h ----
+const DAY_MS = 24 * 60 * 60 * 1000;
+const memCache = new Map<string, { at: number; value: unknown }>();
+const CACHE_PREFIX = "arrival-cache:";
+const inflight = new Map<string, Promise<unknown>>();
+
+export async function cached<T>(key: string, load: () => Promise<T>, ttlMs = DAY_MS): Promise<T> {
+  const now = Date.now();
+  const mem = memCache.get(key);
+  if (mem && now - mem.at < ttlMs) return mem.value as T;
+  try {
+    const raw = typeof localStorage !== "undefined" ? localStorage.getItem(CACHE_PREFIX + key) : null;
+    if (raw) {
+      const hit = JSON.parse(raw) as { at: number; value: T };
+      if (now - hit.at < ttlMs) {
+        memCache.set(key, hit);
+        return hit.value;
+      }
+      localStorage.removeItem(CACHE_PREFIX + key);
+    }
+  } catch {
+    /* ignore bad cache entries */
+  }
+  // Share one in-flight request between callers asking for the same key.
+  const pending = inflight.get(key) as Promise<T> | undefined;
+  if (pending) return pending;
+  const promise = load().finally(() => inflight.delete(key));
+  inflight.set(key, promise);
+  const value = await promise;
+  const entry = { at: now, value };
+  memCache.set(key, entry);
+  try {
+    localStorage.setItem(CACHE_PREFIX + key, JSON.stringify(entry));
+  } catch {
+    /* storage full or unavailable — memory cache still works */
+  }
+  return value;
+}
+
+/** Only for tests. */
+export function clearMemoryCache() {
+  memCache.clear();
+}
+
+/** City centre, cached per city for 24h. */
+export function getCityCenter(city: string, countryCode?: string): Promise<Place | undefined> {
+  return cached(`center:${countryCode ?? ""}:${city.toLowerCase()}`, () => geocodeCityCenter(city, countryCode));
+}
+
+export function distanceMeters(a: [number, number], b: [number, number]): number {
+  const R = 6371000;
+  const rad = Math.PI / 180;
+  const dLat = (b[0] - a[0]) * rad;
+  const dLon = (b[1] - a[1]) * rad;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+// Public Overpass servers are often busy; try each in turn with a timeout.
+const OVERPASS_HOSTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+];
+
+async function overpassFetch(query: string): Promise<{ elements?: OverpassElement[] }> {
+  let lastError: unknown;
+  for (const host of OVERPASS_HOSTS) {
+    try {
+      const res = await fetch(host, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `data=${encodeURIComponent(query)}`,
+        signal: AbortSignal.timeout(20000),
+      });
+      if (!res.ok) throw new Error(`Overpass failed: ${res.status}`);
+      return (await res.json()) as { elements?: OverpassElement[] };
+    } catch (e) {
+      lastError = e;
+    }
+  }
+  throw lastError;
+}
+
+interface OverpassElement {
+  type: string;
+  id: number;
+  lat?: number;
+  lon?: number;
+  center?: { lat: number; lon: number };
+  tags?: Record<string, string>;
+}
+
+function kindFromTags(t: Record<string, string>): Place["kind"] {
+  const a = t["amenity"];
+  if (a === "restaurant" || a === "fast_food" || a === "cafe") return a;
+  if (t["tourism"] === "museum") return "museum";
+  if (t["tourism"] === "gallery") return "gallery";
+  if (t["tourism"] === "viewpoint") return "viewpoint";
+  if (t["tourism"] === "attraction") return "attraction";
+  if (t["historic"] === "castle") return "castle";
+  if (t["historic"] === "monument") return "monument";
+  if (t["railway"] === "station" || t["public_transport"] === "station") return "station";
+  if (t["highway"] === "bus_stop") return "bus_stop";
+  return "other";
+}
+
+/**
+ * Queries Overpass for named places around a point.
+ * `selectors` are Overpass tag filters, e.g. `["amenity"~"^(restaurant|cafe)$"]`.
+ * Results are sorted by distance and cached for 24h.
+ */
+export function fetchOverpassPlaces(
+  lat: number,
+  lon: number,
+  radiusM: number,
+  selectors: string[],
+): Promise<Place[]> {
+  const key = `overpass:${lat.toFixed(3)},${lon.toFixed(3)}:${radiusM}:${selectors.join("|")}`;
+  return cached(key, async () => {
+    const body = selectors.map((s) => `nwr${s}["name"](around:${radiusM},${lat},${lon});`).join("");
+    const query = `[out:json][timeout:25];(${body});out center tags 800;`;
+    const data = await overpassFetch(query);
+    const places: Place[] = [];
+    for (const el of data.elements ?? []) {
+      const pLat = el.lat ?? el.center?.lat;
+      const pLon = el.lon ?? el.center?.lon;
+      const tags = el.tags ?? {};
+      const name = tags["name:en"] || tags["name"];
+      if (pLat === undefined || pLon === undefined || !name) continue;
+      const place: Place = {
+        id: `${el.type}/${el.id}`,
+        name,
+        kind: kindFromTags(tags),
+        lat: pLat,
+        lon: pLon,
+        distance: distanceMeters([lat, lon], [pLat, pLon]),
+        tags,
+      };
+      const cuisine = tags["cuisine"];
+      if (cuisine) place.cuisine = cuisine.split(";").map((c) => c.trim().replace(/_/g, " ")).join(", ");
+      if (tags["opening_hours"]) place.openingHours = tags["opening_hours"];
+      if (tags["wikipedia"]) place.wikipedia = tags["wikipedia"];
+      if (tags["wikidata"]) place.wikidata = tags["wikidata"];
+      places.push(place);
+    }
+    return places.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
+  });
+}
+
+export const FOOD_SELECTORS = ['["amenity"~"^(restaurant|fast_food|cafe)$"]'];
+
 const notYet = (name: string) => (): never => {
   throw new Error(`${name} is not implemented yet`);
 };
 
 // ---- Stubs (later steps) ----
-export const fetchOverpassPlaces: (lat: number, lon: number, radiusM: number, kinds: string[]) => Promise<Place[]> =
-  notYet("fetchOverpassPlaces");
 export const fetchWikivoyageGetIn: (city: string) => Promise<string> = notYet("fetchWikivoyageGetIn");
 export const fetchWikipediaSummary: (title: string) => Promise<string> = notYet("fetchWikipediaSummary");
 export const askAI: (question: string, context: unknown) => Promise<{ text: string; places: Place[] }> =

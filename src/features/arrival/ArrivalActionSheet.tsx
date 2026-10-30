@@ -12,10 +12,11 @@ interface ArrivalActionSheetProps {
   open: boolean;
   city: string;
   onOpenChange: (open: boolean) => void;
+  onPick: (section: "food") => void;
 }
 
-const CARDS: { icon: ComponentType<{ className?: string }>; label: string; hint: string }[] = [
-  { icon: UtensilsCrossed, label: "Hungry?", hint: "Food nearby" },
+const CARDS: { icon: ComponentType<{ className?: string }>; label: string; hint: string; section?: "food" }[] = [
+  { icon: UtensilsCrossed, label: "Hungry?", hint: "Food nearby", section: "food" },
   { icon: Car, label: "Need a ride?", hint: "Taxi, bus, app" },
   { icon: Landmark, label: "What to visit?", hint: "Sights & museums" },
 ];
@@ -29,7 +30,7 @@ function Soon() {
 }
 
 /** Bottom sheet on mobile, centered modal on desktop. */
-export function ArrivalActionSheet({ open, city, onOpenChange }: ArrivalActionSheetProps) {
+export function ArrivalActionSheet({ open, city, onOpenChange, onPick }: ArrivalActionSheetProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -44,11 +45,12 @@ export function ArrivalActionSheet({ open, city, onOpenChange }: ArrivalActionSh
         </DialogHeader>
 
         <div className="mt-4 flex flex-col gap-2.5">
-          {CARDS.map(({ icon: Icon, label, hint }) => (
+          {CARDS.map(({ icon: Icon, label, hint, section }) => (
             <button
               key={label}
               type="button"
-              disabled
+              disabled={!section}
+              onClick={() => section && onPick(section)}
               className="flex items-center gap-3 rounded-xl border bg-card p-3.5 text-left transition-colors hover:bg-accent/50 disabled:opacity-90"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -58,7 +60,7 @@ export function ArrivalActionSheet({ open, city, onOpenChange }: ArrivalActionSh
                 <span className="block text-base font-semibold">{label}</span>
                 <span className="block text-sm text-muted-foreground">{hint}</span>
               </span>
-              <Soon />
+              {!section && <Soon />}
             </button>
           ))}
 
