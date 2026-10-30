@@ -53,7 +53,7 @@ export function categorizeSight(title: string, description = ""): Place["kind"] 
 export function mergeSightLanguages(primary: Place[], english: Place[]): Place[] {
   const result = [...primary];
   for (const p of english) {
-    if (!result.some((existing) => existing.name.toLowerCase() === p.name.toLowerCase() || distanceMeters([existing.lat, existing.lon], [p.lat, p.lon]) < 30)) result.push(p);
+    if (!result.some((existing) => (existing.wikidata && existing.wikidata === p.wikidata) || existing.id === p.id)) result.push(p);
   }
   return result.sort((a,b) => (a.distance ?? 0) - (b.distance ?? 0));
 }

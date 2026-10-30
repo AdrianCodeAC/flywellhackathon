@@ -18,3 +18,5 @@
   - [x] D: Cleanup, all 4 cards live, per-source errors, tests, EN/RO 375px review
 - [ ] Replace primary food/sight sources with Nominatim/Wikipedia; 24h caches, 8s Overpass fallback, HTTP logging.
 - [ ] Measure CRA and BGY food and sights in EN/RO through the live app.
+
+- [ ] Default food area to city center.

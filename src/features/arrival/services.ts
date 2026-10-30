@@ -3,7 +3,6 @@
  * Implemented: airports, OSRM routing, Nominatim geocoding. Others are stubs, filled in by later steps.
  */
 import type { Airport, Place, Route, RouteProfile } from "./types";
-import { rankSights } from "./place-utils";
 import { sourceCacheKey } from "./place-sources";
 import { loggedFetch } from "./external-http";
 import { getOverpassPlaces } from "./overpass.functions";
@@ -101,6 +100,7 @@ interface NominatimHit {
   lon: string;
   category?: string;
   type?: string;
+  addresstype?: string;
 }
 
 // Nominatim's usage policy: at most one request per second.
@@ -127,7 +127,7 @@ function toPlace(hit: NominatimHit, i: number): Place {
     kind: "other",
     lat: Number(hit.lat),
     lon: Number(hit.lon),
-    tags: { display_name: hit.display_name, category: hit.category ?? "" },
+    tags: { display_name: hit.display_name, category: hit.category ?? "", addresstype: hit.addresstype ?? "" },
   };
 }
 
@@ -151,7 +151,7 @@ export async function geocodeCityCenter(
   countryCode?: string,
 ): Promise<Place | undefined> {
   const rows = await geocodeNominatim(city, countryCode);
-  const best = rows.find((r) => r.tags?.["category"] === "administrative") ?? rows[0];
+  const best = rows.find((r) => r.tags?.["addresstype"] === "city" || r.tags?.["addresstype"] === "town") ?? rows.find((r) => r.tags?.["category"] === "administrative") ?? rows[0];
   return best;
 }
 
@@ -202,7 +202,7 @@ export function clearMemoryCache() {
 
 /** City centre, cached per city for 24h. */
 export function getCityCenter(city: string, countryCode?: string): Promise<Place | undefined> {
-  return cached(`center:${countryCode ?? ""}:${city.toLowerCase()}`, () =>
+  return cached(`center-v2:${countryCode ?? ""}:${city.toLowerCase()}`, () =>
     geocodeCityCenter(city, countryCode),
   );
 }

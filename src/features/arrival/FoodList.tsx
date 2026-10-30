@@ -24,7 +24,7 @@ const chip = (on: boolean) =>
 
 export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
   const { t, i18n } = useTranslation();
-  const [area, setArea] = useState<Area>("airport");
+  const [area, setArea] = useState<Area>("center");
   const [filter, setFilter] = useState<Filter>("all");
   const [openOnly, setOpenOnly] = useState(false);
   const [result, setResult] = useState<PlacesResult | null>(null);

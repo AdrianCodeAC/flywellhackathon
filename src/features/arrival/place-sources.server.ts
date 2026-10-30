@@ -33,7 +33,7 @@ async function nominatimFood(lat: number, lon: number, radiusM: number): Promise
 }
 
 interface GeoRow { pageid: number; title: string; lat: number; lon: number; dist?: number }
-interface PageRow { pageid: number; title: string; extract?: string; thumbnail?: { source?: string } }
+interface PageRow { pageid: number; title: string; extract?: string; pageprops?: { wikibase_item?: string }; thumbnail?: { source?: string } }
 async function wikiJson(url: string): Promise<unknown> {
   const res = await loggedFetch(url, { headers: { Accept: "application/json", "User-Agent": USER_AGENT }, signal: AbortSignal.timeout(8_000) });
   if (!res.ok) throw new Error(`Wikipedia ${res.status}`);
@@ -50,7 +50,7 @@ async function wikipediaSights(lang: "ro" | "en", lat: number, lon: number, radi
   return rows.map((row) => {
     const page = pages[String(row.pageid)];
     const description = page?.extract?.trim();
-    return { id: `wiki:${lang}:${row.pageid}`, name: row.title, kind: categorizeSight(row.title, description), lat: row.lat, lon: row.lon, distance: Math.round(row.dist ?? distanceMeters([lat, lon], [row.lat, row.lon])), ...(description ? { description } : {}), ...(page?.thumbnail?.source ? { thumbnail: page.thumbnail.source } : {}), articleUrl: `https://${lang}.wikipedia.org/?curid=${row.pageid}` } satisfies Place;
+    return { id: `wiki:${lang}:${row.pageid}`, name: row.title, kind: categorizeSight(row.title, description), lat: row.lat, lon: row.lon, distance: Math.round(row.dist ?? distanceMeters([lat, lon], [row.lat, row.lon])), ...(description ? { description } : {}), ...(page?.thumbnail?.source ? { thumbnail: page.thumbnail.source } : {}), ...(page?.pageprops?.wikibase_item ? { wikidata: page.pageprops.wikibase_item } : {}), articleUrl: `https://${lang}.wikipedia.org/?curid=${row.pageid}` } satisfies Place;
   });
 }
 
