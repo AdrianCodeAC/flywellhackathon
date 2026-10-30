@@ -57,3 +57,22 @@ Each card shows: icon, name, estimated time, estimated cost (if known), and a "S
 - Handle errors on each API separately: if one source fails, show "Couldn't load this right now — retry" on that section only.
 - Use TypeScript types for Airport, Place, TransportOption, Route.
 - All text in English. Keep components small and named clearly (AirportSearch, ArrivalActionSheet, FoodList, RideOptions, VisitList, AskAI, RouteMap).
+## 8. Mobile (phone-first)
+- Design for 375px width first; everything must work one-handed.
+- Make the app a PWA: manifest, app icons, theme color, standalone display, and a service worker so it can be added to the home screen and opens fast.
+- Cache the airport dataset and the app shell for offline use; show a clear "You're offline" banner and keep showing cached results.
+- Touch targets at least 44px, no hover-only interactions, respect safe areas (notch, home bar) with env(safe-area-inset-*).
+- Bottom sheets instead of modals on phones, sticky bottom action buttons, full-screen map with a large back button.
+- "Use my location" button next to the airport search that uses the phone's GPS to pick the nearest airport (friendly message if permission is denied).
+- "Call" button on places with a phone number (tel: links); deep links should open the native Uber/Bolt/Google Maps/Apple Maps apps when installed.
+- Keep it light: lazy-load the map and each section.
+
+## 9. Language: English + Romanian
+- Use react-i18next. Every visible string (buttons, titles, labels, errors, empty states, popup text, placeholders, the offline banner) must come from src/locales/en.json and src/locales/ro.json. No hardcoded text in components.
+- EN / RO switcher in the header, always visible. Save the choice in localStorage. Default to the phone's language: Romanian if navigator.language starts with "ro", otherwise English.
+- Switching language updates the whole page instantly, with no reload and no lost state (selected airport, filters, open map).
+- Format distances, durations, prices and opening hours with the selected locale (Intl APIs).
+- Translate category names in the locale files (e.g. Restaurant, Fast-food, Cafenea, Muzeu, Monument, Punct de belvedere).
+- Place names stay as they are. Wikipedia summaries: use the Romanian article when one exists (via wikidata sitelinks), otherwise English. Wikivoyage airport transport text: when Romanian is selected, translate it into Romanian through the backend AI function and cache the translation per city.
+- The AI assistant must answer in the selected language (pass the language to the AI function and add "Always respond in {language}" to its instructions).
+- Romanian text must use correct diacritics (ă, â, î, ș, ț with comma below, not cedilla) and must not break the layout; Romanian strings are often longer, so check buttons and cards in both languages at 375px.

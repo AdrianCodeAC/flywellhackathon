@@ -84,3 +84,24 @@ export function isOpenNow(value: string | undefined, now: Date = new Date()): bo
   }
   return matchedAny ? result : false;
 }
+
+/**
+ * Shows OSM opening hours with the selected locale's day names, e.g.
+ * "Mo-Fr 09:00-18:00; Su off" → "lun.–vin. 09:00–18:00; dum. închis" in Romanian.
+ */
+export function formatOpeningHours(
+  value: string,
+  locale: string,
+  labels: { alwaysOpen: string; closed: string },
+): string {
+  const v = value.trim();
+  if (v === "24/7") return labels.alwaysOpen;
+  const fmt = new Intl.DateTimeFormat(locale, { weekday: "short", timeZone: "UTC" });
+  // 2023-01-01 was a Sunday, matching DAYS[0].
+  const names = DAYS.map((_, i) => fmt.format(new Date(Date.UTC(2023, 0, 1 + i))));
+  return v
+    .replace(/\b(Su|Mo|Tu|We|Th|Fr|Sa)\b/g, (d) => names[DAYS.indexOf(d)] ?? d)
+    .replace(/\b(off|closed)\b/g, labels.closed)
+    .replace(/(\d)-(\d)/g, "$1–$2")
+    .replace(/\.-/g, ".–");
+}

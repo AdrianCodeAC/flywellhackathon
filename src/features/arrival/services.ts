@@ -273,6 +273,8 @@ export function fetchOverpassPlaces(
       const cuisine = tags["cuisine"];
       if (cuisine) place.cuisine = cuisine.split(";").map((c) => c.trim().replace(/_/g, " ")).join(", ");
       if (tags["opening_hours"]) place.openingHours = tags["opening_hours"];
+      const phone = (tags["phone"] || tags["contact:phone"])?.split(";")[0]?.trim();
+      if (phone) place.phone = phone;
       if (tags["wikipedia"]) place.wikipedia = tags["wikipedia"];
       if (tags["wikidata"]) place.wikidata = tags["wikidata"];
       places.push(place);

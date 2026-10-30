@@ -16,3 +16,15 @@ describe("isOpenNow", () => {
   it("off overrides", () => expect(isOpenNow("Mo-Su 09:00-17:00; We off", at(28, 10))).toBe(false));
   it("unknown syntax is undefined", () => expect(isOpenNow("sunrise-sunset", at(28, 10))).toBeUndefined());
 });
+
+import { formatOpeningHours } from "./opening-hours";
+describe("formatOpeningHours", () => {
+  const labels = { alwaysOpen: "Deschis non-stop", closed: "închis" };
+  it("translates day names and 'off'", () => {
+    const out = formatOpeningHours("Mo-Fr 09:00-18:00; Su off", "ro", labels);
+    expect(out).toContain("09:00–18:00");
+    expect(out).toContain("închis");
+    expect(out).not.toContain("Mo");
+  });
+  it("24/7 uses the label", () => expect(formatOpeningHours("24/7", "ro", labels)).toBe("Deschis non-stop"));
+});

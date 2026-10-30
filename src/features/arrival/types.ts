@@ -35,6 +35,7 @@ export interface Place {
   distance?: number;
   cuisine?: string;
   openingHours?: string;
+  phone?: string;
   openNow?: boolean;
   description?: string;
   wikipedia?: string;
