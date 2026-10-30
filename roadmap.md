@@ -21,4 +21,4 @@
 
 - [x] Default food area to city center.
 
-- [ ] Creative visual redesign: shared theme, arrival page, search and options, phone/desktop EN/RO verification.
+- [x] Creative visual redesign: shared theme, arrival page, search and options, phone/desktop EN/RO verification.
