@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      content_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          value: string
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          value: string
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       overpass_cache: {
         Row: {
           cache_key: string
