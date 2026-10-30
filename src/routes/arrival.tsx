@@ -4,6 +4,7 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { AirportSearch } from "@/features/arrival/AirportSearch";
 import { ArrivalActionSheet } from "@/features/arrival/ArrivalActionSheet";
+import { FoodList } from "@/features/arrival/FoodList";
 import { geocodeCityCenter, getAirportByIata } from "@/features/arrival/services";
 import type { Airport } from "@/features/arrival/types";
 
@@ -46,6 +47,7 @@ function ArrivalPage() {
   const hydrated = useHydrated();
   const [airport, setAirport] = useState<Airport | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [section, setSection] = useState<"food" | null>(null);
   const [target, setTarget] = useState<Target | null>(null);
   const [finding, setFinding] = useState(false);
   const [findError, setFindError] = useState<string | null>(null);
@@ -76,6 +78,7 @@ function ArrivalPage() {
 
   const clear = () => {
     setAirport(null);
+    setSection(null);
     setSheetOpen(false);
     localStorage.removeItem(STORAGE_KEY);
     navigate({ search: { iata: "" }, replace: true });
@@ -123,7 +126,26 @@ function ArrivalPage() {
         </div>
       )}
 
-      <ArrivalActionSheet open={sheetOpen && !!airport} city={airport?.city ?? ""} onOpenChange={setSheetOpen} />
+      {airport && section === "food" && (
+        <FoodList
+          airport={airport}
+          onBack={() => {
+            setSection(null);
+            setSheetOpen(true);
+          }}
+          onShowRoute={(p) => setTarget({ lat: p.lat, lon: p.lon, name: p.name })}
+        />
+      )}
+
+      <ArrivalActionSheet
+        open={sheetOpen && !!airport}
+        city={airport?.city ?? ""}
+        onOpenChange={setSheetOpen}
+        onPick={(s) => {
+          setSection(s);
+          setSheetOpen(false);
+        }}
+      />
 
       {hydrated && target && airport && (
         <Suspense fallback={null}>
