@@ -29,3 +29,14 @@ describe("searchAirports", () => {
 it("formats suggestions as 'LIS · Name, City, Country'", () => {
   expect(formatAirport(data[0]!)).toBe("LIS · Humberto Delgado Airport, Lisbon, Portugal");
 });
+
+import { nearestAirport } from "./airport-search";
+describe("nearestAirport", () => {
+  it("picks the closest airport to the phone's position", () => {
+    const list = [
+      { iata: "LIS", name: "Lisbon", city: "Lisbon", country: "Portugal", countryCode: "PT", lat: 38.7813, lon: -9.1359 },
+      { iata: "OPO", name: "Porto", city: "Porto", country: "Portugal", countryCode: "PT", lat: 41.2481, lon: -8.6814 },
+    ];
+    expect(nearestAirport(list, 41.15, -8.61)?.airport.iata).toBe("OPO");
+  });
+});
