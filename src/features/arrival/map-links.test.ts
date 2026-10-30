@@ -35,8 +35,13 @@ describe("summary formatting", () => {
 
   it("shows minutes under an hour and hours above it", () => {
     expect(formatDuration(1200)).toBe("20 min");
-    expect(formatDuration(4500)).toBe("1 h 15 min");
-    expect(formatDuration(7200)).toBe("2 h");
+    expect(formatDuration(4500)).toBe("1 hr 15 min");
+    expect(formatDuration(7200)).toBe("2 hr");
     expect(formatDuration(20)).toBe("<1 min");
   });
+});
+
+describe("Romanian formatting", () => {
+  it("uses a decimal comma for kilometres", () => expect(formatDistance(8123, "ro")).toBe("8,1 km"));
+  it("uses Romanian hour units", () => expect(formatDuration(4500, "ro")).toBe("1 h 15 min"));
 });
