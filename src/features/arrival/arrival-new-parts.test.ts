@@ -38,3 +38,15 @@ describe("Romanian Wikipedia choice", () => {
     expect(pickArticle({ wikipedia: "fr:Tour" }, "ro", { en: "Tower" })).toEqual({ lang: "en", title: "Tower" });
   });
 });
+
+import { buildOverpassQuery, searchPlaces } from "./overpass.server";
+import { destinationClock } from "./services";
+it("searches sights within the specified 10 km without widening", async () => {
+  const query = buildOverpassQuery("sights", 44.43, 26.1, 10000);
+  expect(query).toContain("around:10000,");
+  const res = await searchPlaces("sights", 44.43, 26.1, 10000, async () => new Response(JSON.stringify({ elements: [] })));
+  expect(res.radiusM).toBe(10000);
+});
+it("uses Bucharest's real winter local time", () => {
+  expect(destinationClock(26.1, new Date("2026-10-30T19:15:00Z"), 44.57)).toContain("21:15");
+});

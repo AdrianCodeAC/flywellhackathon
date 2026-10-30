@@ -163,7 +163,7 @@ export function RouteMap({ from, to, onBack }: RouteMapProps) {
                   aria-pressed={profile === p}
                   onClick={() => setProfile(p)}
                   className={
-                    "min-h-10 rounded-md px-3 text-sm " +
+                    "min-h-11 rounded-md px-3 text-sm " +
                     (profile === p ? "bg-primary text-primary-foreground" : "text-muted-foreground")
                   }
                 >

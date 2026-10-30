@@ -108,7 +108,7 @@ export async function raceMirrors(
             "User-Agent": "ArrivalAssistant/1.0 (travel helper web app)",
           },
           body: `data=${encodeURIComponent(query)}`,
-          signal: controllers[i]!.signal,
+          signal: controllers[i]?.signal,
         });
         if (!res.ok) throw new Error(`${url} ${res.status}`);
         const data = (await res.json()) as { elements?: OverpassElement[]; remark?: string };
@@ -135,7 +135,7 @@ export async function searchPlaces(
   fetchImpl: typeof fetch = fetch,
 ): Promise<{ places: Place[]; radiusM: number }> {
   let places = parseOverpass(await raceMirrors(buildOverpassQuery(category, lat, lon, radiusM), fetchImpl), lat, lon);
-  if (places.length < MIN_RESULTS) {
+  if (category === "food" && places.length < MIN_RESULTS) {
     const wider = radiusM * 2;
     places = parseOverpass(await raceMirrors(buildOverpassQuery(category, lat, lon, wider), fetchImpl), lat, lon);
     return { places, radiusM: wider };

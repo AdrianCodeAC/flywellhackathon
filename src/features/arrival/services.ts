@@ -7,6 +7,7 @@ import { overpassKey, rankSights } from "./place-utils";
 import { getOverpassPlaces } from "./overpass.functions";
 import { getPlaceSummaries, getTransportGuide, type TransportGuide } from "./guides.functions";
 import { askAssistant, type AssistantAnswer } from "./ai.functions";
+import tzLookup from "tz-lookup";
 import i18n from "@/lib/i18n";
 
 type RawAirport = [iata: string, name: string, city: string, country: string, lat: number, lon: number];
@@ -349,14 +350,10 @@ export interface AssistantContext {
   stations?: Place[];
 }
 
-/** Rough local clock at the destination, from its longitude. */
-export function destinationClock(lon: number, date = new Date()): string {
-  const offsetHours = Math.round(lon / 15);
-  const local = new Date(date.getTime() + offsetHours * 3_600_000);
-  const hh = String(local.getUTCHours()).padStart(2, "0");
-  const mm = String(local.getUTCMinutes()).padStart(2, "0");
-  const day = local.toLocaleDateString("en-GB", { weekday: "long", timeZone: "UTC" });
-  return `${day} ${hh}:${mm} (UTC${offsetHours >= 0 ? "+" : ""}${offsetHours}, approximate)`;
+/** Destination clock with the airport's IANA time zone, including daylight saving. */
+export function destinationClock(lon: number, date = new Date(), lat = 0): string {
+  const timeZone = tzLookup(lat, lon);
+  return `${new Intl.DateTimeFormat("en-GB", { weekday: "long", hour: "2-digit", minute: "2-digit", timeZone }).format(date)} (${timeZone})`;
 }
 
 function contextLine(p: Place): string {
@@ -373,7 +370,7 @@ export function buildAssistantContext(ctx: AssistantContext): string {
   const lines = [
     `Airport: ${ctx.airport.iata} — ${ctx.airport.name}, ${ctx.airport.city}, ${ctx.airport.country}`,
     `Airport coordinates: lat=${ctx.airport.lat}, lon=${ctx.airport.lon}`,
-    `Local time at the destination: ${destinationClock(ctx.airport.lon)}`,
+    `Local time at the destination: ${destinationClock(ctx.airport.lon, new Date(), ctx.airport.lat)}`,
     `Answer language: ${ctx.lang === "ro" ? "Romanian" : "English"}`,
   ];
   const section = (title: string, places?: Place[]) => {
