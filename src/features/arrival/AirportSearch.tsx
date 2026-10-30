@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LocateFixed, Loader2, Plane, X, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loadAirports } from "./services";
 import { formatAirport, nearestAirport, searchAirports } from "./airport-search";
@@ -72,18 +73,18 @@ export function AirportSearch({ selected, onSelect, onClear }: AirportSearchProp
 
   if (selected) {
     return (
-      <div className="flex min-h-11 w-fit max-w-full items-center gap-2 rounded-full bg-secondary pl-4 text-sm text-secondary-foreground">
+      <div className="flex min-h-14 w-full max-w-full items-center gap-3 rounded-lg border border-primary/20 bg-secondary pl-4 text-sm text-secondary-foreground">
         <Plane className="h-4 w-4 shrink-0" />
         <span className="font-semibold">{selected.iata}</span>
         <span className="min-w-0 truncate">{selected.city}</span>
-        <button
+        <Button variant="outline"
           type="button"
           onClick={onClear}
           aria-label={t("search.change")}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full active:bg-background"
         >
           <X className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
     );
   }
@@ -104,7 +105,7 @@ export function AirportSearch({ selected, onSelect, onClear }: AirportSearchProp
             autoComplete="off"
             enterKeyHint="search"
             placeholder={t("search.placeholder")}
-            className="h-12 pl-9 text-base"
+            className="h-14 rounded-lg pl-10 text-base"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
@@ -123,16 +124,16 @@ export function AirportSearch({ selected, onSelect, onClear }: AirportSearchProp
             }}
           />
         </div>
-        <button
+        <Button variant="outline"
           type="button"
           onClick={useMyLocation}
           disabled={locating}
           aria-label={t("search.useLocation")}
           title={t("search.useLocation")}
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border active:bg-accent disabled:opacity-60"
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border active:bg-accent disabled:opacity-60"
         >
           {locating ? <Loader2 className="h-5 w-5 animate-spin" /> : <LocateFixed className="h-5 w-5" />}
-        </button>
+        </Button>
       </div>
       {locating && <p className="mt-2 text-sm text-muted-foreground">{t("search.locating")}</p>}
       {geoMessage && <p className="mt-2 text-sm text-muted-foreground">{t(geoMessage)}</p>}

@@ -142,5 +142,14 @@
     "send": "Trimite întrebarea",
     "scrollDown": "Ultimul mesaj",
     "error": "Asistentul nu a putut răspunde acum."
+  },
+  "design": {
+    "brand": "Flywell",
+    "companion": "Ghidul tău după aterizare",
+    "eyebrow": "Ai aterizat. Hai să explorăm.",
+    "begin": "Începe călătoria",
+    "destination": "Următoarea oprire",
+    "photoLocation": "Lisabona, Portugalia",
+    "footer": "Mai puține planuri. Mai multe descoperiri."
   }
 }

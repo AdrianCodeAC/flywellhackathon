@@ -20,6 +20,13 @@
  */
 
 @theme inline {
+  --font-sans: "DM Sans", sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --color-hero-foreground: var(--hero-foreground);
+  --color-food-tone: var(--food-tone);
+  --color-ride-tone: var(--ride-tone);
+  --color-visit-tone: var(--visit-tone);
+  --color-ask-tone: var(--ask-tone);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -142,4 +149,101 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+}
+
+/* Flywell editorial travel system: all visual roles live here. */
+:root {
+  --radius: 0.5rem;
+  --background: oklch(0.985 0.002 170);
+  --foreground: oklch(0.25 0.025 175);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.505 0.095 180);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.945 0.025 170);
+  --secondary-foreground: var(--primary);
+  --muted: oklch(0.95 0.008 170);
+  --muted-foreground: oklch(0.49 0.018 170);
+  --accent: oklch(0.935 0.028 170);
+  --accent-foreground: var(--foreground);
+  --border: oklch(0.9 0.012 170);
+  --input: var(--border);
+  --ring: var(--primary);
+  --hero-foreground: oklch(1 0 0);
+  --hero-shade: oklch(0.2 0.04 175 / 55%);
+  --food-tone: oklch(0.58 0.16 32);
+  --food-soft: oklch(0.96 0.025 32);
+  --ride-tone: oklch(0.51 0.09 180);
+  --ride-soft: oklch(0.95 0.025 180);
+  --visit-tone: oklch(0.52 0.1 245);
+  --visit-soft: oklch(0.95 0.025 245);
+  --ask-tone: oklch(0.52 0.11 325);
+  --ask-soft: oklch(0.96 0.025 325);
+  --shadow-travel: 0 12px 35px oklch(0.25 0.025 175 / 7%);
+}
+.dark {
+  --background: oklch(0.2 0.018 175);
+  --foreground: oklch(0.96 0.006 175);
+  --card: oklch(0.25 0.018 175);
+  --primary: oklch(0.73 0.11 180);
+  --primary-foreground: oklch(0.2 0.018 175);
+  --secondary: oklch(0.3 0.025 175);
+  --muted: oklch(0.28 0.015 175);
+  --muted-foreground: oklch(0.74 0.01 175);
+  --accent: oklch(0.32 0.03 175);
+  --border: oklch(0.36 0.018 175);
+  --food-soft: oklch(0.3 0.035 32);
+  --ride-soft: oklch(0.3 0.03 180);
+  --visit-soft: oklch(0.3 0.03 245);
+  --ask-soft: oklch(0.3 0.03 325);
+}
+body { font-family: var(--font-sans); letter-spacing: 0; }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+h1, h2, h3 { letter-spacing: 0; }
+.arrival-hero { position: relative; height: 440px; isolation: isolate; color: var(--hero-foreground); overflow: hidden; }
+.arrival-hero-image { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; object-position: center 60%; z-index: -2; }
+.arrival-hero-shade { position: absolute; inset: 0; background: linear-gradient(90deg, var(--hero-shade), transparent 95%); z-index: -1; }
+.arrival-hero-content { max-width: 1152px; margin: 0 auto; padding: 64px 32px; }
+.arrival-hero-content h1 { max-width: 620px; }
+.arrival-photo-caption { position: absolute; right: 32px; bottom: 24px; display: flex; align-items: center; gap: 6px; font-size: 11px; background: var(--hero-shade); padding: 7px 10px; border-radius: 4px; }
+.airport-search-band { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+.search-band-title { flex-shrink: 0; }
+.section-index { display: block; color: var(--primary); font-size: 11px; font-weight: 600; margin-bottom: 5px; }
+.arrival-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.arrival-option { position: relative; display: flex; flex-direction: column; align-items: start; justify-content: space-between; height: 183px; padding: 22px; gap: 22px; white-space: normal; text-align: left; border-radius: 8px; box-shadow: none; background: var(--card); opacity: 1 !important; transition: transform 180ms, box-shadow 180ms, border-color 180ms; }
+.arrival-option:disabled { color: var(--foreground); }
+.arrival-option:hover:not(:disabled) { transform: translateY(-4px); background: var(--card); box-shadow: var(--shadow-travel); border-color: var(--option-tone); }
+.option-food { --option-tone: var(--food-tone); --option-soft: var(--food-soft); }
+.option-ride { --option-tone: var(--ride-tone); --option-soft: var(--ride-soft); }
+.option-visit { --option-tone: var(--visit-tone); --option-soft: var(--visit-soft); }
+.option-ask { --option-tone: var(--ask-tone); --option-soft: var(--ask-soft); }
+.option-icon { height: 44px; width: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--option-soft); color: var(--option-tone); }
+.option-icon svg { width: 21px; height: 21px; }
+.option-arrow { color: var(--muted-foreground); }
+.option-number { position: absolute; bottom: 16px; right: 16px; font-size: 10px; color: var(--border); }
+.arrival-options-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.arrival-options-compact .arrival-option { height: 166px; padding: 16px; }
+.arrival-main > section > h2 { font-family: var(--font-display); font-size: 34px; font-weight: 400; }
+.arrival-main article { border-radius: 8px; box-shadow: 0 2px 6px oklch(0.25 0.025 175 / 2%); }
+.arrival-main article h3 { line-height: 1.5; }
+.arrival-main input { background: var(--card); box-shadow: none; }
+.arrival-main article button:hover { border-color: var(--primary); color: var(--primary); }
+.arrival-main > section { animation: arrival-enter 300ms ease-out; }
+@keyframes arrival-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 639px) {
+  .arrival-hero { height: 390px; }
+  .arrival-hero-content { padding: 46px 24px; }
+  .arrival-hero-content h1 { max-width: 320px; }
+  .arrival-hero-shade { background: linear-gradient(90deg, var(--hero-shade), color-mix(in oklch, var(--hero-shade) 30%, transparent)); }
+  .arrival-photo-caption { right: 20px; bottom: 18px; }
+  .airport-search-band { display: block; }
+  .search-band-title { margin-bottom: 22px; }
+  .arrival-options { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .arrival-option { height: 166px; padding: 16px; gap: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arrival-main > section { animation: none; }
+  .arrival-option { transition: none; }
 }
