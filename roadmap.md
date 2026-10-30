@@ -10,3 +10,4 @@
 - [x] Spec sections 8 (mobile/PWA) + 9 (EN/RO) added and applied to sections 1, 2, 3, 7
 - [ ] Sections 4-6 (rides, visit, AI) — must follow sections 8+9 (RO Wikipedia via wikidata, AI translation of Wikivoyage, AI answers in selected language)
 - [ ] Remove the temporary "Route to city center" test button once section 4 is in
+- [ ] Finish the rest of Arrival Assistant per uploaded brief (Now_finish_the_rest...md)
