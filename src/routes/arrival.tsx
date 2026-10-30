@@ -13,7 +13,7 @@ import type { ArrivalMessage } from "@/features/arrival/AskAI";
 import type { Airport } from "@/features/arrival/types";
 import { ArrowDown, MapPin, Plane, Compass } from "lucide-react";
 import { ArrivalOptions } from "@/features/arrival/ArrivalOptions";
-import cityImage from "@/assets/arrival-city.jpg";
+import cityImage from "@/assets/arrival-craiova.jpg";
 
 // Leaflet is browser-only, so the map module is loaded on demand.
 // Each section is loaded on demand too.
@@ -118,7 +118,7 @@ function ArrivalPage() {
       <AppHeader />
       {!section && (
         <section className="arrival-hero">
-          <img src={cityImage} alt="" width={1600} height={912} fetchPriority="high" className="arrival-hero-image" />
+          <img src={cityImage} alt="" width={1920} height={1088} fetchPriority="high" className="arrival-hero-image" />
           <div className="arrival-hero-shade" />
           <div className="arrival-hero-content">
             <p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase"><Plane className="h-4 w-4" />{t("design.eyebrow")}</p>

@@ -207,7 +207,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .arrival-hero-shade { position: absolute; inset: 0; background: linear-gradient(90deg, var(--hero-shade), transparent 95%); z-index: -1; }
 .arrival-hero-content { max-width: 1152px; margin: 0 auto; padding: 64px 32px; }
 .arrival-hero-content h1 { max-width: 620px; }
-.arrival-photo-caption { position: absolute; right: 32px; bottom: 24px; display: flex; align-items: center; gap: 6px; font-size: 11px; background: var(--hero-shade); padding: 7px 10px; border-radius: 4px; }
+.arrival-photo-caption { position: absolute; right: 32px; bottom: 24px; display: flex; align-items: center; gap: 6px; font-size: 11px; background: color-mix(in oklch, var(--hero-shade) 78%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); padding: 7px 12px; border-radius: 999px; }
 .airport-search-band { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
 .search-band-title { flex-shrink: 0; }
 .section-index { display: block; color: var(--primary); font-size: 11px; font-weight: 600; margin-bottom: 5px; }
@@ -234,6 +234,7 @@ h1, h2, h3 { letter-spacing: 0; }
 @keyframes arrival-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 639px) {
   .arrival-hero { height: 390px; }
+  .arrival-hero-image { object-position: 25% 62%; }
   .arrival-hero-content { padding: 46px 24px; }
   .arrival-hero-content h1 { max-width: 320px; }
   .arrival-hero-shade { background: linear-gradient(90deg, var(--hero-shade), color-mix(in oklch, var(--hero-shade) 30%, transparent)); }
