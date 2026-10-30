@@ -83,7 +83,9 @@
     "station": "Station",
     "bus_stop": "Bus stop",
     "ai": "Suggested",
-    "other": "Place"
+    "other": "Place",
+    "church": "Church",
+    "park": "Park"
   },
   "meta": {
     "title": "Arrival Assistant — Just landed? Start here",
@@ -102,10 +104,11 @@
     "all": "All",
     "museums": "Museums",
     "monuments": "Monuments",
-    "viewpoints": "Viewpoints",
     "other": "Other",
     "empty": "No sights match this filter.",
-    "summaryError": "Descriptions are unavailable right now."
+    "summaryError": "Descriptions are unavailable right now.",
+    "churches": "Churches",
+    "parks": "Parks"
   },
   "ride": {
     "title": "Need a ride?",
