@@ -40,7 +40,7 @@ export function formatDistance(meters: number, locale = "en"): string {
   return unit(locale, "kilometer", meters / 1000, 1);
 }
 
-/** Locale-aware duration: "20 min", "1 hr 15 min" (en), "1 h 15 min" (ro). */
+/** Locale-aware duration: "20 min", "1 hr 15 min" (en), "1 oră 15 min." (ro). */
 export function formatDuration(seconds: number, locale = "en"): string {
   if (!Number.isFinite(seconds)) return "—";
   const minutes = Math.round(seconds / 60);

@@ -43,5 +43,5 @@ describe("summary formatting", () => {
 
 describe("Romanian formatting", () => {
   it("uses a decimal comma for kilometres", () => expect(formatDistance(8123, "ro")).toBe("8,1 km"));
-  it("uses Romanian hour units", () => expect(formatDuration(4500, "ro")).toBe("1 h 15 min"));
+  it("uses Romanian hour units", () => expect(formatDuration(4500, "ro")).toBe("1 oră 15 min."));
 });
