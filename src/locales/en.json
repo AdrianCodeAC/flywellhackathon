@@ -72,7 +72,9 @@
     "call": "Call",
     "hours": "Opening hours",
     "alwaysOpen": "Open 24/7",
-    "closed": "closed"
+    "closed": "closed",
+    "stillSearching": "Still searching… free map servers can be slow.",
+    "savedEarlier": "Saved earlier ({{date}})"
   },
   "category": {
     "restaurant": "Restaurant",

@@ -4,7 +4,7 @@ import { ArrowLeft, Clock, MapPin, Navigation, Phone, UtensilsCrossed } from "lu
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistance } from "./map-links";
 import { formatOpeningHours, isOpenNow } from "./opening-hours";
-import { FOOD_SELECTORS, fetchOverpassPlaces, getCityCenter } from "./services";
+import { FOOD_RADIUS, fetchOverpassPlaces, foodOrigin, peekPlaces, type PlacesResult } from "./services";
 import type { Airport, Place } from "./types";
 
 type Area = "airport" | "center";
@@ -23,38 +23,48 @@ const chip = (on: boolean) =>
   }`;
 
 export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [area, setArea] = useState<Area>("airport");
   const [filter, setFilter] = useState<Filter>("all");
   const [openOnly, setOpenOnly] = useState(false);
-  const [places, setPlaces] = useState<Place[] | null>(null);
+  const [result, setResult] = useState<PlacesResult | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [slow, setSlow] = useState(false);
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    setPlaces(null);
+    setResult(null);
     setError(false);
+    setSlow(false);
+    setLoading(true);
+    const slowTimer = setTimeout(() => !cancelled && setSlow(true), 3000);
     (async () => {
-      let lat = airport.lat;
-      let lon = airport.lon;
-      let radius = 3000;
-      if (area === "center") {
-        const c = await getCityCenter(airport.city, airport.countryCode);
-        if (!c) throw new Error("No city center");
-        lat = c.lat;
-        lon = c.lon;
-        radius = 2000;
+      const [lat, lon] = await foodOrigin(airport, area);
+      const radius = FOOD_RADIUS[area];
+      // Show any saved copy right away, even an old one, while fresh data loads.
+      const saved = peekPlaces("food", lat, lon, radius);
+      if (saved && !cancelled) setResult({ ...saved, stale: !saved.fresh });
+      if (saved?.fresh) return;
+      const fresh = await fetchOverpassPlaces("food", lat, lon, radius);
+      if (!cancelled) {
+        setResult(fresh);
+        if (fresh.stale) setError(true);
       }
-      return fetchOverpassPlaces(lat, lon, radius, FOOD_SELECTORS);
     })()
-      .then((rows) => !cancelled && setPlaces(rows))
-      .catch(() => !cancelled && setError(true));
+      .catch(() => !cancelled && setError(true))
+      .finally(() => {
+        clearTimeout(slowTimer);
+        if (!cancelled) setLoading(false);
+      });
     return () => {
       cancelled = true;
+      clearTimeout(slowTimer);
     };
   }, [airport, area, attempt]);
 
+  const places = result?.places ?? null;
   const shown = useMemo(() => {
     if (!places) return [];
     const now = new Date();
@@ -102,20 +112,43 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
       </div>
 
       <div className="mt-4 flex flex-col gap-2.5">
-        {error ? (
-          <div className="rounded-xl border p-4 text-sm">
+        {error && (
+          <div role="alert" className="rounded-xl border p-4 text-sm">
             {t("food.error")}{" "}
             <button type="button" onClick={retry} className="min-h-11 font-medium text-primary underline">
               {t("food.retry")}
             </button>
           </div>
-        ) : !places ? (
-          Array.from({ length: 5 }, (_, i) => <Skeleton key={i} className="h-28 w-full rounded-xl" />)
+        )}
+        {result?.stale && (
+          <p className="text-xs text-muted-foreground">
+            {t("food.savedEarlier", {
+              date: new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium", timeStyle: "short" }).format(
+                result.fetchedAt,
+              ),
+            })}
+          </p>
+        )}
+        {!places ? (
+          error ? null : (
+            <>
+              {slow && (
+                <p role="status" className="text-sm text-muted-foreground">
+                  {t("food.stillSearching")}
+                </p>
+              )}
+              {Array.from({ length: 5 }, (_, i) => (
+                <Skeleton key={i} className="h-28 w-full rounded-xl" />
+              ))}
+            </>
+          )
         ) : shown.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 rounded-xl border p-8 text-center text-sm text-muted-foreground">
-            <UtensilsCrossed className="h-6 w-6" />
-            {filter === "all" && !openOnly ? t("food.emptyAll") : t("food.emptyFilter")}
-          </div>
+          loading ? null : (
+            <div className="flex flex-col items-center gap-2 rounded-xl border p-8 text-center text-sm text-muted-foreground">
+              <UtensilsCrossed className="h-6 w-6" />
+              {filter === "all" && !openOnly ? t("food.emptyAll") : t("food.emptyFilter")}
+            </div>
+          )
         ) : (
           shown.map((p) => <FoodCard key={p.id} place={p} onShowRoute={onShowRoute} />)
         )}

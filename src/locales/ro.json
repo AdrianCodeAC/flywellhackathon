@@ -72,7 +72,9 @@
     "call": "Sună",
     "hours": "Program",
     "alwaysOpen": "Deschis non-stop",
-    "closed": "închis"
+    "closed": "închis",
+    "stillSearching": "Încă căutăm… serverele gratuite de hărți pot fi lente.",
+    "savedEarlier": "Salvat mai devreme ({{date}})"
   },
   "category": {
     "restaurant": "Restaurant",
