@@ -19,3 +19,6 @@
 - Arrival chat is one in-memory session held by the arrival page; switching sections preserves messages, changing airport resets them. Why: the brief requests continuity between sections, not saved conversations.
 - Live content uses services.ts as the client entry point with server-only gateway and cache helpers behind server functions. Why: credentials stay private and storage can change in one service layer.
 - Destination clocks use coordinate-to-IANA lookup and Intl rather than longitude offsets. Why: legal time zones and daylight saving affect practical arrival advice.
+
+- Food uses bounded Nominatim category searches and sights use language-keyed Wikipedia GeoSearch, with versioned 24h device/shared caches and Overpass only after primary-source failure. Why: live Overpass capacity is unreliable.
+- Nominatim calls are serialized at one-second intervals within each running service instance; public deployment needs a centralized queue for a cross-instance guarantee. Why: the public provider limit applies across users.

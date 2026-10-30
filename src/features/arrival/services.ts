@@ -127,7 +127,11 @@ function toPlace(hit: NominatimHit, i: number): Place {
     kind: "other",
     lat: Number(hit.lat),
     lon: Number(hit.lon),
-    tags: { display_name: hit.display_name, category: hit.category ?? "", addresstype: hit.addresstype ?? "" },
+    tags: {
+      display_name: hit.display_name,
+      category: hit.category ?? "",
+      addresstype: hit.addresstype ?? "",
+    },
   };
 }
 
@@ -151,7 +155,10 @@ export async function geocodeCityCenter(
   countryCode?: string,
 ): Promise<Place | undefined> {
   const rows = await geocodeNominatim(city, countryCode);
-  const best = rows.find((r) => r.tags?.["addresstype"] === "city" || r.tags?.["addresstype"] === "town") ?? rows.find((r) => r.tags?.["category"] === "administrative") ?? rows[0];
+  const best =
+    rows.find((r) => r.tags?.["addresstype"] === "city" || r.tags?.["addresstype"] === "town") ??
+    rows.find((r) => r.tags?.["category"] === "administrative") ??
+    rows[0];
   return best;
 }
 
@@ -223,7 +230,13 @@ const OVERPASS_DEVICE_PREFIX = "arrival-overpass:";
 const overpassMem = new Map<string, PlacesResult>();
 const overpassInflight = new Map<string, Promise<PlacesResult>>();
 
-function placesKey(category: OverpassCategory, lat: number, lon: number, radiusM: number, lang: string) {
+function placesKey(
+  category: OverpassCategory,
+  lat: number,
+  lon: number,
+  radiusM: number,
+  lang: string,
+) {
   return sourceCacheKey(category, lat, lon, radiusM, lang);
 }
 
@@ -267,7 +280,9 @@ export function fetchOverpassPlaces(
   const key = placesKey(category, lat, lon, radiusM, lang);
   const pending = overpassInflight.get(key);
   if (pending) return pending;
-  const p = getOverpassPlaces({ data: { category, lat, lon, radiusM: Math.round(radiusM), lang: lang === "ro" ? "ro" : "en" } })
+  const p = getOverpassPlaces({
+    data: { category, lat, lon, radiusM: Math.round(radiusM), lang: lang === "ro" ? "ro" : "en" },
+  })
     .then((res) => {
       const value: PlacesResult = res;
       // Don't overwrite a newer device copy with an older stale server copy.

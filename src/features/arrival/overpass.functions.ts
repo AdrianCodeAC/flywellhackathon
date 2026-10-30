@@ -43,7 +43,13 @@ export const getOverpassPlaces = createServerFn({ method: "POST" })
     }
 
     try {
-      const places = await searchArrivalPlaces(data.category, data.lat, data.lon, data.radiusM, data.lang);
+      const places = await searchArrivalPlaces(
+        data.category,
+        data.lat,
+        data.lon,
+        data.radiusM,
+        data.lang,
+      );
       const now = new Date();
       await supabaseAdmin.from("overpass_cache").upsert({
         cache_key: key,

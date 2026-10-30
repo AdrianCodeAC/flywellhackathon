@@ -4,7 +4,13 @@ import { ArrowLeft, Clock, MapPin, Navigation, Phone, UtensilsCrossed } from "lu
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistance } from "./map-links";
 import { formatOpeningHours, isOpenNow } from "./opening-hours";
-import { FOOD_RADIUS, fetchOverpassPlaces, foodOrigin, peekPlaces, type PlacesResult } from "./services";
+import {
+  FOOD_RADIUS,
+  fetchOverpassPlaces,
+  foodOrigin,
+  peekPlaces,
+  type PlacesResult,
+} from "./services";
 import type { Airport, Place } from "./types";
 import { DEFAULT_FOOD_AREA } from "./place-sources";
 
@@ -103,11 +109,22 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
 
       <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
         {FILTERS.map((f) => (
-          <button key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)} className={chip(filter === f)}>
+          <button
+            key={f}
+            type="button"
+            aria-pressed={filter === f}
+            onClick={() => setFilter(f)}
+            className={chip(filter === f)}
+          >
             {t(`food.${f}`)}
           </button>
         ))}
-        <button type="button" aria-pressed={openOnly} onClick={() => setOpenOnly((v) => !v)} className={chip(openOnly)}>
+        <button
+          type="button"
+          aria-pressed={openOnly}
+          onClick={() => setOpenOnly((v) => !v)}
+          className={chip(openOnly)}
+        >
           {t("food.openNow")}
         </button>
       </div>
@@ -116,7 +133,11 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
         {error && (
           <div role="alert" className="rounded-xl border p-4 text-sm">
             {t("food.error")}{" "}
-            <button type="button" onClick={retry} className="min-h-11 font-medium text-primary underline">
+            <button
+              type="button"
+              onClick={retry}
+              className="min-h-11 font-medium text-primary underline"
+            >
               {t("food.retry")}
             </button>
           </div>
@@ -124,9 +145,10 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
         {result?.stale && (
           <p className="text-xs text-muted-foreground">
             {t("food.savedEarlier", {
-              date: new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium", timeStyle: "short" }).format(
-                result.fetchedAt,
-              ),
+              date: new Intl.DateTimeFormat(i18n.language, {
+                dateStyle: "medium",
+                timeStyle: "short",
+              }).format(result.fetchedAt),
             })}
           </p>
         )}
@@ -174,7 +196,8 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
 
 function FoodCard({ place, onShowRoute }: { place: Place; onShowRoute: (p: Place) => void }) {
   const { t, i18n } = useTranslation();
-  const action = "flex min-h-11 items-center justify-center gap-1.5 rounded-lg border px-3 text-sm font-medium active:bg-accent";
+  const action =
+    "flex min-h-11 items-center justify-center gap-1.5 rounded-lg border px-3 text-sm font-medium active:bg-accent";
   return (
     <article className="rounded-xl border bg-card p-3.5">
       <div className="flex items-start justify-between gap-2">

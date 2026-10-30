@@ -181,16 +181,36 @@ function VisitCard({ place, onShowRoute }: { place: Place; onShowRoute: (p: Plac
   return (
     <article className="rounded-lg border bg-card p-3.5">
       <div className="flex gap-3">
-        {place.thumbnail ? <img src={place.thumbnail} alt="" loading="lazy" className="h-20 w-20 shrink-0 rounded-md bg-muted object-cover" /> : <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground"><Landmark /></div>}
+        {place.thumbnail ? (
+          <img
+            src={place.thumbnail}
+            alt=""
+            loading="lazy"
+            className="h-20 w-20 shrink-0 rounded-md bg-muted object-cover"
+          />
+        ) : (
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
+            <Landmark />
+          </div>
+        )}
         <div className="min-w-0 flex-1">
-      <h3 className="break-words font-semibold">{place.name}</h3>
-      <p className="text-sm text-muted-foreground">{t(`category.${place.kind}`)}</p>
-      {place.description && (
-        <p className="mt-2 text-sm text-muted-foreground">{place.description}</p>
-      )}
+          <h3 className="break-words font-semibold">{place.name}</h3>
+          <p className="text-sm text-muted-foreground">{t(`category.${place.kind}`)}</p>
+          {place.description && (
+            <p className="mt-2 text-sm text-muted-foreground">{place.description}</p>
+          )}
         </div>
       </div>
-      {place.articleUrl && <a href={place.articleUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex min-h-11 items-center text-xs text-primary underline">{t("visit.source")}</a>}
+      {place.articleUrl && (
+        <a
+          href={place.articleUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex min-h-11 items-center text-xs text-primary underline"
+        >
+          {t("visit.source")}
+        </a>
+      )}
       <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
         <MapPin className="h-3.5 w-3.5" />
         {place.distance !== undefined && formatDistance(place.distance, i18n.language)}

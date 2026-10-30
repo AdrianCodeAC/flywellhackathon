@@ -153,14 +153,24 @@ export async function searchPlaces(
   timeoutMs = MIRROR_TIMEOUT_MS,
 ): Promise<{ places: Place[]; radiusM: number }> {
   let places = parseOverpass(
-    await raceMirrors(buildOverpassQuery(category, lat, lon, radiusM, timeoutMs), fetchImpl, OVERPASS_MIRRORS, timeoutMs),
+    await raceMirrors(
+      buildOverpassQuery(category, lat, lon, radiusM, timeoutMs),
+      fetchImpl,
+      OVERPASS_MIRRORS,
+      timeoutMs,
+    ),
     lat,
     lon,
   );
   if (category === "food" && places.length < MIN_RESULTS) {
     const wider = radiusM * 2;
     places = parseOverpass(
-      await raceMirrors(buildOverpassQuery(category, lat, lon, wider, timeoutMs), fetchImpl, OVERPASS_MIRRORS, timeoutMs),
+      await raceMirrors(
+        buildOverpassQuery(category, lat, lon, wider, timeoutMs),
+        fetchImpl,
+        OVERPASS_MIRRORS,
+        timeoutMs,
+      ),
       lat,
       lon,
     );

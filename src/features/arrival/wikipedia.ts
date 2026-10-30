@@ -1,3 +1,4 @@
+import { loggedFetch } from "./external-http";
 /**
  * Wikipedia summaries. The Romanian article is found through Wikidata sitelinks,
  * so a place whose OSM tag only names an English article still gets a Romanian
@@ -59,7 +60,10 @@ const WIKIDATA_API = "https://www.wikidata.org/w/api.php";
 export async function fetchWikidataSitelinks(qid: string): Promise<Record<string, string>> {
   if (!/^Q[1-9]\d*$/i.test(qid)) return {};
   const url = `${WIKIDATA_API}?action=wbgetentities&ids=${encodeURIComponent(qid)}&props=sitelinks&format=json&origin=*`;
-  const res = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "ArrivalAssistant/1.0 (travel helper)" }, signal: AbortSignal.timeout(8000) });
+  const res = await loggedFetch(url, {
+    headers: { Accept: "application/json", "User-Agent": "ArrivalAssistant/1.0 (travel helper)" },
+    signal: AbortSignal.timeout(8000),
+  });
   if (!res.ok) throw new Error(`Wikidata failed: ${res.status}`);
   const data = (await res.json()) as {
     entities?: Record<string, { sitelinks?: Record<string, { title?: string }> }>;
@@ -70,8 +74,11 @@ export async function fetchWikidataSitelinks(qid: string): Promise<Record<string
 /** One-paragraph summary, or nothing when there is no readable article. */
 export async function fetchSummary(ref: ArticleRef): Promise<string | undefined> {
   const url = `https://${ref.lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(ref.title)}`;
-  const res = await fetch(url, {
-    headers: { Accept: "application/json", "User-Agent": "ArrivalAssistant/1.0 (travel helper web app)" },
+  const res = await loggedFetch(url, {
+    headers: {
+      Accept: "application/json",
+      "User-Agent": "ArrivalAssistant/1.0 (travel helper web app)",
+    },
     signal: AbortSignal.timeout(8000),
   });
   if (!res.ok) return undefined;

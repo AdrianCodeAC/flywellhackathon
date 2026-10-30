@@ -108,7 +108,8 @@
     "empty": "No sights match this filter.",
     "summaryError": "Descriptions are unavailable right now.",
     "churches": "Churches",
-    "parks": "Parks"
+    "parks": "Parks",
+    "source": "Wikipedia · CC BY-SA"
   },
   "ride": {
     "title": "Need a ride?",
