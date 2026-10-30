@@ -16,7 +16,7 @@ describe("searchAirports", () => {
     expect(searchAirports(data, "l")).toEqual([]);
   });
   it("matches IATA code first", () => {
-    expect(searchAirports(data, "lis")[0].iata).toBe("LIS");
+    expect(searchAirports(data, "lis")[0]?.iata).toBe("LIS");
   });
   it("matches by city", () => {
     expect(searchAirports(data, "porto").map((a) => a.iata)).toEqual(["OPO"]);
@@ -27,5 +27,5 @@ describe("searchAirports", () => {
 });
 
 it("formats suggestions as 'LIS · Name, City, Country'", () => {
-  expect(formatAirport(data[0])).toBe("LIS · Humberto Delgado Airport, Lisbon, Portugal");
+  expect(formatAirport(data[0]!)).toBe("LIS · Humberto Delgado Airport, Lisbon, Portugal");
 });

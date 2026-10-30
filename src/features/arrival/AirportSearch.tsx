@@ -85,7 +85,8 @@ export function AirportSearch({ selected, onSelect, onClear }: AirportSearchProp
               setActive((i) => Math.max(i - 1, 0));
             } else if (e.key === "Enter") {
               e.preventDefault();
-              pick(results[active]);
+              const chosen = results[active];
+              if (chosen) pick(chosen);
             }
           }}
         />
