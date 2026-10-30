@@ -49,13 +49,14 @@ export function buildOverpassQuery(
   lat: number,
   lon: number,
   radiusM: number,
+  timeoutMs = MIRROR_TIMEOUT_MS,
 ): string {
   const around = `(around:${Math.round(radiusM)},${lat.toFixed(5)},${lon.toFixed(5)})`;
   const parts = FILTERS[category].flatMap((f) => [
     `node${f}["name"]${around};`,
     `way${f}["name"]${around};`,
   ]);
-  return `[out:json][timeout:12];(${parts.join("")});out center tags 60;`;
+  return `[out:json][timeout:${Math.ceil(timeoutMs / 1000)}];(${parts.join("")});out center tags 60;`;
 }
 
 interface OverpassElement {
@@ -149,16 +150,17 @@ export async function searchPlaces(
   lon: number,
   radiusM: number,
   fetchImpl: typeof fetch = fetch,
+  timeoutMs = MIRROR_TIMEOUT_MS,
 ): Promise<{ places: Place[]; radiusM: number }> {
   let places = parseOverpass(
-    await raceMirrors(buildOverpassQuery(category, lat, lon, radiusM), fetchImpl),
+    await raceMirrors(buildOverpassQuery(category, lat, lon, radiusM, timeoutMs), fetchImpl, OVERPASS_MIRRORS, timeoutMs),
     lat,
     lon,
   );
   if (category === "food" && places.length < MIN_RESULTS) {
     const wider = radiusM * 2;
     places = parseOverpass(
-      await raceMirrors(buildOverpassQuery(category, lat, lon, wider), fetchImpl),
+      await raceMirrors(buildOverpassQuery(category, lat, lon, wider, timeoutMs), fetchImpl, OVERPASS_MIRRORS, timeoutMs),
       lat,
       lon,
     );
