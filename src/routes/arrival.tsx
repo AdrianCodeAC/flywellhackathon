@@ -212,7 +212,7 @@ function ArrivalPage() {
           </Suspense>
         )}
       </main>
-      {!section && <footer className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 border-t px-5 py-6 text-xs text-muted-foreground sm:px-8"><span className="font-semibold">{t("design.brand")}.</span><span>{t("design.footer")}</span><Plane className="h-4 w-4 text-primary" /></footer>}
+      {!section && <footer className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 border-t px-5 py-6 text-xs text-muted-foreground sm:px-8"><span className="font-semibold">{t("design.brand")}.</span><span>{t("design.footer")}</span><a href="https://commons.wikimedia.org/wiki/File:Nicolae_Romanescu_Park_in_Craiova,_Romania.jpg" target="_blank" rel="noreferrer" className="underline decoration-border underline-offset-4 hover:text-foreground">{t("design.photoCredit")}</a><Plane className="h-4 w-4 text-primary" /></footer>}
     </>
   );
 }
