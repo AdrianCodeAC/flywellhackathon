@@ -31,7 +31,10 @@ export function AppHeader() {
         <LanguageSwitcher />
       </div>
       {offline && (
-        <div role="status" className="flex items-center justify-center gap-2 bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground">
+        <div
+          role="status"
+          className="flex items-center justify-center gap-2 bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground"
+        >
           <WifiOff className="h-4 w-4 shrink-0" />
           {t("app.offline")}
         </div>
@@ -45,9 +48,14 @@ export function LanguageSwitcher() {
   const { t, i18n } = useTranslation();
   const current: Language = i18n.language === "ro" ? "ro" : "en";
   return (
-    <div role="group" aria-label={t("app.language")} className="inline-flex shrink-0 rounded-lg border p-0.5">
+    <div
+      role="group"
+      aria-label={t("app.language")}
+      className="inline-flex shrink-0 rounded-lg border p-0.5"
+    >
       {LANGUAGES.map((l) => (
-        <Button variant="ghost"
+        <Button
+          variant="ghost"
           key={l}
           type="button"
           lang={l}

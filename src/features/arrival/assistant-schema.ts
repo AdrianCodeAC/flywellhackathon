@@ -11,6 +11,15 @@ export function parseAssistantAnswer(value: unknown): AssistantAnswer {
   const answer = answerSchema.parse(value);
   return {
     text: answer.text.trim(),
-    places: answer.places.filter((p) => p.name.trim() && Number.isFinite(p.lat) && Number.isFinite(p.lon) && Math.abs(p.lat) <= 90 && Math.abs(p.lon) <= 180).slice(0, 5),
+    places: answer.places
+      .filter(
+        (p) =>
+          p.name.trim() &&
+          Number.isFinite(p.lat) &&
+          Number.isFinite(p.lon) &&
+          Math.abs(p.lat) <= 90 &&
+          Math.abs(p.lon) <= 180,
+      )
+      .slice(0, 5),
   };
 }

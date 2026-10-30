@@ -6,7 +6,8 @@ import { pickArticle } from "./wikipedia";
 
 describe("Wikivoyage parsing", () => {
   it("keeps only Get in > By plane and removes wiki markup", () => {
-    const raw = "== Get in ==\n=== By plane ===\n* Take the [[Metro|metro]] {{see|x}}<ref>x</ref> to '''Centre'''.\n=== By train ===\nTrain\n== See ==\nNo";
+    const raw =
+      "== Get in ==\n=== By plane ===\n* Take the [[Metro|metro]] {{see|x}}<ref>x</ref> to '''Centre'''.\n=== By train ===\nTrain\n== See ==\nNo";
     const section = extractSection(raw, "Get in", "By plane");
     expect(section).not.toContain("By train");
     expect(cleanWikiText(section ?? "")).toBe("Take the metro to Centre.");
@@ -15,7 +16,9 @@ describe("Wikivoyage parsing", () => {
 
 describe("ride links", () => {
   it("puts airport pickup and destination dropoff in Uber", () => {
-    const url = new URL(uberDeepLink({ lat: 38.7742, lon: -9.1342 }, { lat: 38.7139, lon: -9.1394 }));
+    const url = new URL(
+      uberDeepLink({ lat: 38.7742, lon: -9.1342 }, { lat: 38.7139, lon: -9.1394 }),
+    );
     expect(url.searchParams.get("pickup[latitude]")).toBe("38.7742");
     expect(url.searchParams.get("dropoff[longitude]")).toBe("-9.1394");
     expect(BOLT_URL).toBe("https://m.bolt.eu/");
@@ -24,8 +27,15 @@ describe("ride links", () => {
 
 describe("AI places", () => {
   it("keeps up to five valid tappable places", () => {
-    const places = Array.from({ length: 7 }, (_, i) => ({ name: `P${i}`, lat: 44 + i / 100, lon: 26 }));
-    const out = parseAssistantAnswer({ text: " Hi ", places: [{ name: "Bad", lat: 99, lon: 0 }, ...places] });
+    const places = Array.from({ length: 7 }, (_, i) => ({
+      name: `P${i}`,
+      lat: 44 + i / 100,
+      lon: 26,
+    }));
+    const out = parseAssistantAnswer({
+      text: " Hi ",
+      places: [{ name: "Bad", lat: 99, lon: 0 }, ...places],
+    });
     expect(out.text).toBe("Hi");
     expect(out.places).toHaveLength(5);
     expect(out.places[0]?.name).toBe("P0");
@@ -34,8 +44,14 @@ describe("AI places", () => {
 
 describe("Romanian Wikipedia choice", () => {
   it("uses Romanian, otherwise English", () => {
-    expect(pickArticle({}, "ro", { ro: "Ateneul Român", en: "Romanian Athenaeum" })).toEqual({ lang: "ro", title: "Ateneul Român" });
-    expect(pickArticle({ wikipedia: "fr:Tour" }, "ro", { en: "Tower" })).toEqual({ lang: "en", title: "Tower" });
+    expect(pickArticle({}, "ro", { ro: "Ateneul Român", en: "Romanian Athenaeum" })).toEqual({
+      lang: "ro",
+      title: "Ateneul Român",
+    });
+    expect(pickArticle({ wikipedia: "fr:Tour" }, "ro", { en: "Tower" })).toEqual({
+      lang: "en",
+      title: "Tower",
+    });
   });
 });
 
@@ -44,7 +60,13 @@ import { destinationClock } from "./services";
 it("searches sights within the specified 10 km without widening", async () => {
   const query = buildOverpassQuery("sights", 44.43, 26.1, 10000);
   expect(query).toContain("around:10000,");
-  const res = await searchPlaces("sights", 44.43, 26.1, 10000, async () => new Response(JSON.stringify({ elements: [] })));
+  const res = await searchPlaces(
+    "sights",
+    44.43,
+    26.1,
+    10000,
+    async () => new Response(JSON.stringify({ elements: [] })),
+  );
   expect(res.radiusM).toBe(10000);
 });
 it("uses Bucharest's real winter local time", () => {

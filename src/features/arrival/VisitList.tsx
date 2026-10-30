@@ -121,18 +121,41 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
 
       <div className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1">
         {FILTERS.map((f) => (
-          <Button variant="outline" key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)} className={chip(filter === f)}>
+          <Button
+            variant="outline"
+            key={f}
+            type="button"
+            aria-pressed={filter === f}
+            onClick={() => setFilter(f)}
+            className={chip(filter === f)}
+          >
             {t(`visit.${f}`)}
           </Button>
         ))}
       </div>
 
-      {summaryError && <p role="alert" className="mt-3 text-sm">{t("visit.summaryError")} <Button variant="link" className="min-h-11" onClick={() => setSummaryAttempt((n) => n + 1)}>{t("common.retry")}</Button></p>}
+      {summaryError && (
+        <p role="alert" className="mt-3 text-sm">
+          {t("visit.summaryError")}{" "}
+          <Button
+            variant="link"
+            className="min-h-11"
+            onClick={() => setSummaryAttempt((n) => n + 1)}
+          >
+            {t("common.retry")}
+          </Button>
+        </p>
+      )}
       <div className="mt-4 flex flex-col gap-2.5">
         {error && (
           <div role="alert" className="rounded-lg border p-4 text-sm">
             {t("common.error")}{" "}
-            <Button variant="outline" type="button" onClick={retry} className="min-h-11 font-medium text-primary underline">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={retry}
+              className="min-h-11 font-medium text-primary underline"
+            >
               {t("common.retry")}
             </Button>
           </div>
@@ -140,9 +163,10 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
         {result?.stale && (
           <p className="text-xs text-muted-foreground">
             {t("common.savedEarlier", {
-              date: new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium", timeStyle: "short" }).format(
-                result.fetchedAt,
-              ),
+              date: new Intl.DateTimeFormat(i18n.language, {
+                dateStyle: "medium",
+                timeStyle: "short",
+              }).format(result.fetchedAt),
             })}
           </p>
         )}
@@ -173,7 +197,8 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur">
         <div className="mx-auto max-w-xl">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             type="button"
             onClick={onBack}
             className="flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border bg-card text-base font-medium active:bg-accent"
@@ -200,7 +225,8 @@ function VisitCard({ place, onShowRoute }: { place: Place; onShowRoute: (p: Plac
         <MapPin className="h-3.5 w-3.5" />
         {place.distance !== undefined && formatDistance(place.distance, i18n.language)}
       </div>
-      <Button variant="outline"
+      <Button
+        variant="outline"
         type="button"
         onClick={() => onShowRoute(place)}
         className="mt-3 flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border px-3 text-sm font-medium active:bg-accent"

@@ -10,7 +10,14 @@ import { askAssistant, type AssistantAnswer } from "./ai.functions";
 import tzLookup from "tz-lookup";
 import i18n from "@/lib/i18n";
 
-type RawAirport = [iata: string, name: string, city: string, country: string, lat: number, lon: number];
+type RawAirport = [
+  iata: string,
+  name: string,
+  city: string,
+  country: string,
+  lat: number,
+  lon: number,
+];
 
 let airportsPromise: Promise<Airport[]> | null = null;
 
@@ -99,12 +106,14 @@ let lastNominatimAt = 0;
 let nominatimQueue: Promise<unknown> = Promise.resolve();
 
 async function nominatimFetch(url: string): Promise<Response> {
-  const pending = nominatimQueue.catch(() => {}).then(async () => {
-    const wait = Math.max(0, 1000 - (Date.now() - lastNominatimAt));
-    if (wait) await new Promise((r) => setTimeout(r, wait));
-    lastNominatimAt = Date.now();
-    return fetch(url, { headers: { Accept: "application/json" } });
-  });
+  const pending = nominatimQueue
+    .catch(() => {})
+    .then(async () => {
+      const wait = Math.max(0, 1000 - (Date.now() - lastNominatimAt));
+      if (wait) await new Promise((r) => setTimeout(r, wait));
+      lastNominatimAt = Date.now();
+      return fetch(url, { headers: { Accept: "application/json" } });
+    });
   nominatimQueue = pending;
   return pending;
 }
@@ -135,12 +144,14 @@ export async function geocodeNominatim(query: string, countryCode?: string): Pro
  * country beats searching "{city} center", which matches places literally named
  * "Lisbon Center" in the United States.
  */
-export async function geocodeCityCenter(city: string, countryCode?: string): Promise<Place | undefined> {
+export async function geocodeCityCenter(
+  city: string,
+  countryCode?: string,
+): Promise<Place | undefined> {
   const rows = await geocodeNominatim(city, countryCode);
   const best = rows.find((r) => r.tags?.["category"] === "administrative") ?? rows[0];
   return best;
 }
-
 
 // ---- Cache: memory + localStorage, 24h ----
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -153,7 +164,8 @@ export async function cached<T>(key: string, load: () => Promise<T>, ttlMs = DAY
   const mem = memCache.get(key);
   if (mem && now - mem.at < ttlMs) return mem.value as T;
   try {
-    const raw = typeof localStorage !== "undefined" ? localStorage.getItem(CACHE_PREFIX + key) : null;
+    const raw =
+      typeof localStorage !== "undefined" ? localStorage.getItem(CACHE_PREFIX + key) : null;
     if (raw) {
       const hit = JSON.parse(raw) as { at: number; value: T };
       if (now - hit.at < ttlMs) {
@@ -188,7 +200,9 @@ export function clearMemoryCache() {
 
 /** City centre, cached per city for 24h. */
 export function getCityCenter(city: string, countryCode?: string): Promise<Place | undefined> {
-  return cached(`center:${countryCode ?? ""}:${city.toLowerCase()}`, () => geocodeCityCenter(city, countryCode));
+  return cached(`center:${countryCode ?? ""}:${city.toLowerCase()}`, () =>
+    geocodeCityCenter(city, countryCode),
+  );
 }
 
 export { distanceMeters } from "./place-utils";
@@ -261,7 +275,9 @@ export function fetchOverpassPlaces(
           /* storage full */
         }
       }
-      return value.stale && local && local.fetchedAt > value.fetchedAt ? { ...local, stale: true } : value;
+      return value.stale && local && local.fetchedAt > value.fetchedAt
+        ? { ...local, stale: true }
+        : value;
     })
     .finally(() => overpassInflight.delete(key));
   overpassInflight.set(key, p);
@@ -271,7 +287,10 @@ export function fetchOverpassPlaces(
 export const FOOD_RADIUS = { airport: 1500, center: 1200 } as const;
 
 /** Resolves the search point for the food list's two areas. */
-export async function foodOrigin(airport: Airport, area: "airport" | "center"): Promise<[number, number]> {
+export async function foodOrigin(
+  airport: Airport,
+  area: "airport" | "center",
+): Promise<[number, number]> {
   if (area === "airport") return [airport.lat, airport.lon];
   const c = await getCityCenter(airport.city, airport.countryCode);
   if (!c) throw new Error("No city center");
@@ -394,4 +413,3 @@ export function askAI(
     data: { question, history, lang: lang === "ro" ? "ro" : "en", context },
   });
 }
-

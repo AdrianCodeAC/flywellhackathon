@@ -1,4 +1,10 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Car, Landmark, MessageCircle, UtensilsCrossed } from "lucide-react";
 import type { ComponentType } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,7 +19,12 @@ interface ArrivalActionSheetProps {
   onPick: (section: ArrivalSection) => void;
 }
 
-const CARDS: { icon: ComponentType<{ className?: string }>; label: string; hint: string; section?: ArrivalSection }[] = [
+const CARDS: {
+  icon: ComponentType<{ className?: string }>;
+  label: string;
+  hint: string;
+  section?: ArrivalSection;
+}[] = [
   { icon: UtensilsCrossed, label: "sheet.food", hint: "sheet.foodHint", section: "food" },
   { icon: Car, label: "sheet.ride", hint: "sheet.rideHint", section: "ride" },
   { icon: Landmark, label: "sheet.visit", hint: "sheet.visitHint", section: "visit" },
@@ -27,7 +38,8 @@ export function ArrivalActionSheet({ open, city, onOpenChange, onPick }: Arrival
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent closeLabel={t("sheet.close")}
+      <DialogContent
+        closeLabel={t("sheet.close")}
         className={
           "inset-x-0 bottom-0 left-0 top-auto max-h-[88dvh] translate-x-0 translate-y-0 gap-0 overflow-y-auto rounded-t-2xl border-b-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-auto sm:left-[50%] sm:top-[50%] sm:max-w-md sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-2xl sm:p-6"
         }
@@ -41,7 +53,8 @@ export function ArrivalActionSheet({ open, city, onOpenChange, onPick }: Arrival
 
         <div className="mt-4 flex flex-col gap-2.5">
           {CARDS.map(({ icon: Icon, label, hint, section }) => (
-            <Button variant="outline"
+            <Button
+              variant="outline"
               key={label}
               type="button"
               onClick={() => section && onPick(section)}
@@ -52,11 +65,12 @@ export function ArrivalActionSheet({ open, city, onOpenChange, onPick }: Arrival
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block text-base font-semibold">{t(label)}</span>
-                <span className="block text-sm text-muted-foreground">{t(hint, { city: place })}</span>
+                <span className="block text-sm text-muted-foreground">
+                  {t(hint, { city: place })}
+                </span>
               </span>
             </Button>
           ))}
-
         </div>
       </DialogContent>
     </Dialog>

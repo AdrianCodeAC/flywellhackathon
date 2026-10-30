@@ -26,16 +26,16 @@ function instructions(lang: "en" | "ro"): string {
     "When recommending specific places, prefer places from the provided data; only add a place you are confident about " +
     "when the data does not cover the question. " +
     `Always respond in ${language}.` +
-    (lang === "ro"
-      ? " Use correct Romanian diacritics (ă, â, î, ș, ț with comma below)."
-      : "") +
+    (lang === "ro" ? " Use correct Romanian diacritics (ă, â, î, ș, ț with comma below)." : "") +
     " Return an object with: text — your answer; places — up to 5 recommended places, each with name, lat and lon " +
     "taken from the provided data, or an empty list when you are not recommending a specific location."
   );
 }
 
 function prompt(data: z.infer<typeof askInput>): string {
-  const turns = data.history.map((h) => `${h.role === "user" ? "Traveller" : "Assistant"}: ${h.content}`).join("\n");
+  const turns = data.history
+    .map((h) => `${h.role === "user" ? "Traveller" : "Assistant"}: ${h.content}`)
+    .join("\n");
   return [
     "Context:",
     data.context,
