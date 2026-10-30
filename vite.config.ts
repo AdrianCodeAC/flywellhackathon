@@ -21,10 +21,13 @@ export default defineConfig({
         registerType: "autoUpdate",
         strategies: "generateSW",
         filename: "sw.js",
+        // Write into the client output that is actually served.
+        outDir: "dist/client",
         // public/manifest.webmanifest is hand-written and linked from __root.
         manifest: false,
         devOptions: { enabled: false },
         workbox: {
+          globDirectory: "dist/client",
           globPatterns: ["**/*.{js,css,png,svg,ico,webmanifest,woff2}", "data/airports.json"],
           navigateFallback: null,
           cleanupOutdatedCaches: true,
