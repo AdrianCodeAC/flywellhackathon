@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { WifiOff } from "lucide-react";
+import { Plane, WifiOff } from "lucide-react";
 import { LANGUAGES, setLanguage, syncClientLanguage, type Language } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 
@@ -27,7 +27,12 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 pt-[env(safe-area-inset-top)] backdrop-blur">
-      <div className="mx-auto flex max-w-xl items-center justify-end px-4 py-1.5">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
+        <a href="/arrival" className="flex min-h-11 items-center gap-2.5" aria-label={t("app.title")}>
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"><Plane className="h-5 w-5 -rotate-12" /></span>
+          <span className="text-xl font-bold">{t("design.brand")}<span className="text-primary">.</span></span>
+        </a>
+        <span className="hidden text-xs font-medium uppercase text-muted-foreground sm:block">{t("design.companion")}</span>
         <LanguageSwitcher />
       </div>
       {offline && (
@@ -51,7 +56,7 @@ export function LanguageSwitcher() {
     <div
       role="group"
       aria-label={t("app.language")}
-      className="inline-flex shrink-0 rounded-lg border p-0.5"
+      className="inline-flex shrink-0 rounded-full bg-muted p-0.5"
     >
       {LANGUAGES.map((l) => (
         <Button
@@ -61,7 +66,7 @@ export function LanguageSwitcher() {
           lang={l}
           aria-pressed={current === l}
           onClick={() => setLanguage(l)}
-          className={`min-h-11 min-w-11 rounded-md px-2.5 text-sm font-semibold uppercase ${
+          className={`min-h-11 min-w-11 rounded-full px-2.5 text-xs font-semibold uppercase ${
             current === l ? "bg-primary text-primary-foreground" : "text-muted-foreground"
           }`}
         >

@@ -11,6 +11,9 @@ import { Button } from "@/components/ui/button";
 import type { ArrivalSection } from "@/features/arrival/ArrivalActionSheet";
 import type { ArrivalMessage } from "@/features/arrival/AskAI";
 import type { Airport } from "@/features/arrival/types";
+import { ArrowDown, MapPin, Plane, Compass } from "lucide-react";
+import { ArrivalOptions } from "@/features/arrival/ArrivalOptions";
+import cityImage from "@/assets/arrival-city.jpg";
 
 // Leaflet is browser-only, so the map module is loaded on demand.
 // Each section is loaded on demand too.
@@ -113,23 +116,31 @@ function ArrivalPage() {
   return (
     <>
       <AppHeader />
-      <main className="mx-auto min-h-dvh w-full max-w-xl px-4 pt-6 pb-[max(2rem,env(safe-area-inset-bottom))] sm:pt-12">
-        <h1 className="text-3xl font-bold tracking-tight">{t("app.title")}</h1>
-        <p className="mt-2 text-muted-foreground">{t("app.tagline")}</p>
-
-        <div className="mt-8">
+      {!section && (
+        <section className="arrival-hero">
+          <img src={cityImage} alt="" width={1600} height={912} fetchPriority="high" className="arrival-hero-image" />
+          <div className="arrival-hero-shade" />
+          <div className="arrival-hero-content">
+            <p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase"><Plane className="h-4 w-4" />{t("design.eyebrow")}</p>
+            <h1 className="font-display text-5xl font-normal leading-[1.05] sm:text-7xl">{t("app.title")}</h1>
+            <p className="mt-5 max-w-md text-base leading-relaxed text-hero-foreground/90">{t("app.tagline")}</p>
+            <a href="#airport-search" className="mt-7 inline-flex min-h-11 items-center gap-3 text-sm font-medium">{t("design.begin")}<ArrowDown className="h-4 w-4" /></a>
+          </div>
+          <span className="arrival-photo-caption"><MapPin className="h-3.5 w-3.5" />{t("design.photoLocation")}</span>
+        </section>
+      )}
+      <main className={`arrival-main mx-auto w-full px-5 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-8 ${section ? "max-w-3xl pt-7" : "max-w-6xl pt-9 sm:pt-12"}`}>
+        {section && <p className="mb-6 flex items-center gap-2 text-xs font-semibold uppercase text-primary"><Compass className="h-4 w-4" />{t("design.companion")}</p>}
+        <div id="airport-search" className={`scroll-mt-28 ${!section ? "airport-search-band" : ""}`}>
+          {!section && <div className="search-band-title"><span className="section-index" aria-hidden>01 /</span><h2 className="font-display text-3xl sm:text-4xl">{t("design.destination")}</h2></div>}
+          <div className={!section ? "w-full max-w-xl" : "w-full"}>
           <AirportSearch selected={airport} onSelect={select} onClear={clear} />
+          </div>
         </div>
-
-        {airport && !section && (
-          <Button
-            variant="outline"
-            onClick={() => setSheetOpen(true)}
-            className="mt-6 min-h-12 w-full"
-          >
-            {t("sheet.openOptions")}
-          </Button>
-        )}
+        {!section && <section className="mt-9 border-t pt-7 sm:mt-11 sm:pt-8">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-3"><span className="section-index" aria-hidden>02 /</span><h2 className="font-display text-3xl">{t("sheet.openOptions")}</h2></div>{airport && <Button variant="ghost" onClick={() => setSheetOpen(true)} className="min-h-11 text-primary"><Compass />{airport.city}</Button>}</div>
+          <ArrivalOptions city={airport?.city ?? ""} disabled={!airport} onPick={(s) => { setSection(s); setSheetOpen(false); }} />
+        </section>}
 
         {hydrated && airport && section === "food" && (
           <Suspense fallback={null}>
@@ -201,6 +212,7 @@ function ArrivalPage() {
           </Suspense>
         )}
       </main>
+      {!section && <footer className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 border-t px-5 py-6 text-xs text-muted-foreground sm:px-8"><span className="font-semibold">{t("design.brand")}.</span><span>{t("design.footer")}</span><Plane className="h-4 w-4 text-primary" /></footer>}
     </>
   );
 }
