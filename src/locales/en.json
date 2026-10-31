@@ -938,23 +938,12 @@
       "middle": "middle (B, E)",
       "aisle": "aisle (C, D)"
     },
-    "front": "Front",
-    "middle": "Middle",
-    "rear": "Rear",
     "legendBest": "Best seats",
     "legendGood": "Good row",
     "legendAvoid": "Avoid",
     "legendExit": "Exit",
     "legendWing": "Wing",
     "comfortOnly": "Comfort tip — there is no safety data behind it.",
-    "aircraftNote": "Drawn on a typical 30-row plane (A320 / Boeing 737). Wing and exit rows differ on your aircraft; check the seat map when you choose your seat.",
-    "statsTitle": "What the data says about safety",
-    "turbTitle": "Serious turbulence injuries among crew not wearing seat belts, by cabin section (US airlines, 2009–2018)",
-    "turbNote": "Of {{total}} people seriously hurt by turbulence, only {{belted}} passenger was wearing a seat belt, and {{rear}}% of injured passengers were in the rear section.",
-    "crashTitle": "Fatality rate by cabin third in 17 accidents with survivors (US, 1985–2000)",
-    "crashNote": "Middle seats at the back: {{rear}}%; aisle seats in the middle: {{aisle}}%. It is a small sample, and the FAA says no seat is always safest — every accident is different.",
-    "exitTitle": "Distance to an exit matters",
-    "exitNote": "In a study of 105 accidents, the exit row and the rows next to it had the best survival; up to {{rows}} rows from an exit people still had better than even odds of escaping a fire.",
-    "bottomLine": "Flying is very safe. What helps most: keep your seat belt fastened while seated and know where your nearest exit is."
+    "aircraftNote": "Drawn on a typical 30-row plane (A320 / Boeing 737). Wing and exit rows differ on your aircraft; check the seat map when you choose your seat."
   }
 }

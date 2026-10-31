@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, useReducedMotion } from "motion/react";
-import { Armchair, ExternalLink, ShieldCheck } from "lucide-react";
+import { Armchair, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { PreflightInput } from "./rules";
 import {
   EXIT_ROWS,
   ROWS,
   SEAT_SOURCES,
-  SEAT_STATS,
   SITUATIONS,
   WING_ROWS,
   adviceFor,
@@ -163,7 +162,6 @@ export function SeatAdvice({ input }: { input: PreflightInput }) {
         )}
       </motion.div>
 
-      <SeatStats />
       <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{t("seats.aircraftNote")}</p>
     </section>
   );
@@ -185,77 +183,5 @@ function SourceLink({ id }: { id: keyof typeof SEAT_SOURCES }) {
       {s.name}
       <ExternalLink className="size-3.5 shrink-0" />
     </a>
-  );
-}
-
-function SeatStats() {
-  const { t, i18n } = useTranslation();
-  const pct = (v: number) => new Intl.NumberFormat(i18n.language, { maximumFractionDigits: 1 }).format(v);
-  return (
-    <div className="mt-6 rounded-2xl border bg-card p-4">
-      <h4 className="flex items-center gap-2 text-lg font-semibold">
-        <ShieldCheck className="size-5 text-primary" />
-        {t("seats.statsTitle")}
-      </h4>
-
-      <Bars
-        title={t("seats.turbTitle")}
-        rows={SEAT_STATS.turbulenceBySection.map((r) => ({ label: t(`seats.${r.section}`), value: r.value, note: r.count }))}
-        max={60}
-        format={pct}
-        tone="stat-warn"
-      />
-      <p className="mt-2 text-sm text-muted-foreground">
-        {t("seats.turbNote", { total: SEAT_STATS.seriouslyInjured, belted: SEAT_STATS.beltedPassengers, rear: pct(SEAT_STATS.passengerInjuriesRear) })}
-      </p>
-      <div className="flex flex-wrap gap-x-4">
-        <SourceLink id="ntsb" />
-      </div>
-
-      <Bars
-        title={t("seats.crashTitle")}
-        rows={SEAT_STATS.fatalityByThird.map((r) => ({ label: t(`seats.${r.section}`), value: r.value }))}
-        max={50}
-        format={pct}
-        tone="stat-neutral"
-      />
-      <p className="mt-2 text-sm text-muted-foreground">
-        {t("seats.crashNote", { rear: SEAT_STATS.rearMiddleSeats, aisle: SEAT_STATS.middleAisleSeats })}
-      </p>
-      <SourceLink id="time" />
-
-      <h5 className="mt-5 font-semibold">{t("seats.exitTitle")}</h5>
-      <p className="mt-1 text-sm text-muted-foreground">{t("seats.exitNote", { rows: SEAT_STATS.exitRows })}</p>
-      <SourceLink id="greenwich" />
-
-      <p className="mt-4 rounded-lg bg-secondary p-3 text-sm font-medium">{t("seats.bottomLine")}</p>
-    </div>
-  );
-}
-
-function Bars({ title, rows, max, format, tone }: { title: string; rows: { label: string; value: number; note?: string }[]; max: number; format: (v: number) => string; tone: string }) {
-  const reduce = useReducedMotion() ?? false;
-  return (
-    <figure className="mt-4">
-      <figcaption className="text-sm font-semibold">{title}</figcaption>
-      <div className="mt-2 grid gap-2">
-        {rows.map((r, i) => (
-          <div key={r.label} className="grid grid-cols-[4.5rem_1fr_3.5rem] items-center gap-2 text-sm">
-            <span className="text-muted-foreground">{r.label}</span>
-            <span className="stat-track h-3 overflow-hidden rounded-full">
-              <motion.span
-                className={`block h-full rounded-full ${tone}`}
-                initial={reduce ? false : { width: 0 }}
-                whileInView={{ width: `${(r.value / max) * 100}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: i * 0.12, ease: "easeOut" }}
-                style={reduce ? { width: `${(r.value / max) * 100}%` } : {}}
-              />
-            </span>
-            <span className="text-right font-semibold tabular-nums">{format(r.value)}%</span>
-          </div>
-        ))}
-      </div>
-    </figure>
   );
 }

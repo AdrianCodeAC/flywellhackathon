@@ -40,3 +40,5 @@
 - [x] Accounts: header sign-in button, /auth (Google, Apple first on iPhone, Lovable, email/password + reset), profile (name, photo), /account with saved planned trips, saved pre-flight checklists and the trip chat.
 - [x] Airport guide map redesign: illustrated buildings, runways, parked/taking-off planes, dropping pins, drawn route, walking marker, step card with prev/next.
 - [x] Seat advice in Before you fly: recommended seats per situation (child, less turbulence, fear of flying, tall, quick exit, sleep, motion sickness, accessibility) with sourced safety statistics; never invent numbers.
+- [x] Recolor the whole app from the user's palette (base green), defined globally per element
+- [x] Remove seat safety statistics
