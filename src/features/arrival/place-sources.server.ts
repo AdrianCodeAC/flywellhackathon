@@ -144,6 +144,8 @@ const LOOKS_LIKE_SIGHT =
 function isWorthVisiting(p: Place): boolean {
   const text = `${p.name} ${p.description ?? ""}`.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   if (NOT_A_SIGHT.test(text) || A_SETTLEMENT.test(text)) return false;
+  // "Podari, Dolj"-style titles are settlements.
+  if (p.kind === "other" && /^[^,()]+, [^,()]+$/.test(p.name) && !LOOKS_LIKE_SIGHT.test(p.name)) return false;
   return p.kind !== "other" || LOOKS_LIKE_SIGHT.test(p.name.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
 }
 
