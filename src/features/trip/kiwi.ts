@@ -19,9 +19,14 @@ export type KiwiLeg = {
 };
 export type KiwiItinerary = {
   id?: string; price?: number; priceFormatted?: string; totalDurationSeconds?: number;
-  bookingUrl?: string; imageId?: string;
+  bookingUrl?: string | undefined; imageId?: string;
   baggage?: { personalItem?: number; cabinBag?: number; checkedBag?: number };
-  outbound?: KiwiLeg; inbound?: KiwiLeg;
+  outbound?: KiwiLeg | undefined; inbound?: KiwiLeg | undefined;
+};
+export type KiwiArgs = {
+  flyFrom: string; flyTo: string; departureDate: string; adults: number; children: number;
+  currency: string; sort: string;
+  departureDateFlexDays?: number; returnDate?: string; returnDateFlexDays?: number; max_sector_stopovers?: number;
 };
 export type KiwiPayload = { currency?: string; resultsCount?: number; itineraries?: KiwiItinerary[] };
 
@@ -36,9 +41,9 @@ export function readStreamJson(text: string): unknown {
 }
 
 /** Kiwi wants dd/mm/yyyy and its own spelling of the options the traveller picked. */
-export function kiwiArgs(input: TripInput, currency: string) {
+export function kiwiArgs(input: TripInput, currency: string): KiwiArgs {
   const day = (value: string) => `${value.slice(8, 10)}/${value.slice(5, 7)}/${value.slice(0, 4)}`;
-  const args: Record<string, string | number | boolean> = {
+  const args: KiwiArgs = {
     flyFrom: input.origin,
     flyTo: input.destinationIata ?? input.destination,
     departureDate: day(input.departure),
@@ -54,6 +59,11 @@ export function kiwiArgs(input: TripInput, currency: string) {
   }
   if (input.direct) args.max_sector_stopovers = 0;
   return args;
+}
+
+/** The whole request body the free service expects for this trip. */
+export function kiwiRequestBody(input: TripInput, currency: string) {
+  return JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "search-flight", arguments: kiwiArgs(input, currency) } });
 }
 
 /** "2026-11-12T06:15:00" -> "2026-11-12T06:15"; anything else is not a time we can show. */

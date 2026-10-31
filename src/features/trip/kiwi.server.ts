@@ -2,13 +2,10 @@
 // The parsing rules live in kiwi.ts; nothing here needs a key or an account.
 import { bookingLinks, type FlightResult, type TripInput } from "./types";
 import { readTripCache, writeTripCache } from "./cache.server";
-import { KIWI_MCP_URL, KIWI_TTL, kiwiArgs, parseKiwi, readStreamJson, type KiwiPayload } from "./kiwi";
+import { KIWI_MCP_URL, KIWI_TTL, kiwiRequestBody, parseKiwi, readStreamJson, type KiwiPayload } from "./kiwi";
 
 export { KIWI_TTL };
 
-function mcpBody(args: Record<string, string | number | boolean>) {
-  return JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "search-flight", arguments: args } });
-}
 
 
 export function kiwiCacheKey(input: TripInput, currency: string) {
@@ -31,7 +28,7 @@ export async function kiwiFares(input: TripInput, signal: AbortSignal): Promise<
     const response = await fetch(KIWI_MCP_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json, text/event-stream" },
-      body: mcpBody(kiwiArgs(input, currency)),
+      body: kiwiRequestBody(input, currency),
       signal: controller.signal,
     });
     console.info(`[Trip HTTP] ${new URL(KIWI_MCP_URL).hostname} status=${response.status}`);
