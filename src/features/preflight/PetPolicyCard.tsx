@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
-import { AlertTriangle, CalendarClock, Dog, ExternalLink, Luggage, PawPrint } from "lucide-react";
+import { CalendarClock, Dog, ExternalLink, Luggage, PawPrint } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { findPetPolicy, PET_POLICIES, type PetPolicy } from "./pets";
 
@@ -34,7 +34,7 @@ export function PetPolicyCard({ airline: text, to }: { airline: string; to: stri
     );
   }
 
-  if (!policy.cabin && policy.hold.kind === "no") {
+  if ((!policy.cabin && policy.hold.kind === "no") || to === "GB") {
     // The checklist already says "no pets"; only add what is new: assistance dogs + official page.
     return (
       <article className="mb-3 rounded-lg border border-primary/40 bg-card p-4">
@@ -42,11 +42,15 @@ export function PetPolicyCard({ airline: text, to }: { airline: string; to: stri
           <Dog className="size-5 text-primary" />
           {t("preflight.pets.assistTitle", { airline: policy.name })}
         </h4>
-        {policy.notes.map((n) => (
-          <p key={n} className="mt-2 text-sm text-muted-foreground">
-            {t(`preflight.pets.note.${n}`)}
-          </p>
-        ))}
+        {to === "GB" && policy.cabin ? (
+          <p className="mt-2 text-sm text-muted-foreground">{t("preflight.pets.assistanceText")}</p>
+        ) : (
+          policy.notes.map((n) => (
+            <p key={n} className="mt-2 text-sm text-muted-foreground">
+              {t(`preflight.pets.note.${n}`)}
+            </p>
+          ))
+        )}
         <a
           href={policy.url}
           target="_blank"
@@ -103,12 +107,6 @@ export function PetPolicyCard({ airline: text, to }: { airline: string; to: stri
         {t("preflight.pets.title", { airline: policy.name })}
         {policy.verify && <Badge variant="outline">{t("preflight.pets.verifyBadge")}</Badge>}
       </h4>
-      {to === "GB" && (
-        <p className="mt-2 flex gap-2 rounded-md bg-accent p-2 text-sm text-accent-foreground">
-          <AlertTriangle className="mt-0.5 size-4 shrink-0" />
-          {t("preflight.pets.gbWarning")}
-        </p>
-      )}
       <dl className="mt-3 grid gap-3">
         {rows.map((r) => (
           <div key={r.label} className="flex items-start gap-3">

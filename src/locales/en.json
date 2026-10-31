@@ -522,7 +522,7 @@
       },
       "petAirlineUnknown": {
         "title": "Your airline decides if the pet can fly",
-        "detail": "Airlines differ a lot: Wizz Air, Ryanair and easyJet do not carry pets at all, while many others take a small pet in the cabin (usually up to 8 kg with the carrier). Fill in your airline to see its exact rules."
+        "detail": "Airlines differ a lot. See the list above, or fill in your airline to see its exact rules."
       },
       "petAirlineNo": {
         "title": "{{airline}} does not carry pets",
@@ -531,10 +531,6 @@
       "petAirlineCabin": {
         "title": "Book the pet with {{airline}} in advance",
         "detail": "{{airline}} takes a small pet in the cabin (up to {{kg}} kg with the carrier). Places are limited, so add the pet to your booking as early as possible and wait for confirmation."
-      },
-      "petAirlineGb": {
-        "title": "Pet to Great Britain with {{airline}}",
-        "detail": "Even if {{airline}} normally takes pets in the cabin, pets flying into Great Britain must travel as cargo. Arrange it with an approved pet transport company."
       },
       "petAirlineCargo": {
         "title": "{{airline}}: pets only as cargo",
@@ -613,7 +609,6 @@
       "holdNo": "No",
       "assistanceText": "Recognised guide and assistance dogs fly free in the cabin with separate approval; emotional-support animals count as pets.",
       "notice": "Book the pet at least {{hours}} hours before departure and wait for confirmation.",
-      "gbWarning": "Flying into Great Britain, pets must travel as cargo — not in the cabin — whatever the airline's usual rule.",
       "shortCabin": "Cabin up to {{kg}} kg",
       "shortCargo": "Cargo only",
       "shortNo": "No pets",

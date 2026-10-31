@@ -200,9 +200,9 @@ export function buildChecklist(input: PreflightInput, today = new Date()): Check
       add("documents", "must", `pet_${entry}`, entrySource[entry], { city });
       if (entry === "us") add("documents", "info", "pet_usCats", "usAnimals");
       if (!airline) add("documents", "must", "petAirlineUnknown");
-      else if (to === "GB")
-        add("documents", "must", "petAirlineGb", undefined, { airline: airline.name });
-      else if (airline.cabin)
+      else if (to === "GB") {
+        // pet_gb already says "cargo only"; the airline's cabin rule does not apply.
+      } else if (airline.cabin)
         add("documents", "must", "petAirlineCabin", undefined, {
           airline: airline.name,
           kg: airline.cabin.kg,

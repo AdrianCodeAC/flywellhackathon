@@ -67,7 +67,7 @@ describe("pet entry rules per destination", () => {
 
   it("into Great Britain the pet must fly as cargo even with a cabin-pet airline", () => {
     const list = keys(trip({ airline: "Lufthansa", destination: { iata: "LHR", city: "London", countryCode: "GB" } }));
-    expect(list).toEqual(expect.arrayContaining(["pet_gb", "petAirlineGb"]));
+    expect(list).toContain("pet_gb");
     expect(list).not.toContain("petAirlineCabin");
   });
 
@@ -77,7 +77,7 @@ describe("pet entry rules per destination", () => {
       const pets = dict.preflight.pets as unknown as { note: Record<string, string> };
       for (const n of notes) expect(pets.note[n], n).toBeTruthy();
       const rules = dict.preflight.rule as Record<string, unknown>;
-      for (const k of ["pet_eu", "pet_intoEu", "pet_gb", "pet_us", "pet_usCats", "pet_tr", "pet_ae", "pet_other", "petAirlineUnknown", "petAirlineNo", "petAirlineCabin", "petAirlineGb", "petAirlineCargo"])
+      for (const k of ["pet_eu", "pet_intoEu", "pet_gb", "pet_us", "pet_usCats", "pet_tr", "pet_ae", "pet_other", "petAirlineUnknown", "petAirlineNo", "petAirlineCabin", "petAirlineCargo"])
         expect(rules[k], k).toBeTruthy();
     }
   });

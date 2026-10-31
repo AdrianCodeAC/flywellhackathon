@@ -522,7 +522,7 @@
       },
       "petAirlineUnknown": {
         "title": "Compania aeriană decide dacă animalul poate zbura",
-        "detail": "Companiile diferă mult: Wizz Air, Ryanair și easyJet nu transportă deloc animale, iar multe altele acceptă un animal mic în cabină (de obicei până la 8 kg cu tot cu cușca). Completează compania aeriană ca să vezi regulile exacte."
+        "detail": "Companiile diferă mult. Vezi lista de mai sus sau completează compania aeriană ca să vezi regulile exacte."
       },
       "petAirlineNo": {
         "title": "{{airline}} nu transportă animale",
@@ -531,10 +531,6 @@
       "petAirlineCabin": {
         "title": "Rezervă din timp locul animalului la {{airline}}",
         "detail": "{{airline}} acceptă un animal mic în cabină (până la {{kg}} kg cu tot cu geanta de transport). Locurile sunt limitate, așa că adaugă animalul la rezervare cât mai devreme și așteaptă confirmarea."
-      },
-      "petAirlineGb": {
-        "title": "Animal spre Marea Britanie cu {{airline}}",
-        "detail": "Chiar dacă {{airline}} acceptă de obicei animale în cabină, cele care zboară spre Marea Britanie trebuie să meargă drept cargo. Organizează transportul cu o firmă aprobată."
       },
       "petAirlineCargo": {
         "title": "{{airline}}: animale doar prin cargo",
@@ -613,7 +609,6 @@
       "holdNo": "Nu",
       "assistanceText": "Câinii-ghid și de asistență recunoscuți zboară gratuit în cabină, cu aprobare separată; animalele de suport emoțional sunt tratate ca animale de companie.",
       "notice": "Rezervă animalul cu cel puțin {{hours}} h înainte de plecare și așteaptă confirmarea.",
-      "gbWarning": "Spre Marea Britanie, animalele trebuie să zboare drept cargo — nu în cabină — indiferent de regula obișnuită a companiei.",
       "shortCabin": "Cabină până la {{kg}} kg",
       "shortCargo": "Doar cargo",
       "shortNo": "Fără animale",
