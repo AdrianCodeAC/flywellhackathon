@@ -644,7 +644,8 @@
         "aegeanProp": "On propeller aircraft (ATR, Dash 8) the carrier must be max 40 × 25 × 25 cm.",
         "vuelingUk": "Not available on flights to or from the UK and Iceland.",
         "hiskyFee": "€50 per flight within Romania and Bucharest–Chișinău; not offered on London flights. Contact HiSky to confirm."
-      }
+      },
+      "assistTitle": "Assistance dogs — {{airline}}"
     }
   },
   "weather": {

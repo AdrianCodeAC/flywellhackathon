@@ -33,6 +33,32 @@ export function PetPolicyCard({ airline: text, to }: { airline: string; to: stri
     );
   }
 
+  if (!policy.cabin && policy.hold.kind === "no") {
+    // The checklist already says "no pets"; only add what is new: assistance dogs + official page.
+    return (
+      <article className="mb-3 rounded-lg border border-primary/40 bg-card p-4">
+        <h4 className="flex items-center gap-2 font-semibold">
+          <Dog className="size-5 text-primary" />
+          {t("preflight.pets.assistTitle", { airline: policy.name })}
+        </h4>
+        {policy.notes.map((n) => (
+          <p key={n} className="mt-2 text-sm text-muted-foreground">
+            {t(`preflight.pets.note.${n}`)}
+          </p>
+        ))}
+        <a
+          href={policy.url}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-1 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline"
+        >
+          {t("preflight.pets.official", { airline: policy.name })}
+          <ExternalLink className="size-3.5" />
+        </a>
+      </article>
+    );
+  }
+
   const species = policy.cabin?.species.map((s) => t(`preflight.pets.species.${s}`)).join(", ");
   const rows = [
     {

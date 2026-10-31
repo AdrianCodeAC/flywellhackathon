@@ -644,7 +644,8 @@
         "aegeanProp": "Pe avioanele cu elice (ATR, Dash 8) geanta trebuie să fie max. 40 × 25 × 25 cm.",
         "vuelingUk": "Nu este disponibil pe zborurile spre sau din Marea Britanie și Islanda.",
         "hiskyFee": "50 € pe zbor în România și pe ruta București–Chișinău; nu se oferă pe zborurile spre Londra. Contactează HiSky pentru confirmare."
-      }
+      },
+      "assistTitle": "Câini de asistență — {{airline}}"
     }
   },
   "weather": {
