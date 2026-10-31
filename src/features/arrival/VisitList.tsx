@@ -13,6 +13,8 @@ import {
   type PlacesResult,
 } from "./services";
 import type { Airport, Place } from "./types";
+import type { StartPointState } from "./start-point";
+import { StartNotice } from "./StartNotice";
 
 type Filter = "all" | "museums" | "churches" | "parks" | "monuments" | "other";
 const FILTERS: Filter[] = ["all", "museums", "churches", "parks", "monuments", "other"];
@@ -27,6 +29,7 @@ const GROUPS: Record<Exclude<Filter, "all">, Place["kind"][]> = {
 
 interface VisitListProps {
   airport: Airport;
+  start: StartPointState;
   onBack: () => void;
   onShowRoute: (place: Place) => void;
 }
@@ -37,7 +40,7 @@ const chip = (on: boolean) =>
   }`;
 
 /** What to visit? — sights around the city centre, Wikipedia first. */
-export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
+export function VisitList({ airport, start, onBack, onShowRoute }: VisitListProps) {
   const { t, i18n } = useTranslation();
   const [filter, setFilter] = useState<Filter>("all");
   const [result, setResult] = useState<PlacesResult | null>(null);
@@ -77,17 +80,18 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
     };
   }, [airport, attempt, i18n.language]);
 
+  const from = start.start ?? { lat: airport.lat, lon: airport.lon };
   const shown = useMemo(() => {
     const group = filter === "all" ? null : GROUPS[filter];
     return (result?.places ?? [])
       .map((p): Place => ({
         ...p,
-        // Distances on the card are measured from the airport, not the centre.
-        distance: Math.round(distanceMeters([airport.lat, airport.lon], [p.lat, p.lon])),
+        // Measured from the same point "Show route" starts at (you, or the airport).
+        distance: Math.round(distanceMeters([from.lat, from.lon], [p.lat, p.lon])),
       }))
       .filter((p) => !group || group.includes(p.kind))
       .slice(0, 30);
-  }, [result, filter, airport.lat, airport.lon]);
+  }, [result, filter, from.lat, from.lon]);
 
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
@@ -109,6 +113,8 @@ export function VisitList({ airport, onBack, onShowRoute }: VisitListProps) {
           </Button>
         ))}
       </div>
+
+      <StartNotice state={start} />
 
       <div className="mt-4 flex flex-col gap-2.5">
         {error && (

@@ -138,7 +138,7 @@ export function ArrivalAssistant({ iata, embedded = false, onIataChange }: { iat
           <Suspense fallback={null}>
             {section === "food" && <FoodList airport={airport} start={startState} onBack={back} onShowRoute={routeFromStart} />}
             {section === "visit" && <VisitList airport={airport} start={startState} onBack={back} onShowRoute={routeFromStart} />}
-            {section === "ride" && <RideOptions airport={airport} onBack={back} onShowRoute={(to) => setTarget({ to, from: airportEnd })} />}
+            {section === "ride" && <RideOptions airport={airport} onBack={back} onShowRoute={(to) => airportEnd && setTarget({ from: airportEnd, to: { lat: to.lat, lon: to.lon, name: to.name } })} />}
             {section === "ask" && <AskAI airport={airport} messages={messages} onMessages={setMessages} onBack={back} onShowRoute={routeFromStart} />}
           </Suspense>
         )}

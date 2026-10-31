@@ -14,6 +14,9 @@ import {
 } from "./services";
 import type { Airport, Place } from "./types";
 import { DEFAULT_FOOD_AREA } from "./place-sources";
+import { distanceMeters } from "./place-utils";
+import type { StartPointState } from "./start-point";
+import { StartNotice } from "./StartNotice";
 
 type Area = "airport" | "center";
 type Filter = "all" | "restaurant" | "fast_food" | "cafe";
@@ -21,6 +24,7 @@ const FILTERS: Filter[] = ["all", "restaurant", "fast_food", "cafe"];
 
 interface FoodListProps {
   airport: Airport;
+  start: StartPointState;
   onBack: () => void;
   onShowRoute: (place: Place) => void;
 }
@@ -30,7 +34,7 @@ const chip = (on: boolean) =>
     on ? "border-primary bg-primary text-primary-foreground" : "active:bg-accent"
   }`;
 
-export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
+export function FoodList({ airport, start, onBack, onShowRoute }: FoodListProps) {
   const { t, i18n } = useTranslation();
   const [area, setArea] = useState<Area>(DEFAULT_FOOD_AREA);
   const [filter, setFilter] = useState<Filter>("all");
@@ -73,17 +77,22 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
   }, [airport, area, attempt]);
 
   const places = result?.places ?? null;
+  const from = start.start;
   const shown = useMemo(() => {
     if (!places) return [];
     const now = new Date();
-    return places
+    const list = places
       .map((p): Place => {
         const openNow = isOpenNow(p.openingHours, now);
-        return openNow === undefined ? p : { ...p, openNow };
+        // Measured from the same point "Show route" starts at, never from the search centre.
+        const distance = from ? Math.round(distanceMeters([from.lat, from.lon], [p.lat, p.lon])) : p.distance;
+        return openNow === undefined ? { ...p, distance } : { ...p, distance, openNow };
       })
-      .filter((p) => (filter === "all" || p.kind === filter) && (!openOnly || p.openNow === true))
-      .slice(0, 30);
-  }, [places, filter, openOnly]);
+      .filter((p) => (filter === "all" || p.kind === filter) && (!openOnly || p.openNow === true));
+    // Live position: nearest to you first.
+    if (from?.source === "you") list.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
+    return list.slice(0, 30);
+  }, [places, filter, openOnly, from?.lat, from?.lon, from?.source]);
 
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
@@ -129,6 +138,8 @@ export function FoodList({ airport, onBack, onShowRoute }: FoodListProps) {
           {t("food.openNow")}
         </Button>
       </div>
+
+      <StartNotice state={start} />
 
       <div className="mt-4 flex flex-col gap-2.5">
         {error && (
