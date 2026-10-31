@@ -261,3 +261,19 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-meter-accommodation { --meter-tone: var(--visit-tone); }
 .trip-meter-activities { --meter-tone: var(--ask-tone); }
 @media (max-width: 639px) { .trip-hero { height: 295px; } .trip-hero .arrival-hero-content { padding: 32px 24px; } }
+.calendar-cheap { color: var(--primary); background: var(--secondary); }
+.calendar-expensive { color: var(--food-tone); background: var(--food-soft); }
+.calendar-no-price { color: var(--muted-foreground); }
+.calendar-best { color: var(--primary); }
+.trip-price-calendar button { min-height: 44px; }
+.trip-date-sheet { display:flex; flex-direction:column; }
+.trip-date-sheet > div { min-height:0; flex:1; }
+.trip-date-sheet > button { width:44px; height:44px; display:flex; align-items:center; justify-content:center; }
+.trip-date-sheet > button .sr-only { display:none; }
+.trip-price-calendar { width:100%; max-width:100%; }
+.trip-price-calendar [data-day] { aspect-ratio:auto; min-width:44px; width:100%; }
+.trip-price-calendar .rdp-month { min-width:0; }
+.trip-price-calendar .rdp-day { aspect-ratio:auto; }
+.trip-price-calendar .rdp-week > td { flex:0 0 calc(100% / 7); min-width:0; width:calc(100% / 7); }
+.trip-price-calendar .rdp-weekdays > th { flex:0 0 calc(100% / 7); min-width:0; }
+@media (min-width:768px) { .trip-price-calendar { width:680px; } }

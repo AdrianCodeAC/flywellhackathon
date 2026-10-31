@@ -11,11 +11,12 @@ export const tripInputSchema = z.object({
   adults: z.number().int().min(1).max(9),
   children: z.number().int().min(0).max(8),
   flexible: z.boolean(),
+  oneWay: z.boolean().optional(),
   budget: z.enum(["budget", "medium", "comfort"]),
   direct: z.boolean(),
   bag: z.boolean(),
   lang: z.enum(["en", "ro"]),
-}).refine((v) => validDate(v.departure) && validDate(v.returnDate) && nights(v.departure, v.returnDate) > 0 && nights(v.departure, v.returnDate) <= 90 && v.departure >= new Date().toISOString().slice(0,10), { message: "Invalid travel dates", path: ["returnDate"] })
+}).refine((v) => validDate(v.departure) && validDate(v.returnDate) && (v.oneWay ? v.departure===v.returnDate : nights(v.departure, v.returnDate) > 0) && nights(v.departure, v.returnDate) <= 90 && v.departure >= new Date().toISOString().slice(0,10), { message: "Invalid travel dates", path: ["returnDate"] })
   .refine((v) => v.adults + v.children <= 9, { message: "Maximum 9 travellers", path: ["children"] });
 export type TripInput = z.infer<typeof tripInputSchema>;
 export type Destination = { iata: string; city: string; country: string; lat: number; lon: number };
@@ -64,12 +65,12 @@ export function bookingLinks(input: TripInput, city: string) {
   return {
     booking: `https://www.booking.com/searchresults.html?${new URLSearchParams({ ss: city, checkin: input.departure, checkout: input.returnDate, group_adults: String(input.adults), group_children: String(input.children), no_rooms: "1" })}`,
     airbnb: `https://www.airbnb.com/s/${encodeURIComponent(city)}/homes?${new URLSearchParams({ checkin: input.departure, checkout: input.returnDate, adults: String(input.adults), children: String(input.children) })}`,
-    google: `https://www.google.com/travel/flights?q=${encodeURIComponent(`${input.origin} to ${input.destinationIata ?? city} ${input.departure} return ${input.returnDate} ${guests} passengers${input.direct ? " nonstop" : ""}`)}`,
-    skyscanner: `https://www.skyscanner.net/transport/flights/${input.origin.toLowerCase()}/${(input.destinationIata ?? city).toLowerCase()}/${input.departure.slice(2).replaceAll("-","")}/${input.returnDate.slice(2).replaceAll("-","")}/?${new URLSearchParams({ adults: String(input.adults), children: String(input.children), adultsv2: String(input.adults), cabinclass: "economy", preferdirects: String(input.direct) })}`,
+    google: `https://www.google.com/travel/flights?q=${encodeURIComponent(`${input.origin} to ${input.destinationIata ?? city} ${input.departure}${input.oneWay?' one way':` return ${input.returnDate}`} ${guests} passengers${input.direct ? " nonstop" : ""}`)}`,
+    skyscanner: `https://www.skyscanner.net/transport/flights/${input.origin.toLowerCase()}/${(input.destinationIata ?? city).toLowerCase()}/${input.departure.slice(2).replaceAll("-","")}/${input.oneWay?'':input.returnDate.slice(2).replaceAll("-","")+ '/'}?${new URLSearchParams({ adults: String(input.adults), children: String(input.children), adultsv2: String(input.adults), cabinclass: "economy", preferdirects: String(input.direct) })}`,
   };
 }
 export function stayCosts(input: TripInput, advice: TripAdvice, flight: Flight | undefined, rate: number) {
-  const days = nights(input.departure,input.returnDate), people = input.adults + input.children;
+  const days = input.oneWay?1:nights(input.departure,input.returnDate), people = input.adults + input.children;
   const areas = advice.areas;
   const accommodation = [Math.min(...areas.map(a=>a.nightlyMinEur)),Math.max(...areas.map(a=>a.nightlyMaxEur))].map(v=>v*days*rate);
   const scaled = (v: number[]) => v.map(x=>x*days*people*rate);

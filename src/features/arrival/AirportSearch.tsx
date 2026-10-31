@@ -11,9 +11,10 @@ interface AirportSearchProps {
   selected: Airport | null;
   onSelect: (airport: Airport) => void;
   onClear: () => void;
+  label?: string;
 }
 
-export function AirportSearch({ selected, onSelect, onClear }: AirportSearchProps) {
+export function AirportSearch({ selected, onSelect, onClear, label }: AirportSearchProps) {
   const { t, i18n } = useTranslation();
   const [query, setQuery] = useState("");
   const [debounced, setDebounced] = useState("");
@@ -92,7 +93,7 @@ export function AirportSearch({ selected, onSelect, onClear }: AirportSearchProp
   return (
     <div className="relative w-full">
       <label htmlFor={`${listId}-input`} className="mb-2 block text-sm font-medium">
-        {t("search.label")}
+        {label ?? t("search.label")}
       </label>
       <div className="flex gap-2">
         <div className="relative min-w-0 flex-1">

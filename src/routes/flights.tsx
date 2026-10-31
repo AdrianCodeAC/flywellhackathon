@@ -1,0 +1,5 @@
+import { createFileRoute } from '@tanstack/react-router';
+import { z } from 'zod';
+import { AllFlights } from '@/features/trip/AllFlights';
+const searchSchema=z.object({origin:z.string().regex(/^[A-Z]{3}$/).catch('CRA'),from:z.string().date().catch('2026-11-12'),to:z.string().date().catch('2026-11-16'),flexible:z.boolean().catch(false),adults:z.number().int().min(1).max(9).catch(1),children:z.number().int().min(0).max(8).catch(0),lang:z.enum(['en','ro']).catch('en')});
+export const Route=createFileRoute('/flights')({validateSearch:search=>searchSchema.parse(search),head:()=>({meta:[{title:'Flywell — Flights in your travel period'},{name:'description',content:'Compare real cached flight fares from your airport for your selected travel dates.'},{property:'og:title',content:'Flywell — Compare flights'},{property:'og:description',content:'Airport-specific fares, travel dates and comfort scores.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary'}]}),component:()=> <AllFlights search={Route.useSearch()}/>});

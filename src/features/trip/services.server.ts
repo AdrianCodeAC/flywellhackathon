@@ -23,8 +23,9 @@ export async function flights(input: TripInput,signal:AbortSignal): Promise<Flig
     const rows:Record<string,unknown>[]=[];
     const currency=(input.lang==="ro"?"RON":"EUR");
     // At month boundaries ±3 days spans multiple month pairs; keep calls sequential.
-    for(const departMonth of searchMonths(input.departure,input.flexible))for(const returnMonth of searchMonths(input.returnDate,input.flexible)){
-      const params = new URLSearchParams({origin:input.origin,destination:input.destinationIata ?? "",departure_at:departMonth,return_at:returnMonth,currency:currency.toLowerCase(),one_way:"false",sorting:"price",limit:"100",unique:"false"});
+    for(const departMonth of searchMonths(input.departure,input.flexible))for(const returnMonth of input.oneWay?['']:searchMonths(input.returnDate,input.flexible)){
+      const params = new URLSearchParams({origin:input.origin,destination:input.destinationIata ?? "",departure_at:departMonth,currency:currency.toLowerCase(),one_way:String(Boolean(input.oneWay)),sorting:"price",limit:"100",unique:"false"});
+      if(returnMonth)params.set('return_at',returnMonth);
       const r = await http(`https://api.travelpayouts.com/aviasales/v3/prices_for_dates?${params}`,{headers:{"X-Access-Token":token,Accept:"application/json"},signal});
       const data = await r.json() as {success:boolean;currency?:string;data?:Record<string,unknown>[];error?:string};
       if(!data.success||(data.currency&&data.currency.toUpperCase()!==currency)) return {flights:[],error:"providerError",fetchedAt,baggageUnknown:input.bag};
@@ -37,7 +38,7 @@ export async function flights(input: TripInput,signal:AbortSignal): Promise<Flig
       const actualDestination=row["destination_airport"]??row["destination"];
       const actualOrigin=row["origin_airport"]??row["origin"];
       const returnStops=Number(row["return_transfers"]??stops);
-      if(!dateMatches(departure,input.departure,input.flexible)||!dateMatches(returnDate,input.returnDate,input.flexible)||!(price>0)||!Number.isFinite(stops)||(input.direct&&(stops>0||returnStops>0))||actualDestination!==input.destinationIata||actualOrigin!==input.origin) continue;
+      if(!dateMatches(departure,input.departure,input.flexible)||(!input.oneWay&&!dateMatches(returnDate,input.returnDate,input.flexible))||(input.oneWay&&returnDate)||!(price>0)||!Number.isFinite(stops)||(input.direct&&(stops>0||returnStops>0))||actualDestination!==input.destinationIata||actualOrigin!==input.origin) continue;
       const duration=typeof row["duration"]==="number"?row["duration"]:null;
       const f:Flight={id:String(row["flight_number"]??found.length)+departure+returnDate,airline:String(row["airline"]??""),departure,returnDate,price,stops,duration,layover:null,arrival:null,score:0,link:bookingLinks(input,input.destination).google,currency};
       const link=row["link"];
