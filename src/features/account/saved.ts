@@ -29,13 +29,13 @@ export async function listSaved(): Promise<SavedRow[]> {
 export async function findSaved(kind: SavedKind, key: string) {
   const { data, error } = await supabase
     .from("saved_trips")
-    .select("id")
+    .select("id,data")
     .eq("kind", kind)
     .eq("data->>key", key)
     .limit(1)
     .maybeSingle();
   if (error) throw error;
-  return data?.id ?? null;
+  return data ? { id: data.id, data: data.data } : null;
 }
 
 export async function saveItem(item: {

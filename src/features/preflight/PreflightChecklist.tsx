@@ -156,6 +156,20 @@ export function PreflightChecklist({
             label={t("account.saveChecklist")}
             returnTo={`/preflight?from=${input.origin.iata}&to=${input.destination.iata}&date=${input.date}`}
             onSignedOut={() => sessionStorage.setItem(OPEN_PREFLIGHT_KEY, JSON.stringify(input))}
+            onLoaded={(stored) => {
+              const saved = (stored as { ticks?: unknown } | null)?.ticks;
+              if (!Array.isArray(saved)) return;
+              const extra = saved.filter((v): v is string => typeof v === "string");
+              setTicks((current) => {
+                const next = [...new Set([...current, ...extra])];
+                try {
+                  localStorage.setItem(storageKey, JSON.stringify(next));
+                } catch {
+                  /* storage unavailable */
+                }
+                return next;
+              });
+            }}
             data={{ input, ticks: ticks.filter((id) => rows.some((r) => r.id === id)), total: rows.length }}
           />
           <Button variant="outline" className="min-h-11" onClick={onEdit}>
