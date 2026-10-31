@@ -318,7 +318,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .map-taxiway { fill: none; stroke: var(--map-taxiway); stroke-width: 18; stroke-linecap: round; stroke-linejoin: round; }
 .map-runway { fill: none; stroke: var(--map-runway); stroke-width: 50; }
 .map-runway-line { fill: none; stroke: var(--map-runway-line); stroke-width: 2; stroke-dasharray: 30 25; }
-.map-terminal { fill: var(--map-terminal); stroke: var(--map-terminal-edge); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.map-terminal { fill: var(--map-terminal); stroke: var(--map-terminal-edge); stroke-width: 1.25; vector-effect: non-scaling-stroke; }
 .map-terminal-departures { fill: var(--map-departures); }
 .map-terminal-arrivals { fill: var(--map-arrivals); }
 .map-terminal-label { fill: var(--foreground); font-weight: 700; paint-order: stroke; stroke: var(--map-ground); stroke-width: 3; vector-effect: non-scaling-stroke; pointer-events: none; }
@@ -327,6 +327,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .map-gate-mine circle { fill: var(--map-mine); animation: gate-glow 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 .map-poi circle { fill: var(--card); stroke: var(--poi-tone, var(--primary)); stroke-width: 2; vector-effect: non-scaling-stroke; }
 .map-poi svg { color: var(--poi-tone, var(--primary)); }
+.map-poi-dot circle { fill: var(--poi-tone, var(--primary)); stroke: var(--card); }
 .map-poi-transport { --poi-tone: var(--map-transport); }
 .map-poi-food { --poi-tone: var(--map-food); }
 .map-poi-money { --poi-tone: var(--map-money); }

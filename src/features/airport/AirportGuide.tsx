@@ -23,7 +23,7 @@ export function AirportGuide({ input }: { input: PreflightInput }) {
   const [side, setSide] = useState<Side>("departures");
   const [layouts, setLayouts] = useState<Record<string, AirportLayout | null | undefined>>({});
   const [active, setActive] = useState(0);
-  const [layers, setLayers] = useState<Set<Layer>>(new Set(LAYERS));
+  const [layers, setLayers] = useState<Set<Layer>>(new Set<Layer>(["gates", "toilets", "transport"]));
   const gateKey = `flywell:gate:${input.origin.iata}-${input.destination.iata}-${input.date}`;
   const [gate, setGate] = useState("");
   const [offline, setOffline] = useState(false);
@@ -176,7 +176,7 @@ export function AirportGuide({ input }: { input: PreflightInput }) {
             >
               <span className="journey-number">{i + 1}</span>
               <span className="min-w-0 flex-1">
-                <span className="block font-semibold">{t(`airportGuide.step.${step.id}.title`)}</span>
+                <span className="block font-semibold">{t(`airportGuide.step.${step.id}.title`, step.params ?? {})}</span>
                 <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
                   {t(`airportGuide.step.${step.id}.detail`, step.params ?? {})}
                 </span>

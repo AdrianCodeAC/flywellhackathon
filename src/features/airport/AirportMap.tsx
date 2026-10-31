@@ -111,9 +111,15 @@ export function AirportMap({
   // Markers keep their on-screen size while the map zooms.
   const unit = Math.max(width, height * 0.75) / 26 / scale;
 
+  // Steps that share a spot (e.g. two "follow the signs" steps in one hall) are fanned out.
   const placed = steps
     .map((s, i) => ({ ...s, index: i, xy: s.at ? project(s.at) : undefined }))
-    .filter((s): s is typeof s & { xy: [number, number] } => Boolean(s.xy));
+    .filter((s): s is typeof s & { xy: [number, number] } => Boolean(s.xy))
+    .map((s, i, all) => {
+      const before = all.slice(0, i).filter((o) => Math.hypot(o.xy[0] - s.xy[0], o.xy[1] - s.xy[1]) < unit * 0.9).length;
+      return before ? { ...s, xy: [s.xy[0] + unit * 1.25 * before, s.xy[1] + unit * 0.55 * before] as [number, number] } : s;
+    });
+  const detailed = scale >= 1.8;
 
   const focus = useCallback(
     (index: number, zoom = 2.6) => {
@@ -214,12 +220,12 @@ export function AirportMap({
             {services.map((p, i) => {
               const [x, y] = project(p.at);
               const Icon = ICON[p.kind] ?? DoorOpen;
-              const s = unit * 0.62;
+              const s = unit * (detailed ? 0.62 : 0.3);
               return (
-                <g key={`p${i}`} className={`map-poi map-poi-${LAYER_OF[p.kind]}`}>
+                <g key={`p${i}`} className={`map-poi map-poi-${LAYER_OF[p.kind]} ${detailed ? "" : "map-poi-dot"}`}>
                   <title>{p.label ?? t(`airportGuide.poi.${p.kind}`)}</title>
                   <circle cx={x} cy={y} r={s * 0.62} />
-                  <Icon x={x - s * 0.36} y={y - s * 0.36} width={s * 0.72} height={s * 0.72} strokeWidth={2.4} />
+                  {detailed && <Icon x={x - s * 0.36} y={y - s * 0.36} width={s * 0.72} height={s * 0.72} strokeWidth={2.4} />}
                 </g>
               );
             })}

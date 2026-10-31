@@ -85,7 +85,7 @@ const pt = (lat: number, lon: number): LatLon => [round(lat), round(lon)];
 
 /** Names in the languages of the airports we serve most, matched case-insensitively. */
 const NAME_RULES: [PoiKind, RegExp][] = [
-  ["baggage", /baggage|luggage reclaim|bagaj|ritiro bagagli|equipajes|gepäckausgabe|bagages|bagagli/i],
+  ["baggage", /baggage (claim|reclaim|hall)|luggage reclaim|baggage carousel|preluare bagaj|ritiro bagagli|recogida de equipajes|gepäckausgabe|livraison des bagages|retrait des bagages/i],
   ["checkin", /check.?in|bag drop|înregistrare|inregistrare|accettazione|facturaci|enregistrement/i],
   ["security", /security|securitate|sicurezza|seguridad|sûreté|sicherheitskontrolle|control de securitate/i],
   ["passport", /passport|pașaport|paşaport|pasaport|immigration|border control|frontier|controllo passaporti|control de pasaportes|passkontrolle/i],
