@@ -306,6 +306,7 @@
     "maxPrice": "Maximum price per person",
     "noPeriodFlights": "No cached fares found for this period. Check Google Flights; prices have not been invented.",
     "flightCount_one": "{{count}} flight",
-    "flightCount_other": "{{count}} flights"
+    "flightCount_other": "{{count}} flights",
+    "flightCount_few": "{{count}} flights"
   }
 }
