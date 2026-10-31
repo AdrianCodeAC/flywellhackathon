@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { motion, useReducedMotion } from "motion/react";
 import { Armchair, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { PreflightInput } from "./rules";
 import {
   EXIT_ROWS,
   ROWS,
@@ -34,7 +33,7 @@ const rowX = (row: number) => X0 + (row - 1) * PITCH;
 const seatY = (i: number) => 38 + i * 11 + (i >= 3 ? 10 : 0);
 
 /** "Where to sit": situation chips, an animated cabin map and sourced safety statistics. */
-export function SeatAdvice({ input }: { input: PreflightInput }) {
+export function SeatAdvice({ input }: { input: { children: boolean } }) {
   const { t } = useTranslation();
   const reduce = useReducedMotion() ?? false;
   const [situation, setSituation] = useState<Situation>(() => defaultSituation(input));

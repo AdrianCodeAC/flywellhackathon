@@ -25,7 +25,6 @@ import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
 import { AirlineBaggage } from "./AirlineBaggage";
 import { PetPolicyCard } from "./PetPolicyCard";
 import { JetLagCard } from "./JetLagCard";
-import { SeatAdvice } from "./SeatAdvice";
 import { WeatherCard } from "@/features/arrival/WeatherCard";
 import { getAirportByIata } from "@/features/arrival/services";
 import { FORECAST_DAYS } from "@/features/arrival/weather";
@@ -226,7 +225,6 @@ export function PreflightChecklist({
         );
       })}
 
-      <SeatAdvice input={input} />
       {!hideJetLag && <JetLagCard input={input} />}
       <LandingWeather input={input} />
 
