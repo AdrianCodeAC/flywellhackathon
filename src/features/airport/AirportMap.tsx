@@ -359,10 +359,9 @@ export function AirportMap({
                 <motion.g
                   key={`p${p.kind}${i}`}
                   className={`map-poi map-poi-${LAYER_OF[p.kind]}`}
-                  initial={reduce ? false : { scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
+                  initial={reduce ? false : { y: -s, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ type: "spring", stiffness: 380, damping: 18, delay: Math.min(i * 0.02, 0.5) }}
-                  style={{ originX: `${x}px`, originY: `${y}px` }}
                 >
                   <title>{p.label ?? t(`airportGuide.poi.${p.kind}`)}</title>
                   <circle cx={x} cy={y + s * 0.12} r={s * 0.62} className="map-poi-shadow" />
@@ -397,7 +396,7 @@ export function AirportMap({
               const [x, y] = s.xy;
               const on = s.index === active;
               const passed = activePos >= 0 && n < activePos;
-              const r = unit * 0.5;
+              const r = unit * (on ? 0.64 : 0.5);
               return (
                 <g
                   key={s.id}
@@ -411,9 +410,8 @@ export function AirportMap({
                   {on && <circle r={r * 1.1} className="map-step-pulse" />}
                   <motion.g
                     initial={reduce ? false : { y: -unit * 2.5, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1, scale: on ? 1.3 : 1 }}
+                    animate={{ y: 0, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 420, damping: 16, delay: reduce ? 0 : 0.25 + n * 0.12 }}
-                    style={{ originX: "0px", originY: "0px" }}
                   >
                     <path d={pin(r)} className="map-pin" strokeWidth={unit * 0.08} strokeDasharray={s.exact ? undefined : `${unit * 0.18} ${unit * 0.12}`} />
                     <text y={-r * 1.9} fontSize={r * 1.1} textAnchor="middle" dy="0.36em" className="map-step-number">

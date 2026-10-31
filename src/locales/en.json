@@ -677,7 +677,10 @@
         "detail": "Follow the exit signs; trains, buses and taxis are marked on the map."
       }
     },
-    "gatePlaceholder": "e.g. 12"
+    "gatePlaceholder": "e.g. 12",
+    "stepOf": "Step {{n}} of {{total}}",
+    "prevStep": "Previous step",
+    "nextStep": "Next step"
   },
   "help": {
     "button": "Help",

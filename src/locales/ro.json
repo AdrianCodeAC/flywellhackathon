@@ -677,7 +677,10 @@
         "detail": "Urmează indicatoarele de ieșire; trenurile, autobuzele și taxiurile sunt marcate pe hartă."
       }
     },
-    "gatePlaceholder": "ex. 12"
+    "gatePlaceholder": "ex. 12",
+    "stepOf": "Pasul {{n}} din {{total}}",
+    "prevStep": "Pasul anterior",
+    "nextStep": "Pasul următor"
   },
   "help": {
     "button": "Ajutor",
