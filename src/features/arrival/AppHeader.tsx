@@ -39,7 +39,7 @@ export function AppHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
         <Link to="/" onClick={() => localStorage.setItem("flywell:tab", "plan")} className="flex min-h-11 items-center gap-2.5" aria-label={t("design.brand")}>
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"><Plane className="h-5 w-5 -rotate-12" /></span>
-          <span className="text-xl font-bold">{t("design.brand")}<span className="text-primary">.</span></span>
+          <span className="hidden text-xl font-bold min-[400px]:inline">{t("design.brand")}<span className="text-primary">.</span></span>
         </Link>
         <span className="hidden text-xs font-medium uppercase text-muted-foreground sm:block">{t("design.companion")}</span>
         <div className="flex items-center gap-1.5 sm:gap-2">
