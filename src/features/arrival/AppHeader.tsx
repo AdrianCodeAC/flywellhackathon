@@ -16,7 +16,7 @@ export function AppHeader() {
   const ticket = location.pathname === "/preflight";
   const plan = location.pathname === "/" || location.pathname === "/flights";
 
-  useEffect(() => { if (arrival || preflight) localStorage.setItem("flywell:tab", arrival ? "arrival" : "preflight"); }, [arrival, preflight]);
+  useEffect(() => { if (trips || ticket) localStorage.setItem("flywell:tab", trips ? "trips" : "preflight"); }, [trips, ticket]);
 
   // Apply the saved / phone language only after hydration so server and client HTML match.
   useEffect(() => {
