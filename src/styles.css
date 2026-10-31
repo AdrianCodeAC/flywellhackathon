@@ -477,3 +477,49 @@ h1, h2, h3 { letter-spacing: 0; }
 @media (prefers-reduced-motion: reduce) {
   .panic-ring, .help-aurora, .crew-bell, .help-tile-alert .help-tile-icon, .map-route-ahead, .map-step-pulse, .map-gate-halo, .map-canvas, .help-screen { animation: none; }
 }
+
+/* Seat advice: cabin map and safety statistics. */
+:root {
+  --seat-body: oklch(0.985 0.004 200);
+  --seat-edge: oklch(0.8 0.02 200);
+  --seat-wing: oklch(0.9 0.015 220);
+  --seat-plain: oklch(0.88 0.01 220);
+  --seat-good: oklch(0.82 0.08 170);
+  --seat-best: var(--primary);
+  --seat-avoid: oklch(0.72 0.14 30);
+  --seat-exit: oklch(0.66 0.17 50);
+  --stat-warn: oklch(0.66 0.17 40);
+  --stat-neutral: oklch(0.5 0.07 220);
+  --stat-track: oklch(0.93 0.008 220);
+}
+.dark {
+  --seat-body: oklch(0.3 0.015 200);
+  --seat-edge: oklch(0.45 0.02 200);
+  --seat-wing: oklch(0.36 0.015 220);
+  --seat-plain: oklch(0.42 0.01 220);
+  --seat-good: oklch(0.5 0.08 170);
+  --stat-track: oklch(0.32 0.01 220);
+}
+.seat-cabin { background: color-mix(in oklch, var(--card) 70%, var(--secondary)); }
+.seat-body { fill: var(--seat-body); stroke: var(--seat-edge); stroke-width: 1.2; }
+.seat-cockpit { fill: var(--seat-wing); }
+.seat-wing { fill: var(--seat-wing); stroke: var(--seat-edge); stroke-width: 0.8; }
+.seat-exit { fill: var(--seat-exit); }
+.seat { transition: fill 0.45s ease; }
+.seat-plain { fill: var(--seat-plain); }
+.seat-good { fill: var(--seat-good); }
+.seat-best { fill: var(--seat-best); }
+.seat-avoid { fill: var(--seat-avoid); opacity: 0.85; }
+.seat-row-number { font-size: 6px; font-weight: 700; fill: var(--muted-foreground); }
+.seat-axis { font-size: 8px; font-weight: 700; fill: var(--muted-foreground); text-transform: uppercase; }
+.seat-legend { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.seat-legend.seat-plain { background: var(--seat-plain); }
+.seat-legend.seat-good { background: var(--seat-good); }
+.seat-legend.seat-best { background: var(--seat-best); }
+.seat-legend.seat-avoid { background: var(--seat-avoid); }
+.seat-legend.seat-exit { background: var(--seat-exit); }
+.seat-legend.seat-wing { background: var(--seat-wing); border: 1px solid var(--seat-edge); }
+.stat-track { background: var(--stat-track); }
+.stat-warn { background: var(--stat-warn); }
+.stat-neutral { background: var(--stat-neutral); }
+@media (prefers-reduced-motion: reduce) { .seat { transition: none; } }

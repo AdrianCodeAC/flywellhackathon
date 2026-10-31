@@ -868,5 +868,93 @@
     "saveError": "Could not save. Try again.",
     "loadError": "Saved items could not be loaded.",
     "invalidEmail": "Use a real email address you can open."
+  },
+  "seats": {
+    "eyebrow": "Where to sit",
+    "title": "The right seat for you",
+    "situations": "Your situation",
+    "subtitle": "Pick your situation and the plane shows where to aim and what to avoid. Rows differ between aircraft, so match them to your airline's seat map.",
+    "situation": {
+      "child": "With a child",
+      "turbulence": "Fewer bumps",
+      "fear": "Fear of flying",
+      "motion": "Motion sickness",
+      "legroom": "More legroom",
+      "quickExit": "Get off fast",
+      "sleep": "Sleep",
+      "mobility": "Reduced mobility"
+    },
+    "summary": {
+      "child": "Over the wing or just in front of it, window and middle seats together, away from exit rows and the last rows.",
+      "turbulence": "Rows over the wing feel the least turbulence; the last rows feel the most.",
+      "fear": "Sit over the wing, on the aisle, and tell the crew you are nervous — they are used to it.",
+      "motion": "A window seat over the wing, where the ride is smoothest.",
+      "legroom": "Exit rows or the first row have the most space.",
+      "quickExit": "An aisle seat in the first rows gets you off first.",
+      "sleep": "A window seat away from the toilets and galleys.",
+      "mobility": "An aisle seat near the front, not in an exit row, with assistance booked ahead."
+    },
+    "tip": {
+      "child": {
+        "1": "Put a child seat by the window: it must not block the way out of the row. Ask the airline which child seats it accepts.",
+        "2": "Children and infants cannot sit in exit rows — the crew will move you.",
+        "3": "The back of the cabin bumps the most, and people queue there for the toilets, so stay over the wing or further forward."
+      },
+      "turbulence": {
+        "1": "Over the wing is closest to the plane's centre of gravity, so movement is smallest; the tail moves the most.",
+        "2": "Keep your seat belt loosely fastened all flight — turbulence can happen in clear sky."
+      },
+      "fear": {
+        "1": "Over the wing the ride is smoothest and the engine sound stays steady.",
+        "2": "An aisle seat helps if you feel closed in; a window helps if seeing the horizon calms you.",
+        "3": "Tap Help at the top of the screen for a breathing exercise that works in airplane mode."
+      },
+      "motion": {
+        "1": "Look at the horizon and keep your head still against the headrest.",
+        "2": "Avoid reading during take-off and bumpy parts, and point the air vent at your face."
+      },
+      "legroom": {
+        "1": "Exit rows are only for adults able and willing to help open the exit; the crew may move you if you are not suitable.",
+        "2": "The first row has extra room but no space under the seat in front for bags during take-off and landing."
+      },
+      "quickExit": {
+        "1": "Front rows on the aisle are best for tight connections.",
+        "2": "In an emergency the distance to a usable exit matters most: when you sit down, count the rows to the exits in front of and behind you."
+      },
+      "sleep": {
+        "1": "A window gives you something to lean on and nobody climbs over you.",
+        "2": "The front and back of the cabin have toilets and galleys: light, noise and queues."
+      },
+      "mobility": {
+        "1": "Ask your airline for free assistance at least 48 hours before the flight — EU rules give you this right.",
+        "2": "Some aisle seats have armrests that lift, which makes moving across easier; ask when you book."
+      }
+    },
+    "rows": "Rows {{list}}",
+    "avoidRows": "avoid {{list}}",
+    "columns": "seats: {{list}}",
+    "col": {
+      "window": "window (A, F)",
+      "middle": "middle (B, E)",
+      "aisle": "aisle (C, D)"
+    },
+    "front": "Front",
+    "middle": "Middle",
+    "rear": "Rear",
+    "legendBest": "Best seats",
+    "legendGood": "Good row",
+    "legendAvoid": "Avoid",
+    "legendExit": "Exit",
+    "legendWing": "Wing",
+    "comfortOnly": "Comfort tip — there is no safety data behind it.",
+    "aircraftNote": "Drawn on a typical 30-row plane (A320 / Boeing 737). Wing and exit rows differ on your aircraft; check the seat map when you choose your seat.",
+    "statsTitle": "What the data says about safety",
+    "turbTitle": "Serious turbulence injuries among crew not wearing seat belts, by cabin section (US airlines, 2009–2018)",
+    "turbNote": "Of {{total}} people seriously hurt by turbulence, only {{belted}} passenger was wearing a seat belt, and {{rear}}% of injured passengers were in the rear section.",
+    "crashTitle": "Fatality rate by cabin third in 17 accidents with survivors (US, 1985–2000)",
+    "crashNote": "Middle seats at the back: {{rear}}%; aisle seats in the middle: {{aisle}}%. It is a small sample, and the FAA says no seat is always safest — every accident is different.",
+    "exitTitle": "Distance to an exit matters",
+    "exitNote": "In a study of 105 accidents, the exit row and the rows next to it had the best survival; up to {{rows}} rows from an exit people still had better than even odds of escaping a fire.",
+    "bottomLine": "Flying is very safe. What helps most: keep your seat belt fastened while seated and know where your nearest exit is."
   }
 }
