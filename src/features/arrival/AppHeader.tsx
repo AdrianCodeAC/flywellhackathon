@@ -12,7 +12,7 @@ export function AppHeader() {
   const location = useLocation();
   const arrival = location.pathname === "/arrival";
 
-  useEffect(() => { localStorage.setItem("flywell:tab", arrival ? "arrival" : "plan"); }, [arrival]);
+  useEffect(() => { if (arrival) localStorage.setItem("flywell:tab", "arrival"); }, [arrival]);
 
   // Apply the saved / phone language only after hydration so server and client HTML match.
   useEffect(() => {
