@@ -65,14 +65,16 @@ export async function cityPhoto(city: string, lang: string) {
   const article = (host: string) => wikiJson(`https://${host}.wikipedia.org/w/api.php?${new URLSearchParams({ action: 'query', titles: city, prop: 'pageimages', piprop: 'thumbnail', pithumbsize: '640', redirects: '1', format: 'json' })}`, `wikipedia article ${host}`);
   const search = (host: string) => wikiJson(`https://${host}.wikipedia.org/w/api.php?${new URLSearchParams({ action: 'query', generator: 'search', gsrsearch: city, gsrlimit: '8', prop: 'pageimages', piprop: 'thumbnail', pithumbsize: '640', format: 'json' })}`, `wikipedia search ${host}`);
   let photo = pickPhotoCandidate(pagesOf(await article(wiki)) as PhotoPage[], city);
-  if (!photo) photo = pickPhotoCandidate(pagesOf(await search(wiki)) as PhotoPage[], city);
-  // The other language wiki often illustrates a city the selected one does not.
-  if (!photo && wiki === 'ro') photo = pickPhotoCandidate(pagesOf(await article('en')) as PhotoPage[], city) ?? pickPhotoCandidate(pagesOf(await search('en')) as PhotoPage[], city);
-  // Last resort: a photo of the city from Wikimedia Commons.
+  // City names come from the airport list in English, so the English article is often the one that exists.
+  if (!photo && wiki !== 'en') photo = pickPhotoCandidate(pagesOf(await article('en')) as PhotoPage[], city);
+  if (!photo) photo = pickPhotoCandidate(pagesOf(await search('en')) as PhotoPage[], city);
+  if (!photo && wiki !== 'en') photo = pickPhotoCandidate(pagesOf(await search(wiki)) as PhotoPage[], city);
+  // Last resort: a photograph of the city from Wikimedia Commons.
   if (!photo) {
     const commons = await wikiJson(`https://commons.wikimedia.org/w/api.php?${new URLSearchParams({ action: 'query', generator: 'search', gsrsearch: `${city} filetype:bitmap`, gsrnamespace: '6', gsrlimit: '8', prop: 'imageinfo', iiprop: 'url|mime|size', iiurlwidth: '800', format: 'json' })}`, 'commons search');
     photo = pickCommonsPhoto(pagesOf(commons) as CommonsPage[], city);
   }
+
   await writeTripCache(key, photo);
   return photo;
 }
