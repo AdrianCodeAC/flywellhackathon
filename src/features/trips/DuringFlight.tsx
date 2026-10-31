@@ -29,7 +29,7 @@ export function DuringFlight({ trip }: { trip: MyTrip }) {
       </p>
 
       <div className="mt-6 flex flex-col items-start gap-2">
-        <PanicButton />
+        <PanicButton seat={trip.input.seat ?? ""} />
         <p className="text-sm text-muted-foreground">{t("trips.during.helpHint")}</p>
       </div>
 

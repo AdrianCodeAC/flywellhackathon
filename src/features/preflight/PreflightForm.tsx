@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowRight, CalendarDays, Luggage, Plane, PlaneLanding, UserRound } from "lucide-react";
+import { Armchair, ArrowRight, CalendarDays, Luggage, Plane, PlaneLanding, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -44,6 +44,7 @@ export function PreflightForm({
   );
   const [bag, setBag] = useState<PreflightInput["bag"]>(initial?.bag ?? "cabin");
   const [airline, setAirline] = useState(initial?.airline ?? "");
+  const [seat, setSeat] = useState(initial?.seat ?? "");
   const [flags, setFlags] = useState({
     children: initial?.children ?? false,
     medication: initial?.medication ?? false,
@@ -60,6 +61,7 @@ export function PreflightForm({
     const name = AIRLINES.find((a) => a.codes.includes(pass.carrier))?.name ?? pass.carrier;
     // Known airline: just its name ("Wizz Air"); unknown: the carrier code so rule lookups still match.
     setAirline(name);
+    if (pass.seat) setSeat(pass.seat.toUpperCase());
     setError("");
     setScanned(
       t("preflight.scan.done", {
@@ -91,6 +93,8 @@ export function PreflightForm({
       return setError(t("preflight.errorAirports"));
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || daysUntil(date) < 0)
       return setError(t("preflight.errorDate"));
+    if (!/^\d{1,2}[A-K]$/i.test(seat.trim()))
+      return setError(t("preflight.errorSeat"));
     setError("");
     onSubmit({
       origin: short(origin),
@@ -99,6 +103,7 @@ export function PreflightForm({
       citizenship,
       bag,
       airline: airline.trim(),
+      seat: seat.trim().toUpperCase(),
       ...flags,
       lang: i18n.language === "ro" ? "ro" : "en",
     });
@@ -164,6 +169,23 @@ export function PreflightForm({
             maxLength={60}
             onChange={(e) => setAirline(e.target.value)}
             placeholder={t("preflight.airlinePlaceholder")}
+            className="min-h-14 text-base"
+          />
+        </div>
+        <div>
+          <label htmlFor="preflight-seat" className={label}>
+            <Armchair className="size-4 text-primary" />
+            {t("preflight.seat")} *
+          </label>
+          <Input
+            id="preflight-seat"
+            value={seat}
+            required
+            maxLength={3}
+            onChange={(e) => setSeat(e.target.value.toUpperCase().replace(/[^0-9A-K]/g, ""))}
+            placeholder={t("preflight.seatPlaceholder")}
+            autoComplete="off"
+            spellCheck={false}
             className="min-h-14 text-base"
           />
         </div>

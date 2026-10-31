@@ -650,7 +650,10 @@
       "assistTitle": "Assistance dogs — {{airline}}"
     },
     "tickAll": "Tick all",
-    "untickAll": "Untick all"
+    "untickAll": "Untick all",
+    "seat": "Seat",
+    "seatPlaceholder": "e.g. 23A",
+    "errorSeat": "Enter your seat number from the ticket, e.g. 23A."
   },
   "weather": {
     "unavailable": "Weather is unavailable right now.",
