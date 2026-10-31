@@ -291,6 +291,22 @@
     "chooseFlight": "Alege zborul",
     "selectedFlight": "Zbor ales spre {{city}}",
     "perPersonOneWay": "de persoană, doar dus",
-    "oneWayCosts": "Zbor doar dus: estimări zilnice fără zbor; durata șederii nu este specificată."
+    "oneWayCosts": "Zbor doar dus: estimări zilnice fără zbor; durata șederii nu este specificată.",
+    "seeAll": "Vezi toate zborurile din perioada aleasă",
+    "withStops": "cu escale",
+    "allFlightsTitle": "Zboruri din {{origin}}",
+    "backSearch": "Înapoi la căutare",
+    "sort": "Sortează zborurile",
+    "sort_price": "Cele mai ieftine",
+    "sort_soonest": "Cele mai apropiate",
+    "sort_shortest": "Cele mai scurte",
+    "sort_comfort": "Cele mai confortabile",
+    "country": "Țară",
+    "allCountries": "Toate țările",
+    "maxPrice": "Preț maxim de persoană",
+    "noPeriodFlights": "Nu am găsit tarife salvate pentru această perioadă. Verifică Google Flights; nu am inventat prețuri.",
+    "flightCount_one": "{{count}} zbor",
+    "flightCount_few": "{{count}} zboruri",
+    "flightCount_other": "{{count}} de zboruri"
   }
 }

@@ -291,6 +291,21 @@
     "chooseFlight": "Choose flight",
     "selectedFlight": "Selected flight to {{city}}",
     "perPersonOneWay": "per person, one way",
-    "oneWayCosts": "One-way flight: daily non-flight estimates only; length of stay is not specified."
+    "oneWayCosts": "One-way flight: daily non-flight estimates only; length of stay is not specified.",
+    "seeAll": "See all flights in this period",
+    "withStops": "with stops",
+    "allFlightsTitle": "Flights from {{origin}}",
+    "backSearch": "Back to search",
+    "sort": "Sort flights",
+    "sort_price": "Cheapest",
+    "sort_soonest": "Soonest",
+    "sort_shortest": "Shortest",
+    "sort_comfort": "Most comfortable",
+    "country": "Country",
+    "allCountries": "All countries",
+    "maxPrice": "Maximum price per person",
+    "noPeriodFlights": "No cached fares found for this period. Check Google Flights; prices have not been invented.",
+    "flightCount_one": "{{count}} flight",
+    "flightCount_other": "{{count}} flights"
   }
 }
