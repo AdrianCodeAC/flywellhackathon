@@ -36,3 +36,5 @@
 - [x] Weather + what to wear: now on the arrival page, flight-day forecast in pre-flight results (Open-Meteo).
 - [x] Airport guide after the pre-flight checklist: only the steps this passenger needs (check-in/bag drop, security, passport control, gate; on arrival passport, baggage claim, customs, exit/transport), drawn on a virtual airport map from OpenStreetMap, saved on the phone for offline use.
 - [x] In-flight help (panic) button: animated calm screen with breathing, show-to-crew card, symptom guide and on-device medical card; works in airplane mode.
+
+- [ ] Accounts: header sign-in button, /auth (Google, Apple first on iPhone, Lovable, email/password + reset), profile (name, photo), /account with saved planned trips, saved pre-flight checklists and the trip chat.
