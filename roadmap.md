@@ -55,7 +55,7 @@
 - [x] No AI checklist items that repeat fixed ones (e.g. "No visa needed" next to "Your ID card or passport is enough").
 - [x] On arrival food/sights: card distances and "Show route" start from the same point (live location when nearby, else the airport); short trips use walking routes.
 - [x] Help → Call the crew: phone vibrates and plays a ring to get attention.
-- [ ] Plan a trip: live, non-cached flight prices — provider, parser, fallback and labels are built and tested; waiting on a provider key (SEARCHAPI_KEY or SERPAPI_KEY) added to the deployment.
+- [x] Plan a trip: live, non-cached flight prices from Kiwi.com's free keyless search (10 min shared cache), Google Flights reader only when a key exists, cached Travelpayouts as the last resort; labels, direct-only filter and honest empty state checked CRA/OTP EN/RO 375px.
 - [ ] Recolor to the new palette (navy, steel, mint, plum, gold) with much less pink, and switch the typeface to Inter everywhere.
 - [x] Jet lag coach: show in Before you fly tab of a trip, not During
 - [x] Replace the pink accent with pine #2E7D6B (gold stays the warm accent) and make flight cards show real city photos (Wikimedia thumbnail host fixed); checked 22 destinations EN/RO, 375px.
