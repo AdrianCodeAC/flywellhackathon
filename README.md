@@ -44,6 +44,21 @@ Cerința de la care a pornit proiectul:
 
 ## Funcționalități
 
+Meniul principal are trei intrări:
+
+- **Călătoriile mele**
+- **Planifică o călătorie**
+- **Am deja bilet**
+
+Fiecare călătorie salvată se deschide cu trei taburi: **Înainte de zbor**, **În timpul zborului** și **La sosire**.
+
+### 0. Cont și călătorii salvate (`/trips`, `/account`)
+
+- Te poți autentifica cu Google sau Apple, prin Lovable Cloud Auth.
+- Călătoriile salvate se sincronizează între dispozitive.
+- Fiecare călătorie reunește checklist-ul, ajutorul din timpul zborului și asistentul de sosire.
+- Tabul **În timpul zborului** funcționează complet fără internet: tot ce conține este salvat pe telefon.
+
 ### 1. Planificare: oferte de zboruri (`/` și `/flights`)
 
 - Caută zboruri după aeroportul de plecare. Destinația se completează automat și sugerează rute care au prețuri reale.
@@ -51,6 +66,7 @@ Cerința de la care a pornit proiectul:
 - Afișează toate zborurile dintr-o perioadă, cu sortare, filtre și grupare.
 - Un asistent AI estimează costurile totale ale călătoriei și dă recomandări.
 - Un chat permite ajustarea planului de călătorie.
+- După alegerea destinației, aplicația recomandă ce loc să alegi în avion, în funcție de preferințe.
 
 ### 2. Înainte de zbor: agentul de reglementări (`/preflight`)
 
@@ -65,11 +81,11 @@ Cerința de la care a pornit proiectul:
 | Vamă       | Ce cantități poți aduce fără taxe când intri în UE                                 |
 | Drepturi   | Regulamentul (CE) nr. 261/2004                                                     |
 
-Fiecare punct are legătură către o sursă oficială: MAE, Poliția de Frontieră, Comisia Europeană, EASA, UK Government sau U.S. CBP. Progresul se salvează pe dispozitiv.
+Fiecare punct are legătură către o sursă oficială: MAE, Poliția de Frontieră, Comisia Europeană, EASA, UK Government sau U.S. CBP. Progresul se salvează și rămâne vizibil în timpul derulării. O categorie întreagă se poate bifa dintr-un singur buton.
 
-**Puncte suplimentare generate de AI.** Se adaugă cel mult șase recomandări specifice călătoriei. Fiecare este legată de una dintre sursele oficiale din catalog. Modelul are instrucțiuni explicite să nu speculeze.
+**Puncte suplimentare generate de AI.** Se adaugă cel mult șase recomandări specifice călătoriei. Fiecare este legată de una dintre sursele oficiale din catalog. Modelul are instrucțiuni explicite să nu speculeze. Recomandările care repetă un punct fix din checklist sunt eliminate.
 
-**Agent conversațional.** Răspunde la întrebări despre călătorie și citează sursele. Dacă serviciul AI nu este disponibil, aplicația răspunde din regulile locale, pe baza cuvintelor cheie.
+**Agent conversațional.** Răspunde doar la întrebări despre călătorie și zbor și citează sursele. Dacă serviciul AI nu este disponibil, aplicația răspunde din regulile locale, pe baza cuvintelor cheie.
 
 **Scanarea biletului de îmbarcare.** Citește codul de bare dintr-o fotografie sau dintr-o captură de ecran:
 
@@ -81,6 +97,13 @@ Fiecare punct are legătură către o sursă oficială: MAE, Poliția de Frontie
 
 - Wizz Air, Ryanair, easyJet, TAROM;
 - Lufthansa/Austrian și Turkish Airlines, marcate „de verificat”.
+
+**Animale de companie.** Regulile pentru transportul animalelor sunt afișate pe două niveluri, cu legături doar către surse oficiale:
+
+- pe companie aeriană: Wizz Air, Ryanair, easyJet, British Airways, TAROM, Lufthansa, Austrian, Turkish Airlines, KLM, Air France, LOT, ITA, Aegean, Vueling și HiSky;
+- pe destinație: în interiorul UE, intrare în UE, Regatul Unit, SUA, Turcia, Emiratele Arabe Unite.
+
+Dacă o companie nu transportă animale, aplicația afișează doar acest lucru.
 
 **Jet lag.** Calculează diferența de fus orar legal, inclusiv ora de vară. Pe baza ei recomandă:
 
@@ -99,21 +122,22 @@ Harta se salvează pe telefon, ca să poată fi folosită și fără internet.
 
 ### 3. În timpul zborului: butonul de ajutor
 
-Butonul **„Ajutor”** este accesibil din orice ecran și funcționează și în modul avion. Conține:
+Butonul **„Ajutor”** este accesibil din orice ecran și funcționează și în modul avion, la fel ca tabul **În timpul zborului**. Conține:
 
 - exerciții de respirație ghidate, cu animație;
 - un card cu fraze pe care pasagerul îl poate arăta echipajului;
+- butonul **„Cheamă echipajul”**, care face telefonul să vibreze și să sune, ca să atragă atenția;
 - un ghid pentru simptome frecvente: atac de panică, greață, presiune în urechi, amețeală, dureri de cap, turbulențe;
-- un card medical personal, stocat exclusiv pe dispozitiv.
+- cardul medical personal, care aici se poate doar citi (se modifică din cont).
 
 ### 4. După aterizare: agentul de sosire (`/arrival`)
 
 - **Vremea curentă** la destinație și recomandări de îmbrăcăminte.
-- **Unde mănânci.** Restaurante și cafenele din centru sau din zona aeroportului, cu filtre și program de funcționare.
+- **Unde mănânci.** Restaurante și cafenele din centru sau din zona aeroportului, cu filtre și program de funcționare. Pe lângă aeroporturile mici, căutarea se extinde automat dacă găsește prea puține locuri.
 - **Cum ajungi în oraș.** Estimări pentru Uber, Bolt și taxi, plus transportul public descris pe Wikivoyage.
-- **Ce vizitezi.** Obiective turistice, cu descrieri de pe Wikipedia în limba aleasă.
+- **Ce vizitezi.** Obiective notabile (parcuri, muzee, monumente), cu descrieri de pe Wikipedia în limba aleasă.
 - **Întreabă AI-ul.** Un asistent care cunoaște contextul (aeroportul, orașul, preferințele) și propune locuri concrete.
-- **Trasee pe hartă.** Fiecare recomandare se poate deschide pe o hartă cu traseul calculat, cu trimitere directă în Google Maps sau Apple Maps.
+- **Trasee pe hartă.** Fiecare recomandare se poate deschide pe o hartă cu traseul calculat, cu trimitere directă în Google Maps sau Apple Maps. Distanțele și traseele pornesc din locația curentă când ești în apropiere, altfel de la aeroport. Pentru distanțe scurte se folosesc trasee pe jos.
 
 ## Arhitectură și tehnologii
 
@@ -133,8 +157,8 @@ Butonul **„Ajutor”** este accesibil din orice ecran și funcționează și �
 Principii de proiectare:
 
 - **Regulile sunt deterministe; AI-ul doar le completează.** Checklist-ul de bază este generat de cod testat (`src/features/preflight/rules.ts`), nu de un model de limbaj. AI-ul doar adaugă puncte și răspunde la întrebări, și poate cita numai surse dintr-un catalog verificat manual.
-- **Aplicația funcționează și fără servicii externe.** Dacă AI-ul nu e disponibil, răspunsurile vin din regulile locale. Harta aeroportului și cardul medical se salvează pe dispozitiv. Datele externe sunt păstrate în cache pe server.
-- **Datele sensibile rămân pe dispozitiv.** Biletul de îmbarcare se decodează local, iar cardul medical nu este trimis la server.
+- **Aplicația funcționează și fără servicii externe.** Dacă AI-ul nu e disponibil, răspunsurile vin din regulile locale. Harta aeroportului, cardul medical și tabul „În timpul zborului” se salvează pe dispozitiv. Datele externe sunt păstrate în cache pe server.
+- **Datele sensibile rămân pe dispozitiv.** Biletul de îmbarcare se decodează local. Cardul medical se trimite la server doar pentru a fi salvat în contul utilizatorului.
 
 ## Surse de date
 
@@ -201,12 +225,17 @@ Dacă nu este configurat niciun serviciu AI, aplicația funcționează în conti
 src/
 ├── routes/                 Paginile aplicației (rute bazate pe fișiere)
 │   ├── index.tsx           Planificarea călătoriei
+│   ├── trips.*.tsx         Călătoriile mele și pagina unei călătorii
+│   ├── auth.tsx            Autentificare
+│   ├── _authenticated/     Pagini care necesită cont (contul utilizatorului)
 │   ├── flights.tsx         Toate zborurile dintr-o perioadă
 │   ├── preflight.tsx       Înainte de zbor
 │   └── arrival.tsx         După aterizare
 ├── features/
 │   ├── trip/               Căutarea zborurilor, calendarul de prețuri, asistentul de planificare
-│   ├── preflight/          Reguli, agentul AI, scanarea biletului, bagaje, jet lag
+│   ├── trips/              Călătorii salvate, tabul „În timpul zborului”
+│   ├── account/            Autentificare, sincronizare, cardul medical
+│   ├── preflight/          Reguli, agentul AI, scanarea biletului, bagaje, animale, locuri, jet lag
 │   ├── airport/            Ghidul și harta aeroportului
 │   ├── inflight/           Butonul de ajutor, respirație, cardul medical
 │   └── arrival/            Vreme, mâncare, transport, obiective, asistentul de sosire
@@ -238,7 +267,8 @@ Un test verifică în plus că fișierele de traducere în engleză și română
 ## Confidențialitate
 
 - Imaginea biletului de îmbarcare nu este încărcată pe server. Decodarea se face în browser.
-- Cardul medical, progresul checklist-ului și harta aeroportului sunt salvate numai pe dispozitivul utilizatorului.
+- Harta aeroportului și conținutul tabului „În timpul zborului” sunt salvate pe dispozitiv.
+- Cardul medical și călătoriile se salvează în contul utilizatorului, numai dacă acesta este autentificat. Există și o copie pe telefon, pentru folosire fără internet.
 - Întrebările adresate asistenților AI sunt trimise furnizorului AI doar pentru a genera răspunsul.
 
 ## Limitări cunoscute
