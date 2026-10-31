@@ -314,7 +314,8 @@
     "noPeriodFlights": "Nu am găsit tarife salvate pentru această perioadă. Verifică Google Flights; nu am inventat prețuri.",
     "flightCount_one": "{{count}} zbor",
     "flightCount_few": "{{count}} zboruri",
-    "flightCount_other": "{{count}} de zboruri"
+    "flightCount_other": "{{count}} de zboruri",
+    "flightNumber": "Număr zbor"
   },
   "preflight": {
     "tab": "Înainte de zbor",

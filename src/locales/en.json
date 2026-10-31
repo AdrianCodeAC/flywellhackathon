@@ -314,7 +314,8 @@
     "noPeriodFlights": "No cached fares found for this period. Check Google Flights; prices have not been invented.",
     "flightCount_one": "{{count}} flight",
     "flightCount_other": "{{count}} flights",
-    "flightCount_few": "{{count}} flights"
+    "flightCount_few": "{{count}} flights",
+    "flightNumber": "Flight number"
   },
   "preflight": {
     "tab": "Before you fly",
