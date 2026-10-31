@@ -9,6 +9,7 @@ import type { ArrivalMessage } from "./AskAI";
 import { ArrivalOptions } from "./ArrivalOptions";
 import { WeatherCard } from "./WeatherCard";
 import { getAirportByIata, prefetchFood, prefetchSights } from "./services";
+import { useStartPoint } from "./start-point";
 import type { Airport } from "./types";
 import cityImage from "@/assets/arrival-craiova.jpg";
 
@@ -22,6 +23,7 @@ const AskAI = lazy(() => import("./AskAI").then((m) => ({ default: m.AskAI })));
 const STORAGE_KEY = "arrival-assistant:airport";
 
 interface Target { lat: number; lon: number; name: string }
+interface RouteTarget { from: Target; to: Target }
 
 /**
  * The Arrival Assistant. Standalone (/arrival) it has its own banner and airport search;
@@ -79,6 +81,16 @@ export function ArrivalAssistant({ iata, embedded = false, onIataChange }: { iat
   const back = () => { setSection(null); if (!embedded) setSheetOpen(true); };
   const showHero = !embedded && !section;
 
+  // Card distances and "Show route" share one start point (live phone position or the airport).
+  const startState = useStartPoint(airport, section === "food" || section === "visit" || section === "ask");
+  const airportEnd = airport ? { lat: airport.lat, lon: airport.lon, name: `${airport.iata} ${airport.city}` } : null;
+  const routeFromStart = (to: Target) => {
+    const s = startState.start;
+    const from = s?.source === "you" ? { lat: s.lat, lon: s.lon, name: t("start.you") } : airportEnd;
+    // The start is frozen when tapped so the map doesn't redraw on every GPS update.
+    if (from) setTarget({ from, to: { lat: to.lat, lon: to.lon, name: to.name } });
+  };
+
   return (
     <>
       {showHero && (
@@ -124,10 +136,10 @@ export function ArrivalAssistant({ iata, embedded = false, onIataChange }: { iat
 
         {hydrated && airport && (
           <Suspense fallback={null}>
-            {section === "food" && <FoodList airport={airport} onBack={back} onShowRoute={(p) => setTarget({ lat: p.lat, lon: p.lon, name: p.name })} />}
-            {section === "visit" && <VisitList airport={airport} onBack={back} onShowRoute={setTarget} />}
-            {section === "ride" && <RideOptions airport={airport} onBack={back} onShowRoute={setTarget} />}
-            {section === "ask" && <AskAI airport={airport} messages={messages} onMessages={setMessages} onBack={back} onShowRoute={setTarget} />}
+            {section === "food" && <FoodList airport={airport} start={startState} onBack={back} onShowRoute={routeFromStart} />}
+            {section === "visit" && <VisitList airport={airport} start={startState} onBack={back} onShowRoute={routeFromStart} />}
+            {section === "ride" && <RideOptions airport={airport} onBack={back} onShowRoute={(to) => setTarget({ to, from: airportEnd })} />}
+            {section === "ask" && <AskAI airport={airport} messages={messages} onMessages={setMessages} onBack={back} onShowRoute={routeFromStart} />}
           </Suspense>
         )}
 
@@ -142,11 +154,7 @@ export function ArrivalAssistant({ iata, embedded = false, onIataChange }: { iat
 
         {hydrated && target && airport && (
           <Suspense fallback={null}>
-            <RouteMap
-              from={{ lat: airport.lat, lon: airport.lon, name: `${airport.iata} ${airport.city}` }}
-              to={target}
-              onBack={() => setTarget(null)}
-            />
+            <RouteMap from={target.from} to={target.to} onBack={() => setTarget(null)} />
           </Suspense>
         )}
       </div>
