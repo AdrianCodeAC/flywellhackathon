@@ -11,7 +11,7 @@ import { useTripUser } from "./auth";
 import { useServerFn } from "@tanstack/react-start";
 import { loadTripConversation } from "./conversation.functions";
 
-export function TripPlanner(){
+export function TripPlanner({runTrip=false}:{runTrip?:boolean}){
   const {t}=useTranslation();const [input,setInput]=useState<TripInput>();const [result,setResult]=useState<TripResult>();const [busy,setBusy]=useState(false),[editing,setEditing]=useState(true),[error,setError]=useState("");const [suggestions,setSuggestions]=useState<Destination[]>([]);
   const abort=useRef<AbortController|null>(null);const resultRef=useRef<HTMLDivElement>(null);
   const user=useTripUser();const load=useServerFn(loadTripConversation);const restored=useRef<string|null>(null);
@@ -37,6 +37,7 @@ export function TripPlanner(){
     }catch(e){if(!controller.signal.aborted)setError(e instanceof Error?e.message:t("trip.searchError"));}
     finally{if(abort.current===controller)setBusy(false);}
   },[t]);
+  useEffect(()=>{if(!runTrip)return;const raw=sessionStorage.getItem('flywell:chosen-flight');if(!raw)return;sessionStorage.removeItem('flywell:chosen-flight');try{const saved=tripInputSchema.safeParse(JSON.parse(raw));if(saved.success)void search(saved.data);}catch{}},[runTrip,search]);
   useEffect(()=>{
     if(!user||restored.current===user.id)return;restored.current=user.id;
     void load().then(row=>{if(row&&!abort.current){const saved=tripInputSchema.safeParse(row.trip_input);if(saved.success)void search(saved.data);}}).catch(()=>{});
