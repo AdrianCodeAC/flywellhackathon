@@ -5,7 +5,7 @@ import { CalendarPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getAirportByIata } from "@/features/arrival/services";
 import type { Destination, Flight, TripInput } from "@/features/trip/types";
-import { inputFromPlan, makeTrip } from "./model";
+import { inputFromPlan, makeTrip, returnLegOf } from "./model";
 import { listTrips, upsertTrip } from "./store";
 
 /** Turns the chosen flight into a trip with its own Before / During / On arrival tabs. */
@@ -32,8 +32,11 @@ export function AddToTrips({ input, destination, flight }: { input: TripInput; d
         lang: input.lang,
         previous,
       });
-      const trip = makeTrip(preflight, { returnDate: input.oneWay ? null : flight.returnDate.slice(0, 10), airline: flight.airline });
+      const returnDate = input.oneWay ? null : flight.returnDate.slice(0, 10);
+      const trip = makeTrip(preflight, { returnDate, airline: flight.airline });
       upsertTrip(trip);
+      // The home-bound flight is a trip of its own: its own checklist and its own arrival guide at home.
+      if (returnDate && returnDate !== trip.input.date) upsertTrip(makeTrip(returnLegOf(preflight, returnDate), { airline: flight.airline }));
       localStorage.setItem("flywell:tab", "trips");
       void navigate({ to: "/trips/$tripId", params: { tripId: trip.id }, search: { tab: "before" } });
     } catch {
@@ -46,7 +49,7 @@ export function AddToTrips({ input, destination, flight }: { input: TripInput; d
     <>
       <Button variant="outline" className="mt-2 min-h-11 w-full whitespace-normal" disabled={busy} onClick={() => void add()}>
         <CalendarPlus className="size-4" />
-        {busy ? t("trips.adding") : t("trips.addToTrips")}
+        {busy ? t("trips.adding") : input.oneWay ? t("trips.addToTrips") : t("trips.addToTripsBoth")}
       </Button>
       {error && <p role="alert" className="mt-1 text-xs text-destructive">{t("trips.addError")}</p>}
     </>
