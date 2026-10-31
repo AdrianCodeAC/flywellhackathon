@@ -120,7 +120,7 @@ export function PreflightChecklist({
       detail: t(`preflight.rule.${i.key}.detail`, i.params ?? {}),
       source: i.source,
     })),
-    ...(advice?.items ?? []).map((i, n) => ({
+    ...(advice?.items ?? []).filter((i) => !isPetItem(i)).map((i, n) => ({
       ...i,
       id: `ai-${n}-${i.title.slice(0, 24)}`,
       ai: true,
