@@ -246,7 +246,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .arrival-main > section > h2 { font-family: var(--font-display); font-size: 34px; font-weight: 400; }
 .arrival-main article { border-radius: 8px; box-shadow: 0 2px 6px oklch(0.311 0.038 267.4 / 3%); }
 .arrival-main article h3 { line-height: 1.5; }
-.arrival-main input { background: var(--card); box-shadow: none; }
+.arrival-main input { background: var(--ui-input); box-shadow: none; }
 .arrival-main article button:hover { border-color: var(--primary); color: var(--primary); }
 .arrival-main > section { animation: arrival-enter 300ms ease-out; }
 @keyframes arrival-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
