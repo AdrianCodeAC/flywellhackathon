@@ -1090,6 +1090,7 @@
     "backToTrips": "My trips",
     "arrivalIn": "On arrival in {{city}}",
     "addToTrips": "Add to my trips",
+    "addToTripsBoth": "Add both flights to my trips",
     "adding": "Adding…",
     "addError": "Could not add this flight. Please try again.",
     "during": {

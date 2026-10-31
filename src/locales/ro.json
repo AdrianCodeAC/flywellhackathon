@@ -1090,6 +1090,7 @@
     "backToTrips": "Călătoriile mele",
     "arrivalIn": "La sosire în {{city}}",
     "addToTrips": "Adaugă la călătoriile mele",
+    "addToTripsBoth": "Adaugă ambele zboruri la călătoriile mele",
     "adding": "Se adaugă…",
     "addError": "Nu am putut adăuga zborul. Încearcă din nou.",
     "during": {
