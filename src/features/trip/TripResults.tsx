@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Plane, BedDouble, Wallet, Sun, FileCheck, Heart, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,6 +7,7 @@ import { TripChat } from "./TripChat";
 import type { TripInput } from "./types";
 import { SaveButton } from "@/features/account/SaveButton";
 import { CHOSEN_FLIGHT_KEY } from "@/features/account/device";
+import { AddToTrips } from "@/features/trips/AddToTrips";
 
 export function TripResults({result,busy,onEdit,onAdjust}:{result:TripResult;busy:boolean;onEdit:()=>void;onAdjust:(i:TripInput,preference?:string)=>void}){
   const {t,i18n}=useTranslation();const {input,destination,flights,advice,extras}=result;
@@ -27,8 +27,7 @@ export function TripResults({result,busy,onEdit,onAdjust}:{result:TripResult;bus
         <p className="mt-3 text-sm">{t("trip.stops",{count:f.stops})} · {f.duration?t("trip.minutes",{count:f.duration}):t("trip.durationUnknown")}</p><p className="mt-2 text-xs text-muted-foreground">{t("trip.score")}: {f.score}/100 · {t("trip.partialScore")}</p>
         <p className="mt-5 text-2xl font-semibold">{money(f.price,f.currency)}</p><p className="text-xs text-muted-foreground">{t(input.oneWay?"trip.perPersonOneWay":"trip.perPerson")} · {t("trip.total")}: {money(f.price*(input.adults+input.children),f.currency)}</p><p className="mt-2 text-xs text-muted-foreground">{t("trip.childFare")}</p>
         <Button asChild className="mt-4 min-h-11 w-full"><a href={f.link} target="_blank" rel="noreferrer">{t("trip.book")}<ArrowUpRight className="size-4"/></a></Button>
-        <Button asChild variant="outline" className="mt-2 min-h-11 w-full whitespace-normal"><Link to="/arrival" search={{iata:destination.iata}} onClick={()=>localStorage.setItem("flywell:tab","arrival")}>{t("trip.setArrival")}</Link></Button>
-        <Button asChild variant="ghost" className="mt-1 min-h-11 w-full whitespace-normal"><Link to="/preflight" search={{from:input.origin,to:destination.iata,date:input.departure}} onClick={()=>localStorage.setItem("flywell:tab","preflight")}>{t("preflight.fromPlanner")}</Link></Button>
+        <AddToTrips input={input} destination={destination} flight={f}/>
       </article>)}</div></>:<div className="border-l-2 border-primary pl-4"><p className="font-medium">{t(`trip.${flights.error??"noFlights"}`)}</p><div className="mt-4 flex flex-wrap gap-2"><Button asChild variant="outline" className="min-h-11"><a href={links.google} target="_blank" rel="noreferrer">{t("trip.googleFlights")}<ArrowUpRight className="size-4"/></a></Button><Button asChild variant="outline" className="min-h-11"><a href={links.skyscanner} target="_blank" rel="noreferrer">{t("trip.skyscanner")}<ArrowUpRight className="size-4"/></a></Button></div></div>}
       {flights?.baggageUnknown&&<p className="mt-3 text-sm text-muted-foreground">{t("trip.bagUnknown")}</p>}
     </section>
