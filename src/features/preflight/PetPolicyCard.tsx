@@ -59,7 +59,7 @@ export function PetPolicyCard({ airline: text, to }: { airline: string; to: stri
             : t("preflight.pets.holdNo"),
     },
     { icon: Dog, label: t("preflight.pets.assistance"), value: t("preflight.pets.assistanceText") },
-    ...(policy.noticeHours && (policy.cabin || policy.hold.kind === "yes" || policy.noticeHours)
+    ...(policy.noticeHours
       ? [
           {
             icon: CalendarClock,
