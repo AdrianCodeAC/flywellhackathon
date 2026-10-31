@@ -2,6 +2,7 @@ import { z } from "zod";
 import { adviceSchema, bookingLinks, comfortScore, dateMatches, searchMonths, tripCacheKey, tripInputSchema, type Destination, type Extras, type Flight, type FlightResult, type TripEvent, type TripInput, type TripResult } from "./types";
 import { tripGateway } from "./gateway.server";
 import { readTripCache, writeTripCache } from "./cache.server";
+import { LIVE_TTL, liveFares } from "./live.server";
 
 async function http(url: string, init?: RequestInit) {
   const r = await fetch(url,init);
@@ -45,7 +46,7 @@ export async function flights(input: TripInput,signal:AbortSignal): Promise<Flig
       if(typeof link==="string" && link.startsWith("/") && !link.startsWith("//")) f.link=`https://www.aviasales.com${link}`;
       f.score=comfortScore(f); if(!found.some(existing=>existing.id===f.id))found.push(f);
     }
-    return {flights:found,error:found.length?null:"noFlights",fetchedAt,baggageUnknown:input.bag};
+    return {flights:found,error:found.length?null:"noFlights",fetchedAt,baggageUnknown:input.bag,source:"cached"};
   } catch { return {flights:[],error:"providerUnavailable",fetchedAt,baggageUnknown:input.bag}; }
 }
 async function extras(input:TripInput,d:Destination,signal:AbortSignal):Promise<Extras> {
@@ -105,7 +106,13 @@ export async function handleTrip(request: Request): Promise<Response> {
       const key=tripCacheKey(input)+preference;
       const cached=preference?undefined:await readTripCache<TripResult>(key).catch(()=>undefined);
       if(cached){
-        if(cached.flights)emit({type:"flights",value:cached.flights});
+        let flights=cached.flights;
+        // A stored live fare goes stale in minutes: re-check it before showing it again.
+        if(flights?.source==="live"&&Date.now()-Date.parse(flights.fetchedAt)>LIVE_TTL){
+          const fresh=await liveFares(input,request.signal).catch(()=>null);
+          if(fresh?.flights.length)flights=fresh;
+        }
+        if(flights)emit({type:"flights",value:flights});
         if(cached.advice)emit({type:"advice",value:cached.advice});
         if(cached.extras)emit({type:"extras",value:cached.extras});
         emit({type:"done",cached:true});return;
@@ -118,7 +125,12 @@ export async function handleTrip(request: Request): Promise<Response> {
         }catch(e){const message=safeAiError(e,input.lang);result.adviceError=message;emit({type:"error",section:"advice",message});}
       })();
       const extraTask=extras(input,destination,request.signal).then(value=>{result.extras=value;emit({type:"extras",value});});
-      const flightTask=flights(input,request.signal).then(value=>{result.flights=value;emit({type:"flights",value});});
+      // Live Google Flights fares when a provider key exists, cached fares otherwise.
+      const flightTask=(async()=>{
+        const live=await liveFares(input,request.signal).catch(()=>null);
+        const value=live?.flights.length?live:await flights(input,request.signal);
+        result.flights=value;emit({type:"flights",value});
+      })();
       await Promise.all([adviceTask,extraTask,flightTask]);
       if(result.advice&&!preference)await writeTripCache(key,result).catch(()=>{});
       emit({type:"done"});
