@@ -120,7 +120,7 @@ export function AirportGuide({ input }: { input: PreflightInput }) {
             onChange={(e) => saveGate(e.target.value)}
             inputMode="text"
             autoCapitalize="characters"
-            placeholder="12"
+            placeholder={t("airportGuide.gatePlaceholder")}
             className="h-11 w-20 text-center text-base font-semibold"
             aria-label={t("airportGuide.gateLabel")}
           />

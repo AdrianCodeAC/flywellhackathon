@@ -588,7 +588,8 @@
         "title": "Exit and transport to {{city}}",
         "detail": "Follow the exit signs; trains, buses and taxis are marked on the map."
       }
-    }
+    },
+    "gatePlaceholder": "e.g. 12"
   },
   "help": {
     "button": "Help",

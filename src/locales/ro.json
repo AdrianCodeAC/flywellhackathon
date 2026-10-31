@@ -588,7 +588,8 @@
         "title": "Ieșirea și transportul spre {{city}}",
         "detail": "Urmează indicatoarele de ieșire; trenurile, autobuzele și taxiurile sunt marcate pe hartă."
       }
-    }
+    },
+    "gatePlaceholder": "ex. 12"
   },
   "help": {
     "button": "Ajutor",
