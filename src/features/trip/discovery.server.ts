@@ -1,6 +1,6 @@
 import { readTripCache, writeTripCache } from './cache.server';
 import { comfortScore } from './types';
-import { recentFare, reachable, ROUTE_TTL, type Discovery, type RouteFare, type PriceDay } from './discovery';
+import { recentFare, reachable, ROUTE_TTL, pickCommonsPhoto, pickPhotoCandidate, type CommonsPage, type Discovery, type PhotoPage, type RouteFare, type PriceDay } from './discovery';
 type Row=Record<string,unknown>;
 async function api(path:string,params:Record<string,string>,token:string){
  const response=await fetch(`https://api.travelpayouts.com${path}?${new URLSearchParams(params)}`,{headers:{'X-Access-Token':token},signal:AbortSignal.timeout(18000)});

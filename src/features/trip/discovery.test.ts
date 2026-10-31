@@ -1,5 +1,5 @@
 import { describe,it,expect } from 'vitest';
-import { pickDay,recentFare,reachable,ROUTE_TTL,recommendationGroups,type RouteFare } from './discovery';
+import { pickDay,recentFare,reachable,ROUTE_TTL,recommendationGroups,isWikimediaPhoto,pickCommonsPhoto,pickPhotoCandidate,type RouteFare } from './discovery';
 import { tripInputSchema,bookingLinks } from './types';
 const fare:RouteFare={id:'a',destinationIata:'BGY',city:'Bergamo',country:'IT',foundAt:new Date().toISOString(),airline:'W4',departure:'2027-01-08',returnDate:'2027-01-11',price:196,currency:'RON',stops:0,duration:250,layover:null,arrival:null,score:98,link:'https://www.aviasales.com'};
 describe('Requested flight discovery rules',()=>{
