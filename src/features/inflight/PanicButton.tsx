@@ -48,7 +48,7 @@ export function PanicButton({ seat = "" }: { seat?: string } = {}) {
       </Button>
       {open && (
         <Suspense fallback={null}>
-          <HelpScreen open={open} onOpenChange={setOpen} initialView={view} />
+          <HelpScreen open={open} onOpenChange={setOpen} initialView={view} seat={seat} />
         </Suspense>
       )}
     </>
