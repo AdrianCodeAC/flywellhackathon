@@ -27,6 +27,7 @@ export function AddToTrips({ input, destination, flight }: { input: TripInput; d
         destination: { iata: to.iata, city: to.city, countryCode: to.countryCode },
         departure: flight.departure,
         airline: flight.airline,
+        flight: flight.outFlight ?? null,
         children: input.children,
         bag: input.bag,
         lang: input.lang,
@@ -36,7 +37,11 @@ export function AddToTrips({ input, destination, flight }: { input: TripInput; d
       const trip = makeTrip(preflight, { returnDate, airline: flight.airline });
       upsertTrip(trip);
       // The home-bound flight is a trip of its own: its own checklist and its own arrival guide at home.
-      if (returnDate && returnDate !== trip.input.date) upsertTrip(makeTrip(returnLegOf(preflight, returnDate), { airline: flight.airline }));
+      if (returnDate && returnDate !== trip.input.date) {
+        const { flight: _f, time: _t, ...base } = preflight;
+        const back = returnLegOf(base, returnDate);
+        upsertTrip(makeTrip({ ...back, ...(flight.backFlight ? { flight: flight.backFlight } : {}), ...(/T\d{2}:\d{2}/.test(flight.returnDate) ? { time: flight.returnDate.slice(11, 16) } : {}) }, { airline: flight.airline }));
+      }
       localStorage.setItem("flywell:tab", "trips");
       void navigate({ to: "/trips/$tripId", params: { tripId: trip.id }, search: { tab: "before" } });
     } catch {

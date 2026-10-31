@@ -59,6 +59,7 @@ export function inputFromPlan(plan: {
   destination: { iata: string; city: string; countryCode: string };
   departure: string;
   airline: string;
+  flight?: string | null;
   children: number;
   bag: boolean;
   lang: "en" | "ro";
@@ -71,6 +72,8 @@ export function inputFromPlan(plan: {
     citizenship: plan.previous?.citizenship ?? (plan.lang === "ro" ? "ro" : "eu"),
     bag: plan.bag ? "checked" : "cabin",
     airline: plan.airline.slice(0, 60),
+    ...(plan.flight ? { flight: plan.flight.slice(0, 8) } : {}),
+    ...(/T\d{2}:\d{2}/.test(plan.departure) ? { time: plan.departure.slice(11, 16) } : {}),
     children: plan.children > 0,
     medication: false,
     pet: false,

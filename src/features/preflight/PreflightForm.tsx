@@ -45,6 +45,7 @@ export function PreflightForm({
   const [bag, setBag] = useState<PreflightInput["bag"]>(initial?.bag ?? "cabin");
   const [airline, setAirline] = useState(initial?.airline ?? "");
   const [seat, setSeat] = useState(initial?.seat ?? "");
+  const [flight, setFlight] = useState(initial?.flight ?? "");
   const [flags, setFlags] = useState({
     children: initial?.children ?? false,
     medication: initial?.medication ?? false,
@@ -62,6 +63,7 @@ export function PreflightForm({
     // Known airline: just its name ("Wizz Air"); unknown: the carrier code so rule lookups still match.
     setAirline(name);
     if (pass.seat) setSeat(pass.seat.toUpperCase());
+    setFlight(`${pass.carrier}${pass.flight}`.replace(/\s/g, "").toUpperCase());
     setError("");
     setScanned(
       t("preflight.scan.done", {
@@ -104,6 +106,8 @@ export function PreflightForm({
       bag,
       airline: airline.trim(),
       seat: seat.trim().toUpperCase(),
+      ...(flight ? { flight } : {}),
+      ...(initial?.time ? { time: initial.time } : {}),
       ...flags,
       lang: i18n.language === "ro" ? "ro" : "en",
     });

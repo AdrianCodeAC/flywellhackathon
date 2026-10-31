@@ -23,7 +23,7 @@ export type Destination = { iata: string; city: string; country: string; lat: nu
 export type Flight = {
   id: string; airline: string; departure: string; returnDate: string; price: number;
   stops: number; duration: number | null; layover: number | null; arrival: string | null;
-  score: number; link: string; currency: string; flightNumber?: string | null; live?: boolean;
+  score: number; link: string; currency: string; flightNumber?: string | null; outFlight?: string | null; backFlight?: string | null; live?: boolean;
 };
 export type PriceInsights = { lowest: number | null; level: string | null; low: number | null; high: number | null };
 export type FlightResult = { flights: Flight[]; error: string | null; fetchedAt: string; baggageUnknown: boolean; source?: "live" | "cached" | "kiwi"; insights?: PriceInsights | null };
