@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import { LanguageSwitcher } from "./AppHeader";
-import { fetchOsrmRoute } from "./services";
+import { fetchOsrmRoute, WALK_DEFAULT_M } from "./services";
+import { distanceMeters } from "./place-utils";
 import { appleMapsUrl, formatDistance, formatDuration, googleMapsUrl } from "./map-links";
 import type { Route, RouteProfile } from "./types";
 
@@ -38,7 +39,9 @@ export function RouteMap({ from, to, onBack }: RouteMapProps) {
   const artRef = useRef<L.LayerGroup | null>(null);
 
   const [route, setRoute] = useState<Route | null>(null);
-  const [profile, setProfile] = useState<RouteProfile>("driving");
+  const straight = distanceMeters([from.lat, from.lon], [to.lat, to.lon]);
+  // A place round the corner is walked to; the car router would send you around one-way streets.
+  const [profile, setProfile] = useState<RouteProfile>(() => (straight < WALK_DEFAULT_M ? "walking" : "driving"));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -103,7 +106,8 @@ export function RouteMap({ from, to, onBack }: RouteMapProps) {
     }
   }, [route, from.lat, from.lon, to.lat, to.lon, from.name, to.name]);
 
-  const showProfileToggle = !!route && route.distanceM < 3000;
+  // Based on the straight line, so a long one-way car detour still lets you switch to walking.
+  const showProfileToggle = straight < 3000;
 
   const btn = "flex min-h-11 items-center justify-center gap-1.5 rounded-lg border px-3 text-sm font-medium active:bg-accent";
 

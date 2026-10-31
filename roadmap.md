@@ -53,3 +53,5 @@
 - [x] Trip page checklist: progress stays visible while scrolling; a button to tick a whole category at once.
 - [x] AI chats answer only travel/flight topics; long chats scroll to the end.
 - [x] No AI checklist items that repeat fixed ones (e.g. "No visa needed" next to "Your ID card or passport is enough").
+- [x] On arrival food/sights: card distances and "Show route" start from the same point (live location when nearby, else the airport); short trips use walking routes.
+- [x] Help → Call the crew: phone vibrates and plays a ring to get attention.

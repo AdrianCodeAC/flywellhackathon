@@ -64,6 +64,9 @@ export async function getAirportByIata(iata: string): Promise<Airport | undefine
 }
 
 const OSRM_HOST = "https://router.project-osrm.org";
+const OSRM_FOOT_HOST = "https://routing.openstreetmap.de/routed-foot";
+/** Closer than this in a straight line, the route map starts on foot. */
+export const WALK_DEFAULT_M = 2000;
 const NOMINATIM_HOST = "https://nominatim.openstreetmap.org";
 
 interface OsrmResponse {
@@ -80,7 +83,10 @@ export async function fetchOsrmRoute(
   to: [number, number],
   profile: RouteProfile = "driving",
 ): Promise<Route> {
-  const url = `${OSRM_HOST}/route/v1/${profile}/${from[1]},${from[0]};${to[1]},${to[0]}?overview=full&geometries=geojson`;
+  // The public OSRM demo only knows cars (its "walking" is a car route), so walking uses
+  // the OSM-hosted foot router.
+  const base = profile === "walking" ? `${OSRM_FOOT_HOST}/route/v1/foot` : `${OSRM_HOST}/route/v1/driving`;
+  const url = `${base}/${from[1]},${from[0]};${to[1]},${to[0]}?overview=full&geometries=geojson`;
   const res = await loggedFetch(url);
   if (!res.ok) throw new Error(`OSRM failed: ${res.status}`);
   const data = (await res.json()) as OsrmResponse;

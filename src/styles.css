@@ -489,11 +489,17 @@ h1, h2, h3 { letter-spacing: 0; }
 .breath-orb + span, .breath-orb ~ span { color: var(--help-bg); }
 .crew-card { border-radius: 20px; padding: 24px 20px; background: var(--help-crew-bg); color: var(--help-crew-fg); box-shadow: 0 20px 60px oklch(0 0 0 / 35%); }
 .crew-bell { color: var(--help-alert); animation: bell-ring 2.2s ease-in-out infinite; transform-origin: top center; }
+/* Flashing outline while the phone rings, in step with the 2.2 s chime. */
+.crew-card-ringing { animation: crew-flash 1.1s ease-in-out infinite; }
+@keyframes crew-flash {
+  0%, 100% { box-shadow: 0 20px 60px oklch(0 0 0 / 35%), 0 0 0 0 var(--help-alert); }
+  50% { box-shadow: 0 20px 60px oklch(0 0 0 / 35%), 0 0 0 6px var(--help-alert); }
+}
 @keyframes bell-ring { 0%, 60%, 100% { transform: rotate(0); } 10% { transform: rotate(14deg); } 20% { transform: rotate(-12deg); } 30% { transform: rotate(8deg); } 40% { transform: rotate(-5deg); } }
 .crew-seat { color: var(--help-crew-fg); background: transparent; border: 2px solid var(--help-alert); }
 .help-phrase { border-radius: 12px; padding: 10px 14px; background: var(--help-panel); border: 1px solid var(--help-panel-edge); }
 @media (prefers-reduced-motion: reduce) {
-  .panic-ring, .help-aurora, .crew-bell, .help-tile-alert .help-tile-icon, .map-route-ahead, .map-step-pulse, .map-gate-halo, .map-canvas, .help-screen { animation: none; }
+  .panic-ring, .help-aurora, .crew-bell, .crew-card-ringing, .help-tile-alert .help-tile-icon, .map-route-ahead, .map-step-pulse, .map-gate-halo, .map-canvas, .help-screen { animation: none; }
 }
 
 /* Seat advice: cabin map. */

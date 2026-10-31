@@ -823,7 +823,11 @@
       "seat": "Locul",
       "callButton": "Apasă butonul de apel de deasupra locului tău (simbolul cu omuleț), apoi arată acest ecran însoțitorului de zbor.",
       "medicalTitle": "Informațiile mele medicale",
-      "addCard": "Adaugă alergiile și medicamentele pe acest card"
+      "addCard": "Adaugă alergiile și medicamentele pe acest card",
+      "ringStop": "Oprește sunetul și vibrația",
+      "ringStart": "Sună și vibrează",
+      "ringOn": "Telefonul sună și vibrează ca să te observe echipajul. Se oprește singur după un minut.",
+      "noVibrate": "Acest telefon nu poate vibra din aplicație, așa că se aude doar sunetul. Scoate telefonul de pe silențios ca să se audă."
     },
     "unwell": {
       "title": "Mi-e rău",
@@ -1099,5 +1103,14 @@
     "eyebrow": "Am deja bilet",
     "title": "Adaugă zborul tău",
     "subtitle": "Scanează cartea de îmbarcare sau scrie detaliile zborului. Primești tot ce-ți trebuie înainte, în timpul și după zbor, salvat în Călătoriile mele."
+  },
+  "start": {
+    "fromYou": "Distanțe de unde ești acum, actualizate pe măsură ce te miști (în linie dreaptă).",
+    "fromAirport": "Distanțe de la aeroport (în linie dreaptă). Pornește locația ca să măsurăm de unde ești.",
+    "far": "Ești departe de acest aeroport, așa că distanțele sunt de la aeroport (în linie dreaptă).",
+    "denied": "Locația e oprită, așa că distanțele sunt de la aeroport (în linie dreaptă).",
+    "useMine": "Folosește locația mea",
+    "locating": "Te căutăm…",
+    "you": "Locația ta"
   }
 }

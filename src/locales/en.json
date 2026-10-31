@@ -823,7 +823,11 @@
       "seat": "Seat",
       "callButton": "Press the call button above your seat (the person symbol), then show this screen to the flight attendant.",
       "medicalTitle": "My medical information",
-      "addCard": "Add allergies and medication to this card"
+      "addCard": "Add allergies and medication to this card",
+      "ringStop": "Stop sound and vibration",
+      "ringStart": "Ring and vibrate",
+      "ringOn": "Your phone is ringing and vibrating so the crew notices you. It stops by itself after a minute.",
+      "noVibrate": "This phone can't vibrate from the app, so only the sound plays. Turn off silent mode so it can be heard."
     },
     "unwell": {
       "title": "I feel unwell",
@@ -1099,5 +1103,14 @@
     "eyebrow": "I already have a ticket",
     "title": "Add your flight",
     "subtitle": "Scan your boarding pass or type the flight details. You get everything for before, during and after the flight, saved in My trips."
+  },
+  "start": {
+    "fromYou": "Distances from where you are now, updated as you move (straight line).",
+    "fromAirport": "Distances from the airport (straight line). Turn on location to measure from where you are.",
+    "far": "You're far from this airport, so distances are from the airport (straight line).",
+    "denied": "Location is off, so distances are from the airport (straight line).",
+    "useMine": "Use my location",
+    "locating": "Finding you…",
+    "you": "Your location"
   }
 }

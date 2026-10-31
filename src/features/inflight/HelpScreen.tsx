@@ -15,6 +15,8 @@ import {
   X,
   TriangleAlert,
   Pencil,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { useTripUser } from "@/features/trip/auth";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -24,6 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { BREATH, CARD_EVENT, CREW_PHRASES, hasMedicalInfo, loadCard, saveCard, type MedicalCard } from "./medical-card";
+import { canVibrate, startAttention } from "./attention";
 
 export type View = "home" | "breathe" | "crew" | "unwell" | "card";
 const SYMPTOMS = ["panic", "nausea", "ears", "faint", "headache", "turbulence"] as const;
@@ -209,11 +212,34 @@ function Crew({ card, onSeat, onEdit }: { card: MedicalCard; onSeat: (s: string)
   const first = i18n.language === "ro" ? "ro" : "en";
   const phrases = [...CREW_PHRASES].sort((a, b) => (a.lang === first ? -1 : b.lang === first ? 1 : 0));
   const [main, ...others] = phrases;
+  const [ringing, setRinging] = useState(false);
+  const [vibrates, setVibrates] = useState(true);
+  const stopRef = useRef<(() => void) | null>(null);
+  const ring = () => {
+    stopRef.current?.();
+    stopRef.current = startAttention(() => {
+      stopRef.current = null;
+      setRinging(false);
+    });
+    setRinging(true);
+  };
+  const silence = () => {
+    stopRef.current?.();
+    stopRef.current = null;
+    setRinging(false);
+  };
+  // Opening this screen is the tap that asks for attention, so start ringing right away.
+  useEffect(() => {
+    setVibrates(canVibrate());
+    ring();
+    return () => stopRef.current?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div>
       <Dialog.Title className="sr-only">{t("help.crew.title")}</Dialog.Title>
       <motion.div
-        className="crew-card"
+        className={`crew-card ${ringing ? "crew-card-ringing" : ""}`}
         initial={{ scale: 0.94 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 18 }}
@@ -235,6 +261,19 @@ function Crew({ card, onSeat, onEdit }: { card: MedicalCard; onSeat: (s: string)
           />
         </label>
       </motion.div>
+
+      <Button
+        className={`mt-4 min-h-14 w-full whitespace-normal text-base ${ringing ? "help-outline" : "help-urgent-button"}`}
+        variant={ringing ? "outline" : "default"}
+        aria-pressed={ringing}
+        onClick={ringing ? silence : ring}
+      >
+        {ringing ? <VolumeX /> : <Volume2 />}
+        {ringing ? t("help.crew.ringStop") : t("help.crew.ringStart")}
+      </Button>
+      <p className="help-muted mt-2 text-sm leading-relaxed" role="status">
+        {ringing && t("help.crew.ringOn")} {!vibrates && t("help.crew.noVibrate")}
+      </p>
 
       <p className="help-panel mt-4 flex items-start gap-2 text-sm leading-relaxed">
         <HeartHandshake className="mt-0.5 size-5 shrink-0" />
