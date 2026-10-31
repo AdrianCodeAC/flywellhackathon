@@ -13,8 +13,9 @@ export function TripResults({result,busy,onEdit,onAdjust}:{result:TripResult;bus
   const money=(v:number,c=currency)=>new Intl.NumberFormat(i18n.language,{style:"currency",currency:c,maximumFractionDigits:0}).format(v);
   const date=(v:string)=>new Intl.DateTimeFormat(i18n.language,{day:"numeric",month:"short"}).format(new Date(`${v.slice(0,10)}T12:00:00`));
   const links=bookingLinks(input,destination.city);const ranked=rankFlights(flights?.flights??[]);const best=ranked[0]?.flight;
-  const costs=advice?stayCosts(input,advice,best,currency==="RON"?(rate??1):1):null;
   const estimatesCurrency=currency==="RON"&&!rate?"EUR":currency;
+  const normalizedFlight=best&&best.currency===estimatesCurrency?best:best&&extras?.rate?{...best,price:best.currency==="RON"?best.price/extras.rate:best.price*extras.rate,currency:estimatesCurrency}:undefined;
+  const costs=advice?stayCosts(input,advice,normalizedFlight,currency==="RON"?(rate??1):1):null;
   return <div className="space-y-9" id="trip-results">
     <header className="flex flex-wrap items-start justify-between gap-3 border-b pb-6"><div><p className="mb-2 text-xs font-semibold uppercase text-primary">{t("trip.yourTrip")}{result.cached?` · ${t("trip.cached")}`:""}</p><h1 className="font-display text-3xl sm:text-4xl">{input.origin} <span className="text-primary">→</span> {destination.city}</h1><p className="mt-2 text-sm text-muted-foreground">{date(input.departure)}–{date(input.returnDate)} · {t("trip.nights",{count:nights(input.departure,input.returnDate)})} · {t("trip.adultCount",{count:input.adults})}{input.children?` · ${t("trip.childCount",{count:input.children})}`:""}</p></div><Button variant="outline" onClick={onEdit} className="min-h-11"><Pencil className="size-4"/>{t("trip.edit")}</Button></header>
     <section><Heading icon={<Plane className="size-5"/>} title={t("trip.flights")}/>

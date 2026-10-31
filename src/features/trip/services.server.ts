@@ -29,7 +29,10 @@ export async function flights(input: TripInput,signal:AbortSignal): Promise<Flig
     for(const row of data.data ?? []) {
       const departure=String(row["departure_at"] ?? ""), returnDate=String(row["return_at"] ?? "");
       const price=Number(row["price"]),stops=Number(row["transfers"] ?? 0);
-      if(!dateMatches(departure,input.departure,input.flexible)||!dateMatches(returnDate,input.returnDate,input.flexible)||!(price>0)||!Number.isFinite(stops)||(input.direct&&stops>0)||row["destination"]!==input.destinationIata) continue;
+      const actualDestination=row["destination_airport"]??row["destination"];
+      const actualOrigin=row["origin_airport"]??row["origin"];
+      const returnStops=Number(row["return_transfers"]??stops);
+      if(!dateMatches(departure,input.departure,input.flexible)||!dateMatches(returnDate,input.returnDate,input.flexible)||!(price>0)||!Number.isFinite(stops)||(input.direct&&(stops>0||returnStops>0))||actualDestination!==input.destinationIata||actualOrigin!==input.origin) continue;
       const duration=typeof row["duration_to"]==="number"?row["duration_to"]:null;
       const f:Flight={id:String(row["flight_number"]??found.length)+departure+returnDate,airline:String(row["airline"]??""),departure,returnDate,price,stops,duration,layover:null,arrival:null,score:0,link:bookingLinks(input,input.destination).google,currency};
       const link=row["link"];

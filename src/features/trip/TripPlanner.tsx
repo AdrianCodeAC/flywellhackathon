@@ -15,13 +15,13 @@ export function TripPlanner(){
   const search=useCallback(async(raw:TripInput,preference?:string)=>{
     const parsed=tripInputSchema.safeParse(raw);if(!parsed.success){setError(t("trip.invalidInput"));return;}
     abort.current?.abort();const controller=new AbortController();abort.current=controller;
-    setInput(raw);setResult(undefined);setError("");setBusy(true);setEditing(false);setSuggestions([]);
+    setInput(raw);setResult(previous=>preference?previous:undefined);setError("");setBusy(true);setEditing(false);setSuggestions([]);
     try{
       const response=await fetch("/api/trip",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...raw,preference}),signal:controller.signal});
       if(!response.ok||!response.body)throw new Error(t("trip.searchError"));
       const reader=response.body.getReader(),decoder=new TextDecoder();let buffer="";
       const event=(e:TripEvent)=>{
-        if(e.type==="destination")setResult({input:{...raw,destination:e.destination.city,destinationIata:e.destination.iata},destination:e.destination});
+        if(e.type==="destination")setResult(previous=>({...previous,input:{...raw,destination:e.destination.city,destinationIata:e.destination.iata},destination:e.destination}));
         if(e.type==="suggestions")setSuggestions(e.destinations);
         if(e.type==="flights")setResult(r=>r?{...r,flights:e.value}:r);
         if(e.type==="advice")setResult(r=>r?{...r,advice:e.value}:r);
