@@ -133,14 +133,17 @@ type WikiPage = PageRow & { coordinates?: { lat: number; lon: number }[] };
 const KIND_PRIORITY: Place["kind"][] = ["museum", "park", "church", "castle", "viewpoint", "attraction", "monument"];
 /** Not things to visit, even when Wikipedia places them near the centre. */
 const NOT_A_SIGHT =
-  /\b(prison|penitenciar\w*|brigad\w*|euroregion\w*|district|cartier\w*|street|strada|station|gara|hospital|spital\w*|airport|aeroport\w*|company|companie|club|f\.?c\.?|election\w*|alegeri|school|scoala|university|universitat\w*|bombing|attack|atentat\w*|ministry|minister\w*|village|commune|comuna|satul|sat|localitat\w*|municipality|municipiu\w*|region|regiune\w*|neighbou?rhood)\b/i;
+  /\b(prison|penitenciar\w*|brigad\w*|euroregion\w*|district|cartier\w*|street|strada|station|gara|hospital|spital\w*|airport|aeroport\w*|company|companie|club|f\.?c\.?|election\w*|alegeri|school|scoala|university|universitat\w*|bombing|attack|atentat\w*|ministry|minister\w*)\b/i;
+/** Descriptions of settlements and areas, not sights. */
+const A_SETTLEMENT =
+  /\b(is an? (village|commune|town|city|municipality|neighbou?rhood|district|region|suburb)|este (un|o) (sat|comuna|oras|municipiu|cartier|localitate|regiune))\b/i;
 
 const LOOKS_LIKE_SIGHT =
   /\b(theat\w*|teatr\w*|palace|palat\w*|castle|castel\w*|square|piata|tower|turn\w*|bridge|pod\w*|fountain|fantan\w*|statue|statui\w*|opera|zoo|market|historic\w*|istoric\w*|memorial\w*|casa|house|hall|sala|landmark|ruins|ruin\w*|fortress|cetat\w*|lake|lac\w*|beach|plaja)\b/i;
 /** Nearby-article filler: keep recognised kinds and sight-like places, drop villages, prisons, regions… */
 function isWorthVisiting(p: Place): boolean {
   const text = `${p.name} ${p.description ?? ""}`.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  if (NOT_A_SIGHT.test(text)) return false;
+  if (NOT_A_SIGHT.test(text) || A_SETTLEMENT.test(text)) return false;
   return p.kind !== "other" || LOOKS_LIKE_SIGHT.test(p.name.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
 }
 
