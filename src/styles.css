@@ -182,28 +182,28 @@
 
 /* Mod întunecat (dacă va fi activat): aceleași roluri, nuanțe închise. */
 .dark {
-  --ui-page: oklch(0.2 0.025 178);
-  --ui-text: oklch(0.96 0.01 170);
-  --ui-text-muted: oklch(0.76 0.03 172);
-  --ui-card: oklch(0.25 0.03 178);
-  --ui-border: oklch(0.36 0.03 178);
-  --ui-input: oklch(0.42 0.04 178);
-  --ui-button: var(--palette-pearl-aqua);
-  --ui-button-text: var(--palette-green-ink);
-  --ui-button-soft: oklch(0.3 0.04 176);
-  --ui-button-soft-text: var(--palette-aquamarine);
-  --ui-highlight: oklch(0.34 0.05 168);
-  --ui-highlight-text: var(--palette-aquamarine);
-  --ui-danger: var(--palette-grapefruit);
-  --ui-food: var(--palette-grapefruit);
-  --ui-food-soft: oklch(0.3 0.05 22);
-  --ui-ride: var(--palette-pearl-aqua);
-  --ui-ride-soft: oklch(0.3 0.04 176);
-  --ui-visit: var(--palette-powder-blush);
-  --ui-visit-soft: oklch(0.3 0.04 25);
-  --ui-ask: var(--palette-aquamarine);
-  --ui-ask-soft: oklch(0.3 0.04 164);
-  --muted: oklch(0.28 0.03 178);
+  --ui-page: oklch(0.23 0.028 267);
+  --ui-text: oklch(0.96 0.01 240);
+  --ui-text-muted: oklch(0.76 0.03 240);
+  --ui-card: oklch(0.28 0.03 267);
+  --ui-border: oklch(0.4 0.03 267);
+  --ui-input: oklch(0.45 0.04 267);
+  --ui-button: var(--palette-steel);
+  --ui-button-text: var(--palette-navy);
+  --ui-button-soft: oklch(0.33 0.04 267);
+  --ui-button-soft-text: oklch(0.85 0.05 230);
+  --ui-highlight: oklch(0.36 0.05 250);
+  --ui-highlight-text: oklch(0.92 0.03 220);
+  --ui-danger: oklch(0.62 0.13 45);
+  --ui-food: oklch(0.8 0.05 45);
+  --ui-food-soft: oklch(0.32 0.05 45);
+  --ui-ride: var(--palette-steel);
+  --ui-ride-soft: oklch(0.32 0.04 250);
+  --ui-visit: oklch(0.75 0.04 50);
+  --ui-visit-soft: oklch(0.32 0.04 50);
+  --ui-ask: oklch(0.9 0.02 200);
+  --ui-ask-soft: oklch(0.32 0.03 240);
+  --muted: oklch(0.31 0.03 267);
 }
 
 @layer base {
@@ -244,7 +244,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .arrival-options-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .arrival-options-compact .arrival-option { height: 166px; padding: 16px; }
 .arrival-main > section > h2 { font-family: var(--font-display); font-size: 34px; font-weight: 400; }
-.arrival-main article { border-radius: 8px; box-shadow: 0 2px 6px oklch(0.25 0.025 175 / 2%); }
+.arrival-main article { border-radius: 8px; box-shadow: 0 2px 6px oklch(0.311 0.038 267.4 / 3%); }
 .arrival-main article h3 { line-height: 1.5; }
 .arrival-main input { background: var(--card); box-shadow: none; }
 .arrival-main article button:hover { border-color: var(--primary); color: var(--primary); }
@@ -298,61 +298,61 @@ h1, h2, h3 { letter-spacing: 0; }
 
 /* Airport guide: virtual airport map drawn from OpenStreetMap geometry. Colors come from the palette above. */
 :root {
-  --map-ground: color-mix(in oklab, var(--palette-aquamarine) 18%, var(--palette-white));
-  --map-apron: oklch(0.93 0.012 176);
-  --map-taxiway: oklch(0.88 0.02 176);
-  --map-runway: var(--palette-green-ink);
+  --map-ground: color-mix(in oklab, var(--palette-mint) 65%, var(--palette-white));
+  --map-apron: oklch(0.93 0.012 220);
+  --map-taxiway: oklch(0.88 0.02 220);
+  --map-runway: var(--palette-navy);
   --map-runway-line: var(--palette-white);
   --map-terminal: var(--palette-white);
-  --map-terminal-edge: var(--palette-green-deep);
-  --map-departures: color-mix(in oklab, var(--palette-pearl-aqua) 40%, var(--palette-white));
-  --map-arrivals: color-mix(in oklab, var(--palette-powder-blush) 35%, var(--palette-white));
-  --map-gate: var(--palette-green-ink);
+  --map-terminal-edge: var(--palette-deep);
+  --map-departures: color-mix(in oklab, var(--palette-steel) 40%, var(--palette-white));
+  --map-arrivals: color-mix(in oklab, var(--palette-clay) 45%, var(--palette-white));
+  --map-gate: var(--palette-navy);
   --map-gate-text: var(--palette-white);
-  --map-mine: var(--palette-grapefruit);
-  --map-step: var(--palette-green-deep);
+  --map-mine: var(--palette-alert);
+  --map-step: var(--palette-deep);
   --map-step-text: var(--palette-white);
-  --map-transport: var(--palette-green-deep);
-  --map-food: var(--palette-grapefruit-deep);
-  --map-money: oklch(0.5 0.09 164);
-  --map-services: var(--palette-blush-deep);
-  --map-toilets: var(--palette-green-ink);
+  --map-transport: var(--palette-deep);
+  --map-food: var(--palette-clay-deep);
+  --map-money: var(--palette-cocoa);
+  --map-services: var(--palette-clay-deep);
+  --map-toilets: var(--palette-navy);
   --map-gates: var(--map-gate);
-  --map-grass-dot: color-mix(in oklab, var(--palette-pearl-aqua) 45%, var(--palette-white));
-  --map-apron-edge: var(--palette-green-line);
-  --map-taxi-line: var(--palette-powder-blush);
-  --map-terminal-shade: var(--palette-green-soft);
-  --map-departures-shade: var(--palette-pearl-aqua);
-  --map-arrivals-shade: var(--palette-powder-blush);
-  --map-wall: color-mix(in oklab, var(--palette-green-deep) 70%, var(--palette-pearl-aqua));
+  --map-grass-dot: color-mix(in oklab, var(--palette-steel) 45%, var(--palette-white));
+  --map-apron-edge: var(--palette-line);
+  --map-taxi-line: var(--palette-clay);
+  --map-terminal-shade: var(--palette-steel-soft);
+  --map-departures-shade: var(--palette-steel);
+  --map-arrivals-shade: var(--palette-clay);
+  --map-wall: color-mix(in oklab, var(--palette-deep) 70%, var(--palette-steel));
   --map-skylight: oklch(1 0 0 / 0.25);
-  --map-building-shadow: oklch(0.27 0.04 178 / 0.25);
+  --map-building-shadow: oklch(0.311 0.038 267.4 / 0.25);
   --map-plane: var(--palette-white);
-  --map-plane-edge: var(--palette-green-muted);
-  --map-step-passed: color-mix(in oklab, var(--palette-green-deep) 55%, var(--palette-pearl-aqua));
-  --map-frame-shadow: 0 12px 30px -16px oklch(0.27 0.04 178 / 0.45);
-  --map-control-shadow: 0 4px 14px -4px oklch(0.27 0.04 178 / 0.35);
+  --map-plane-edge: var(--palette-muted);
+  --map-step-passed: color-mix(in oklab, var(--palette-deep) 55%, var(--palette-steel));
+  --map-frame-shadow: 0 12px 30px -16px oklch(0.311 0.038 267.4 / 0.45);
+  --map-control-shadow: 0 4px 14px -4px oklch(0.311 0.038 267.4 / 0.35);
 }
 .dark {
-  --map-ground: oklch(0.24 0.025 176);
-  --map-apron: oklch(0.3 0.02 176);
-  --map-taxiway: oklch(0.36 0.02 176);
-  --map-runway: oklch(0.16 0.015 178);
-  --map-terminal: oklch(0.36 0.03 176);
-  --map-departures: oklch(0.4 0.05 176);
-  --map-arrivals: oklch(0.4 0.05 25);
-  --map-gate: var(--palette-aquamarine);
-  --map-gate-text: var(--palette-green-ink);
-  --map-grass-dot: oklch(0.3 0.03 170);
-  --map-apron-edge: oklch(0.35 0.02 176);
-  --map-terminal-shade: oklch(0.31 0.03 176);
-  --map-departures-shade: oklch(0.33 0.05 176);
-  --map-arrivals-shade: oklch(0.33 0.05 25);
-  --map-wall: oklch(0.2 0.02 178);
+  --map-ground: oklch(0.26 0.025 267);
+  --map-apron: oklch(0.32 0.02 267);
+  --map-taxiway: oklch(0.38 0.02 267);
+  --map-runway: oklch(0.18 0.015 267);
+  --map-terminal: oklch(0.38 0.03 267);
+  --map-departures: oklch(0.42 0.05 250);
+  --map-arrivals: oklch(0.42 0.05 45);
+  --map-gate: var(--palette-steel);
+  --map-gate-text: var(--palette-navy);
+  --map-grass-dot: oklch(0.32 0.03 250);
+  --map-apron-edge: oklch(0.37 0.02 267);
+  --map-terminal-shade: oklch(0.33 0.03 267);
+  --map-departures-shade: oklch(0.35 0.05 250);
+  --map-arrivals-shade: oklch(0.35 0.05 45);
+  --map-wall: oklch(0.22 0.02 267);
   --map-skylight: oklch(1 0 0 / 0.08);
   --map-building-shadow: oklch(0 0 0 / 0.45);
-  --map-plane: oklch(0.92 0.01 170);
-  --map-step-passed: oklch(0.5 0.06 176);
+  --map-plane: oklch(0.92 0.01 240);
+  --map-step-passed: oklch(0.52 0.06 250);
 }
 .airport-map { height: min(62vh, 520px); min-height: 340px; background: var(--map-ground); touch-action: none; box-shadow: var(--map-frame-shadow); }
 .map-canvas { animation: map-arrive 0.7s ease-out both; }
