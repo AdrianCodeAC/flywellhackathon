@@ -54,6 +54,10 @@ export function rankFlights(flights: Flight[]) {
   return [{ role: "best", flight: best }, { role: "cheapest", flight: cheapest }, { role: "comfortable", flight: comfortable }].filter((r): r is { role: string; flight: Flight } => Boolean(r.flight));
 }
 export function dateMatches(actual: string, requested: string, flexible: boolean) { return Math.abs(nights(actual.slice(0,10),requested)) <= (flexible ? 3 : 0); }
+export function searchMonths(date:string,flexible:boolean){
+  const offsets=flexible?[-3,0,3]:[0];
+  return [...new Set(offsets.map(offset=>new Date(Date.parse(date)+offset*86400000).toISOString().slice(0,7)))];
+}
 export function bookingLinks(input: TripInput, city: string) {
   const guests = input.adults + input.children;
   return {

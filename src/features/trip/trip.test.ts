@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SIX_HOURS, bookingLinks, comfortScore, dateMatches, nights, rankFlights, rememberedTab, stayCosts, tripCacheKey, tripInputSchema, type Flight, type TripAdvice, type TripInput } from "./types";
+import { SIX_HOURS, bookingLinks, comfortScore, dateMatches, searchMonths, nights, rankFlights, rememberedTab, stayCosts, tripCacheKey, tripInputSchema, type Flight, type TripAdvice, type TripInput } from "./types";
 const input:TripInput={destination:"Barcelona",destinationIata:"BCN",origin:"CRA",departure:"2027-11-12",returnDate:"2027-11-16",adults:2,children:0,flexible:false,budget:"medium",direct:false,bag:false,lang:"ro"};
 const advice:TripAdvice={areas:[{name:"a",reason:"r",nightlyMinEur:50,nightlyMaxEur:100},{name:"b",reason:"r",nightlyMinEur:60,nightlyMaxEur:110},{name:"c",reason:"r",nightlyMinEur:70,nightlyMaxEur:120}],foodPerPersonEur:[10,20],transportPerPersonEur:[5,10],activitiesPerPersonEur:[5,15],documents:"check",currency:"EUR",wellbeing:["1","2","3"]};
 const f:Flight={id:"1",airline:"W4",departure:"2027-11-12T12:00:00Z",returnDate:"2027-11-16T12:00:00Z",price:200,stops:0,duration:180,layover:null,arrival:null,score:100,link:"https://www.aviasales.com",currency:"RON"};
@@ -14,4 +14,5 @@ describe("Trip planner rules",()=>{
   it("ranks cheapest and comfort separately",()=>{const cheaper={...f,id:"2",price:100,score:60};expect(rankFlights([f,cheaper])[1]?.flight.id).toBe("2");expect(rankFlights([f,cheaper])[2]?.flight.id).toBe("1");expect(rankFlights([])).toEqual([]);});
   it("prefills hotel dates and guests",()=>{const u=new URL(bookingLinks(input,"Barcelona").booking);expect(u.searchParams.get("checkin")).toBe("2027-11-12");expect(u.searchParams.get("checkout")).toBe("2027-11-16");expect(u.searchParams.get("group_adults")).toBe("2");});
   it("rejects return before departure",()=>expect(tripInputSchema.safeParse({...input,returnDate:"2027-11-10"}).success).toBe(false));
+  it("searches adjacent months for flexible dates",()=>{expect(searchMonths("2027-11-01",true)).toEqual(["2027-10","2027-11"]);expect(searchMonths("2027-11-30",true)).toEqual(["2027-11","2027-12"]);});
 });
