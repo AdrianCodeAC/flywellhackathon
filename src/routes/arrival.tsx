@@ -13,6 +13,7 @@ import type { ArrivalMessage } from "@/features/arrival/AskAI";
 import type { Airport } from "@/features/arrival/types";
 import { ArrowDown, MapPin, Plane, Compass } from "lucide-react";
 import { ArrivalOptions } from "@/features/arrival/ArrivalOptions";
+import { WeatherCard } from "@/features/arrival/WeatherCard";
 import cityImage from "@/assets/arrival-craiova.jpg";
 
 // Leaflet is browser-only, so the map module is loaded on demand.
@@ -137,6 +138,11 @@ function ArrivalPage() {
           <AirportSearch selected={airport} onSelect={select} onClear={clear} />
           </div>
         </div>
+        {hydrated && airport && !section && (
+          <div className="mt-6 max-w-xl">
+            <WeatherCard lat={airport.lat} lon={airport.lon} city={airport.city} />
+          </div>
+        )}
         {!section && <section className="mt-9 border-t pt-7 sm:mt-11 sm:pt-8">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-3"><span className="section-index" aria-hidden>02 /</span><h2 className="font-display text-3xl">{t("sheet.openOptions")}</h2></div>{airport && <Button variant="ghost" onClick={() => setSheetOpen(true)} className="min-h-11 text-primary"><Compass />{airport.city}</Button>}</div>
           <ArrivalOptions city={airport?.city ?? ""} disabled={!airport} onPick={(s) => { setSection(s); setSheetOpen(false); }} />

@@ -9,6 +9,9 @@ import { AirportSearch } from "@/features/arrival/AirportSearch";
 import { getAirportByIata } from "@/features/arrival/services";
 import type { Airport } from "@/features/arrival/types";
 import { daysUntil, type PreflightInput } from "./rules";
+import { AIRLINES } from "./airlines";
+import { flightDate, type BoardingPass } from "./bcbp";
+import { ScanBoardingPass } from "./ScanBoardingPass";
 
 export interface PreflightPrefill {
   from?: string | undefined;
@@ -47,6 +50,25 @@ export function PreflightForm({
     pet: initial?.pet ?? false,
   });
   const [error, setError] = useState("");
+  const [scanned, setScanned] = useState("");
+
+  // A scanned boarding pass fills airports, date and airline in one go.
+  const applyPass = (pass: BoardingPass) => {
+    void getAirportByIata(pass.from).then((a) => a && setOrigin(a));
+    void getAirportByIata(pass.to).then((a) => a && setDestination(a));
+    setDate(flightDate(pass.julianDay));
+    const name = AIRLINES.find((a) => a.codes.includes(pass.carrier))?.name ?? pass.carrier;
+    setAirline(`${name} ${pass.carrier} ${pass.flight}`);
+    setError("");
+    setScanned(
+      t("preflight.scan.done", {
+        flight: `${pass.carrier} ${pass.flight}`,
+        from: pass.from,
+        to: pass.to,
+        seat: pass.seat || "—",
+      }),
+    );
+  };
 
   // Origin: link from the planner, then the planner's saved departure airport, then Craiova.
   useEffect(() => {
@@ -84,6 +106,12 @@ export function PreflightForm({
   const label = "mb-3 flex items-center gap-2 text-sm font-semibold";
   return (
     <form onSubmit={submit} className="trip-search rounded-lg border bg-card p-5 sm:p-7">
+      <ScanBoardingPass onScan={applyPass} />
+      {scanned && (
+        <p role="status" className="-mt-3 mb-6 text-sm font-medium text-primary">
+          {scanned}
+        </p>
+      )}
       <div className="grid gap-6 lg:grid-cols-2">
         <div>
           <p className={label}>

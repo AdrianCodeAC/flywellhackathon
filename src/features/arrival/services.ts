@@ -10,6 +10,7 @@ import { getPlaceSummaries, getTransportGuide, type TransportGuide } from "./gui
 import { askAssistant, type AssistantAnswer } from "./ai.functions";
 import tzLookup from "tz-lookup";
 import i18n from "@/lib/i18n";
+import { parseWeather, weatherUrl, type Weather } from "./weather";
 
 type RawAirport = [
   iata: string,
@@ -427,4 +428,18 @@ export function askAI(
   return askAssistant({
     data: { question, history, lang: lang === "ro" ? "ro" : "en", context },
   });
+}
+
+// ---- Weather (Open-Meteo, keyless) ----
+/** Current weather (no `day`) or the forecast for one day, cached for an hour. */
+export function getWeather(lat: number, lon: number, day?: string): Promise<Weather | null> {
+  return cached(
+    `weather-v1:${lat.toFixed(2)},${lon.toFixed(2)}:${day ?? "now"}`,
+    async () => {
+      const res = await loggedFetch(weatherUrl(lat, lon, day));
+      if (!res.ok) throw new Error(`Open-Meteo ${res.status}`);
+      return parseWeather(await res.json(), day);
+    },
+    60 * 60 * 1000,
+  );
 }

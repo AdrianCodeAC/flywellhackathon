@@ -495,6 +495,94 @@
     },
     "offlineAnswer": "The AI agent is not available right now, so here is what the official rules say:",
     "offlineNoMatch": "The AI agent is not available right now and I could not match your question to an official rule. Try asking about documents, liquids, batteries, baggage, customs or delays.",
-    "offlineNoTrip": "The AI agent is not available right now. Fill in your flight above, or ask about liquids, batteries, baggage, customs or delays."
+    "offlineNoTrip": "The AI agent is not available right now. Fill in your flight above, or ask about liquids, batteries, baggage, customs or delays.",
+    "scan": {
+      "title": "Have your boarding pass?",
+      "hint": "Scan its barcode or pick a screenshot: we fill in the airports, date and airline for you. Nothing is uploaded.",
+      "button": "Scan boarding pass",
+      "reading": "Reading…",
+      "notFound": "No barcode found. Try a sharper photo, closer, in good light — or fill in the form below.",
+      "notBoardingPass": "That barcode is not a boarding pass. Use the code on your boarding pass.",
+      "done": "Filled in from your boarding pass: {{flight}} {{from}} → {{to}}, seat {{seat}}."
+    },
+    "bags": {
+      "title": "Your bag allowance — {{airline}}",
+      "verifyBadge": "Check fare",
+      "pickFare": "Pick the fare you bought:",
+      "kg": "max {{kg}} kg",
+      "notIncluded": "Not included",
+      "paid": "Not included — can be added for a fee (cheaper online than at the airport)",
+      "byRoute": "Depends on route and fare — see your booking",
+      "personal": "Personal item (under the seat)",
+      "cabin": "Cabin bag (overhead bin)",
+      "checked": "Checked bag",
+      "note": {
+        "asBought": "The weight you bought is on your booking confirmation.",
+        "combined8": "8 kg is the combined limit for the cabin bag and personal item; smaller limits apply on ATR aircraft.",
+        "route": "Turkish Airlines allowances vary by route; the booking shows yours."
+      },
+      "verify": "This airline's rules vary by route or recently changed: confirm on your booking.",
+      "checkedOn": "Checked October 2026. Airlines change rules: confirm on the official page.",
+      "official": "{{airline}} baggage rules"
+    },
+    "jetlag": {
+      "title": "Jet-lag coach",
+      "same": "Same time zone — no jet lag.",
+      "ahead": "{{city}} is {{hours}} h ahead of your departure city.",
+      "behind": "{{city}} is {{hours}} h behind your departure city.",
+      "recovery_one": "Without preparation your body needs about {{count}} day to adjust.",
+      "recovery_few": "Without preparation your body needs about {{count}} days to adjust.",
+      "recovery_other": "Without preparation your body needs about {{count}} days to adjust.",
+      "step": {
+        "none": "Less than 2 hours of difference: keep your normal schedule, drink water and rest well the night before.",
+        "flight": "On board: set your watch to destination time. Sleep if it is night there, stay awake if it is day. Drink water, skip alcohol.",
+        "light_east": "After landing: get outdoor light in the morning and avoid bright light and screens in the evening.",
+        "light_west": "After landing: get outdoor light in the afternoon and evening; keep mornings dim for the first days.",
+        "caffeine": "Coffee only in the local morning, none in the 8 hours before bedtime. A short nap (under 30 min) is fine; long naps delay adjustment.",
+        "prep_east_one": "{{count}} day before: go to bed and wake up about 1 hour earlier.",
+        "prep_east_few": "{{count}} days before: go to bed and wake up about 1 hour earlier each day.",
+        "prep_east_other": "{{count}} days before: go to bed and wake up about 1 hour earlier each day.",
+        "prep_west_one": "{{count}} day before: go to bed and wake up about 1 hour later.",
+        "prep_west_few": "{{count}} days before: go to bed and wake up about 1 hour later each day.",
+        "prep_west_other": "{{count}} days before: go to bed and wake up about 1 hour later each day."
+      }
+    }
+  },
+  "weather": {
+    "unavailable": "Weather is unavailable right now.",
+    "now": "Now in {{city}}",
+    "onDay": "Forecast in {{city}} on your flight day",
+    "range": "Night {{low}}°C",
+    "feels": "Feels like {{low}}°C",
+    "rain": "{{chance}}% chance of rain",
+    "wind": "wind {{kmh}} km/h",
+    "sky": {
+      "clear": "clear",
+      "cloudy": "cloudy",
+      "fog": "fog",
+      "drizzle": "drizzle",
+      "rain": "rain",
+      "snow": "snow",
+      "storm": "thunderstorms"
+    },
+    "wearTitle": "What to wear",
+    "wear": {
+      "winterCoat": "Winter coat and warm layers",
+      "hatGloves": "Hat, gloves and scarf",
+      "warmJacket": "Warm jacket or coat",
+      "lightJacket": "Light jacket or sweater",
+      "tshirtLayer": "T-shirt with a light layer for the evening",
+      "lightClothes": "Light, breathable clothes",
+      "sunWater": "Sunglasses, sunscreen and a water bottle",
+      "boots": "Waterproof shoes or boots",
+      "umbrella": "Umbrella or rain jacket",
+      "windproof": "A windproof layer",
+      "layers": "Layers: evenings are much colder than the day"
+    },
+    "source": "Weather: Open-Meteo.",
+    "landingTitle": "Weather on arrival",
+    "tooFar_one": "The forecast is available 15 days ahead — check back in {{count}} day.",
+    "tooFar_few": "The forecast is available 15 days ahead — check back in {{count}} days.",
+    "tooFar_other": "The forecast is available 15 days ahead — check back in {{count}} days."
   }
 }

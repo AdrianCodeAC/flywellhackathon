@@ -495,6 +495,94 @@
     },
     "offlineAnswer": "Agentul AI nu este disponibil acum, așa că iată ce spun regulile oficiale:",
     "offlineNoMatch": "Agentul AI nu este disponibil acum și nu am găsit o regulă oficială pentru întrebarea ta. Întreabă despre acte, lichide, baterii, bagaje, vamă sau întârzieri.",
-    "offlineNoTrip": "Agentul AI nu este disponibil acum. Completează zborul mai sus sau întreabă despre lichide, baterii, bagaje, vamă sau întârzieri."
+    "offlineNoTrip": "Agentul AI nu este disponibil acum. Completează zborul mai sus sau întreabă despre lichide, baterii, bagaje, vamă sau întârzieri.",
+    "scan": {
+      "title": "Ai cartea de îmbarcare?",
+      "hint": "Scanează codul de bare sau alege o captură de ecran: completăm noi aeroporturile, data și compania. Nu se încarcă nimic pe internet.",
+      "button": "Scanează cartea de îmbarcare",
+      "reading": "Citesc…",
+      "notFound": "Nu am găsit niciun cod de bare. Încearcă o poză mai clară, mai de aproape, cu lumină bună — sau completează formularul de mai jos.",
+      "notBoardingPass": "Codul acesta nu este o carte de îmbarcare. Folosește codul de pe cartea de îmbarcare.",
+      "done": "Completat din cartea de îmbarcare: {{flight}} {{from}} → {{to}}, loc {{seat}}."
+    },
+    "bags": {
+      "title": "Bagajele tale — {{airline}}",
+      "verifyBadge": "Verifică tariful",
+      "pickFare": "Alege tariful cumpărat:",
+      "kg": "max. {{kg}} kg",
+      "notIncluded": "Nu este inclus",
+      "paid": "Nu este inclus — se poate adăuga contra cost (online e mai ieftin decât la aeroport)",
+      "byRoute": "Depinde de rută și tarif — vezi rezervarea",
+      "personal": "Obiect personal (sub scaun)",
+      "cabin": "Bagaj de cabină (compartimentul de sus)",
+      "checked": "Bagaj de cală",
+      "note": {
+        "asBought": "Greutatea cumpărată apare în confirmarea rezervării.",
+        "combined8": "8 kg este limita totală pentru bagajul de cabină și obiectul personal; la aeronavele ATR limitele sunt mai mici.",
+        "route": "La Turkish Airlines bagajul inclus diferă în funcție de rută; rezervarea îl arată pe al tău."
+      },
+      "verify": "Regulile acestei companii diferă în funcție de rută sau s-au schimbat recent: confirmă în rezervare.",
+      "checkedOn": "Verificat în octombrie 2026. Companiile își schimbă regulile: confirmă pe pagina oficială.",
+      "official": "Regulile de bagaj {{airline}}"
+    },
+    "jetlag": {
+      "title": "Antrenor pentru jet lag",
+      "same": "Același fus orar — fără jet lag.",
+      "ahead": "La {{city}} ora este cu {{hours}} h înainte față de orașul de plecare.",
+      "behind": "La {{city}} ora este cu {{hours}} h în urmă față de orașul de plecare.",
+      "recovery_one": "Fără pregătire, corpul are nevoie de aproximativ {{count}} zi ca să se adapteze.",
+      "recovery_few": "Fără pregătire, corpul are nevoie de aproximativ {{count}} zile ca să se adapteze.",
+      "recovery_other": "Fără pregătire, corpul are nevoie de aproximativ {{count}} de zile ca să se adapteze.",
+      "step": {
+        "none": "Diferență mai mică de 2 ore: păstrează-ți programul obișnuit, bea apă și odihnește-te bine în noaptea dinainte.",
+        "flight": "În avion: dă ceasul la ora destinației. Dormi dacă acolo e noapte, stai treaz dacă e zi. Bea apă, evită alcoolul.",
+        "light_east": "După aterizare: stai la lumină naturală dimineața și evită lumina puternică și ecranele seara.",
+        "light_west": "După aterizare: stai la lumină naturală după-amiaza și seara; păstrează diminețile mai întunecate în primele zile.",
+        "caffeine": "Cafea doar dimineața, ora locală, și deloc cu 8 ore înainte de culcare. Un pui de somn scurt (sub 30 min) e în regulă; somnul lung întârzie adaptarea.",
+        "prep_east_one": "Cu o zi înainte: culcă-te și trezește-te cu aproximativ o oră mai devreme.",
+        "prep_east_few": "Cu {{count}} zile înainte: culcă-te și trezește-te cu aproximativ o oră mai devreme în fiecare zi.",
+        "prep_east_other": "Cu {{count}} de zile înainte: culcă-te și trezește-te cu aproximativ o oră mai devreme în fiecare zi.",
+        "prep_west_one": "Cu o zi înainte: culcă-te și trezește-te cu aproximativ o oră mai târziu.",
+        "prep_west_few": "Cu {{count}} zile înainte: culcă-te și trezește-te cu aproximativ o oră mai târziu în fiecare zi.",
+        "prep_west_other": "Cu {{count}} de zile înainte: culcă-te și trezește-te cu aproximativ o oră mai târziu în fiecare zi."
+      }
+    }
+  },
+  "weather": {
+    "unavailable": "Vremea nu este disponibilă acum.",
+    "now": "Acum la {{city}}",
+    "onDay": "Prognoza la {{city}} în ziua zborului",
+    "range": "Noaptea {{low}}°C",
+    "feels": "Se simte ca {{low}}°C",
+    "rain": "{{chance}}% șanse de ploaie",
+    "wind": "vânt {{kmh}} km/h",
+    "sky": {
+      "clear": "senin",
+      "cloudy": "înnorat",
+      "fog": "ceață",
+      "drizzle": "burniță",
+      "rain": "ploaie",
+      "snow": "ninsoare",
+      "storm": "furtună"
+    },
+    "wearTitle": "Ce să porți",
+    "wear": {
+      "winterCoat": "Geacă de iarnă și haine groase",
+      "hatGloves": "Căciulă, mănuși și fular",
+      "warmJacket": "Geacă sau palton călduros",
+      "lightJacket": "Geacă subțire sau pulover",
+      "tshirtLayer": "Tricou și un strat subțire pentru seară",
+      "lightClothes": "Haine lejere, care respiră",
+      "sunWater": "Ochelari de soare, cremă de protecție și o sticlă de apă",
+      "boots": "Încălțăminte impermeabilă sau ghete",
+      "umbrella": "Umbrelă sau geacă de ploaie",
+      "windproof": "Un strat care oprește vântul",
+      "layers": "Haine în straturi: serile sunt mult mai reci decât ziua"
+    },
+    "source": "Vremea: Open-Meteo.",
+    "landingTitle": "Vremea la sosire",
+    "tooFar_one": "Prognoza e disponibilă cu 15 zile înainte — revino peste {{count}} zi.",
+    "tooFar_few": "Prognoza e disponibilă cu 15 zile înainte — revino peste {{count}} zile.",
+    "tooFar_other": "Prognoza e disponibilă cu 15 zile înainte — revino peste {{count}} de zile."
   }
 }

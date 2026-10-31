@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
 import {
+  CloudSun,
   ExternalLink,
   FileText,
   Gavel,
@@ -18,6 +19,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Shimmer } from "@/components/ai-elements/shimmer";
 import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
+import { AirlineBaggage } from "./AirlineBaggage";
+import { JetLagCard } from "./JetLagCard";
+import { WeatherCard } from "@/features/arrival/WeatherCard";
+import { getAirportByIata } from "@/features/arrival/services";
+import { FORECAST_DAYS } from "@/features/arrival/weather";
 import {
   CATEGORIES,
   SOURCES,
@@ -27,6 +33,7 @@ import {
   type PreflightInput,
   type Priority,
   type SourceId,
+  daysUntil,
 } from "./rules";
 
 const ICONS: Record<Category, typeof FileText> = {
@@ -163,6 +170,7 @@ export function PreflightChecklist({
               <Icon className="size-5 text-primary" />
               {t(`preflight.category.${category}`)}
             </h3>
+            {category === "baggage" && <AirlineBaggage airline={input.airline} />}
             <ul className="grid gap-3">
               {list.map((row) => (
                 <ChecklistRow
@@ -176,6 +184,9 @@ export function PreflightChecklist({
           </section>
         );
       })}
+
+      <JetLagCard input={input} />
+      <LandingWeather input={input} />
 
       <div className="mt-8 rounded-lg border border-dashed p-4 text-sm" role="status">
         <p className="flex items-center gap-2 font-semibold">
@@ -270,5 +281,39 @@ function ChecklistRow({
         </div>
       </div>
     </li>
+  );
+}
+
+/** Forecast for the flight day at the destination, once it is within forecast range. */
+function LandingWeather({ input }: { input: PreflightInput }) {
+  const { t } = useTranslation();
+  const [coords, setCoords] = useState<{ lat: number; lon: number }>();
+  const days = daysUntil(input.date);
+  useEffect(() => {
+    void getAirportByIata(input.destination.iata).then(
+      (a) => a && setCoords({ lat: a.lat, lon: a.lon }),
+    );
+  }, [input.destination.iata]);
+  return (
+    <section className="mt-8">
+      <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold">
+        <CloudSun className="size-5 text-primary" />
+        {t("weather.landingTitle")}
+      </h3>
+      {days >= FORECAST_DAYS ? (
+        <p className="rounded-lg border bg-card p-4 text-sm text-muted-foreground">
+          {t("weather.tooFar", { count: days - FORECAST_DAYS + 1 })}
+        </p>
+      ) : (
+        coords && (
+          <WeatherCard
+            lat={coords.lat}
+            lon={coords.lon}
+            city={input.destination.city}
+            day={input.date}
+          />
+        )
+      )}
+    </section>
   );
 }

@@ -32,3 +32,6 @@
 - [x] Before you fly: /preflight tab with a rule-based checklist (documents, security, baggage, timeline, customs, EU261) linked to official sources, AI trip-specific items, pre-flight agent chat, planner handoff; EN/RO 375px checked locally.
 - [ ] Verify the pre-flight AI items and chat on the Lovable deployment (needs LOVABLE_API_KEY, not available locally).
 - [ ] Airport maps (terminals, gates, services).
+- [x] Boarding-pass scan (BCBP from PDF417/Aztec/QR photo or screenshot, on-device) fills the pre-flight form; airline/fare bag allowances for Wizz, Ryanair, easyJet, TAROM, Lufthansa/Austrian, Turkish with official links.
+- [x] Jet-lag coach in the pre-flight results (legal time-zone difference, prep days, light and caffeine timing).
+- [x] Weather + what to wear: now on the arrival page, flight-day forecast in pre-flight results (Open-Meteo).
