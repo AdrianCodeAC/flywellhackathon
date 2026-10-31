@@ -23,13 +23,21 @@ export const EMPTY_CARD: MedicalCard = {
 
 const KEY = "flywell:medical-card";
 
+/** Keeps only known text fields, trimmed to a safe length. */
+export function cleanCard(raw: unknown): MedicalCard {
+  const source = raw && typeof raw === "object" ? (raw as Partial<Record<keyof MedicalCard, unknown>>) : {};
+  const card = { ...EMPTY_CARD };
+  for (const k of Object.keys(EMPTY_CARD) as (keyof MedicalCard)[]) {
+    const v = source[k];
+    if (typeof v === "string") card[k] = v.slice(0, 300);
+  }
+  return card;
+}
+
+/** The phone's copy of the card (the account is the source; the seat is only ever local). */
 export function loadCard(): MedicalCard {
   try {
-    const raw = JSON.parse(localStorage.getItem(KEY) ?? "{}") as Partial<MedicalCard>;
-    const card = { ...EMPTY_CARD };
-    for (const k of Object.keys(EMPTY_CARD) as (keyof MedicalCard)[])
-      if (typeof raw[k] === "string") card[k] = raw[k].slice(0, 300);
-    return card;
+    return cleanCard(JSON.parse(localStorage.getItem(KEY) ?? "{}"));
   } catch {
     return { ...EMPTY_CARD };
   }
@@ -43,8 +51,25 @@ export function saveCard(card: MedicalCard) {
   }
 }
 
+/** On sign-out the health details leave this phone; the seat number for the current flight stays. */
+export function clearCard() {
+  saveCard({ ...EMPTY_CARD, seat: loadCard().seat });
+}
+
+/** What the account stores: everything except the seat, which changes every flight. */
+export const accountCard = (card: MedicalCard) => ({ ...cleanCard(card), seat: "" });
+
+/** The account copy wins for every medical field; the phone keeps its own seat number. */
+export const mergeAccountCard = (local: MedicalCard, remote: unknown): MedicalCard => ({
+  ...cleanCard(remote),
+  seat: local.seat,
+});
+
 export const hasMedicalInfo = (c: MedicalCard) =>
   Boolean(c.conditions || c.allergies || c.medication || c.bloodType || c.contactName || c.contactPhone);
+
+/** Lets the help screen and the trip page refresh when the account copy arrives. */
+export const CARD_EVENT = "flywell:medical-card-updated";
 
 /** Short show-to-crew phrases. Fixed text so they work with no network or AI. */
 export const CREW_PHRASES: { lang: string; label: string; text: string }[] = [
