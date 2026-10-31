@@ -23,9 +23,10 @@ export type Destination = { iata: string; city: string; country: string; lat: nu
 export type Flight = {
   id: string; airline: string; departure: string; returnDate: string; price: number;
   stops: number; duration: number | null; layover: number | null; arrival: string | null;
-  score: number; link: string; currency: string;
+  score: number; link: string; currency: string; flightNumber?: string | null; live?: boolean;
 };
-export type FlightResult = { flights: Flight[]; error: string | null; fetchedAt: string; baggageUnknown: boolean };
+export type PriceInsights = { lowest: number | null; level: string | null; low: number | null; high: number | null };
+export type FlightResult = { flights: Flight[]; error: string | null; fetchedAt: string; baggageUnknown: boolean; source?: "live" | "cached"; insights?: PriceInsights | null };
 export const adviceSchema = z.object({
   areas: z.array(z.object({ name: z.string(), reason: z.string(), nightlyMinEur: z.number(), nightlyMaxEur: z.number() }).strict()).length(3),
   foodPerPersonEur: z.array(z.number()).length(2),

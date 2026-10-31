@@ -26,7 +26,7 @@ export function ArrivalOptions({ city, onPick, disabled = false, compact = false
             <span className="option-icon"><Icon /></span>
             <ArrowUpRight className="option-arrow" />
           </div>
-          <div className="w-full min-w-0">
+          <div className="option-copy w-full min-w-0">
             <span className="block text-base font-semibold">{t(label)}</span>
             <span className="mt-1 block text-sm font-normal text-muted-foreground">{t(hint, { city: city || t("sheet.yourDestination") })}</span>
           </div>

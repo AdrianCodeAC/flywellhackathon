@@ -55,3 +55,4 @@
 - [x] No AI checklist items that repeat fixed ones (e.g. "No visa needed" next to "Your ID card or passport is enough").
 - [x] On arrival food/sights: card distances and "Show route" start from the same point (live location when nearby, else the airport); short trips use walking routes.
 - [x] Help → Call the crew: phone vibrates and plays a ring to get attention.
+- [ ] Plan a trip: live, non-cached flight prices — provider, parser, fallback and labels are built and tested; waiting on a provider key (SEARCHAPI_KEY or SERPAPI_KEY) added to the deployment.
