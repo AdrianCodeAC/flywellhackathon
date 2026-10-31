@@ -143,14 +143,17 @@ export function kindFromWikidataTypes(qids: string[]): Place["kind"] {
 /** Typed items within the radius that have an English or Romanian article, most-described first. */
 export function sightsSparql(lat: number, lon: number, radiusM: number): string {
   const types = SIGHT_TYPES.flatMap(([, ids]) => ids.map((q) => `wd:${q}`)).join(" ");
-  return `SELECT ?item (SAMPLE(?coord) AS ?c) (MAX(?links) AS ?l) (GROUP_CONCAT(DISTINCT STRAFTER(STR(?type), "entity/"); separator=" ") AS ?types) (SAMPLE(?enA) AS ?en) (SAMPLE(?roA) AS ?ro) WHERE {
-  SERVICE wikibase:around { ?item wdt:P625 ?coord . bd:serviceParam wikibase:center "Point(${lon.toFixed(5)} ${lat.toFixed(5)})"^^geo:wktLiteral . bd:serviceParam wikibase:radius "${(radiusM / 1000).toFixed(1)}" . }
-  VALUES ?type { ${types} }
-  ?item wdt:P31 ?type ; wikibase:sitelinks ?links .
+  // Rank inside a subquery first, so article lookups run only for the top items.
+  return `SELECT ?item ?c ?l ?types (SAMPLE(?enA) AS ?en) (SAMPLE(?roA) AS ?ro) WHERE {
+  { SELECT ?item (SAMPLE(?coord) AS ?c) (MAX(?links) AS ?l) (GROUP_CONCAT(DISTINCT STRAFTER(STR(?type), "entity/"); separator=" ") AS ?types) WHERE {
+    SERVICE wikibase:around { ?item wdt:P625 ?coord . bd:serviceParam wikibase:center "Point(${lon.toFixed(5)} ${lat.toFixed(5)})"^^geo:wktLiteral . bd:serviceParam wikibase:radius "${(radiusM / 1000).toFixed(1)}" . }
+    VALUES ?type { ${types} }
+    ?item wdt:P31 ?type ; wikibase:sitelinks ?links .
+  } GROUP BY ?item ORDER BY DESC(?l) LIMIT 90 }
   OPTIONAL { ?enA schema:about ?item ; schema:isPartOf <https://en.wikipedia.org/> . }
   OPTIONAL { ?roA schema:about ?item ; schema:isPartOf <https://ro.wikipedia.org/> . }
   FILTER(BOUND(?enA) || BOUND(?roA))
-} GROUP BY ?item ORDER BY DESC(?l) LIMIT 60`;
+} GROUP BY ?item ?c ?l ?types ORDER BY DESC(?l) LIMIT 60`;
 }
 
 export function sourceCacheKey(
