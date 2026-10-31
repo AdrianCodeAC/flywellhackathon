@@ -206,6 +206,23 @@ export function AirportMap({
   }, [active]);
 
   const gates = layout.pois.filter((p) => p.kind === "gate");
+  // Decorative airliners parked nose-in at the first gates, pointing at their terminal.
+  const parked = useMemo(() => {
+    const size = Math.max(width, height) / 40;
+    const centres = layout.terminals.map((term) => project(term.center));
+    if (!centres.length) return [];
+    return layout.pois
+      .filter((p) => p.kind === "gate")
+      .slice(0, 18)
+      .map((g) => {
+        const [x, y] = project(g.at);
+        const c = centres.reduce((best, p) => (Math.hypot(p[0] - x, p[1] - y) < Math.hypot(best[0] - x, best[1] - y) ? p : best));
+        const len = Math.hypot(x - c[0], y - c[1]) || 1;
+        const ux = (x - c[0]) / len;
+        const uy = (y - c[1]) / len;
+        return { x: x + ux * size * 0.75, y: y + uy * size * 0.75, angle: (Math.atan2(-uy, -ux) * 180) / Math.PI, size };
+      });
+  }, [layout, project, width, height]);
   const services = layout.pois.filter((p) => p.kind !== "gate" && LAYER_OF[p.kind] && layers.has(LAYER_OF[p.kind]!));
   const current = steps[active];
   const title = (s: PlacedStep | undefined) => (s ? t(`airportGuide.step.${s.id}.title`, s.params ?? {}) : "");
@@ -302,7 +319,7 @@ export function AirportMap({
                   animate={{ x: [r.a[0], r.b[0]], y: [r.a[1], r.b[1]], opacity: [0, 1, 1, 0] }}
                   transition={{ duration: 9, ease: "easeIn", repeat: Infinity, repeatDelay: 5 + i * 4, delay: 1.5 + i * 6 }}
                 >
-                  <g transform={`rotate(${r.angle}) scale(${depth * 0.55}) translate(-12,-12)`}>
+                  <g transform={`rotate(${r.angle}) scale(${depth * 0.4}) translate(-12,-12)`}>
                     <path d={PLANE} className="map-plane-shadow" transform="translate(1.5,2.5)" />
                     <path d={PLANE} className="map-plane-body" />
                   </g>
@@ -320,9 +337,9 @@ export function AirportMap({
                     ? t("airportGuide.departuresHall")
                     : term.role === "arrivals"
                       ? t("airportGuide.arrivalsHall")
-                      : (term.name ?? "").slice(0, 28);
+                      : (term.name ?? "").length > 24 ? `${(term.name ?? "").slice(0, 23)}…` : (term.name ?? "");
                 const fs = unit * 0.5;
-                const w = text.length * fs * 0.58 + fs * 1.4;
+                const w = text.length * fs * 0.64 + fs * 1.6;
                 return (
                   <g key={`l${i}`} transform={`translate(${cx},${top - fs * 0.6})`} className={`map-hall-tag map-hall-tag-${term.role}`}>
                     <rect x={-w / 2} y={-fs * 0.85} width={w} height={fs * 1.7} rx={fs * 0.85} />
@@ -333,6 +350,21 @@ export function AirportMap({
                 );
               })}
 
+            {layers.has("gates") &&
+              parked.map((pl, i) => (
+                <motion.g
+                  key={`parked${i}`}
+                  className="map-plane"
+                  initial={reduce ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 + i * 0.04 }}
+                >
+                  <g transform={`translate(${pl.x},${pl.y}) rotate(${pl.angle}) scale(${pl.size / 24}) translate(-12,-12)`}>
+                    <path d={PLANE} className="map-plane-shadow" transform="translate(1,1.6)" />
+                    <path d={PLANE} className="map-plane-body" />
+                  </g>
+                </motion.g>
+              ))}
             {layers.has("gates") &&
               gates.map((g, i) => {
                 const [x, y] = project(g.at);
@@ -354,7 +386,7 @@ export function AirportMap({
             {services.map((p, i) => {
               const [x, y] = project(p.at);
               const Icon = ICON[p.kind] ?? DoorOpen;
-              const s = unit * (detailed ? 0.7 : 0.5);
+              const s = unit * (detailed ? 0.95 : 0.72);
               return (
                 <motion.g
                   key={`p${p.kind}${i}`}
@@ -396,7 +428,7 @@ export function AirportMap({
               const [x, y] = s.xy;
               const on = s.index === active;
               const passed = activePos >= 0 && n < activePos;
-              const r = unit * (on ? 0.64 : 0.5);
+              const r = unit * (on ? 0.85 : 0.66);
               return (
                 <g
                   key={s.id}
@@ -477,7 +509,7 @@ export function AirportMap({
           </Button>
         </motion.div>
       )}
-      <p className="map-attribution absolute right-2 top-[10.25rem] text-[10px]">© OSM</p>
+      <p className="map-attribution absolute left-2 top-[3.4rem] text-[10px]">© OSM</p>
     </div>
   );
 }

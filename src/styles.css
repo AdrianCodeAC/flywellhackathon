@@ -307,7 +307,7 @@ h1, h2, h3 { letter-spacing: 0; }
   --map-departures-shade: oklch(0.86 0.07 180);
   --map-arrivals-shade: oklch(0.86 0.06 245);
   --map-wall: oklch(0.62 0.05 190);
-  --map-skylight: oklch(1 0 0 / 0.35);
+  --map-skylight: oklch(1 0 0 / 0.22);
   --map-building-shadow: oklch(0.3 0.03 200 / 0.28);
   --map-plane: oklch(0.99 0 0);
   --map-plane-edge: oklch(0.45 0.02 250);
