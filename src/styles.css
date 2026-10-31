@@ -261,3 +261,12 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-meter-accommodation { --meter-tone: var(--visit-tone); }
 .trip-meter-activities { --meter-tone: var(--ask-tone); }
 @media (max-width: 639px) { .trip-hero { height: 295px; } .trip-hero .arrival-hero-content { padding: 32px 24px; } }
+.calendar-cheap { color: var(--primary); background: var(--secondary); }
+.calendar-expensive { color: var(--food-tone); background: var(--food-soft); }
+.calendar-no-price { color: var(--muted-foreground); }
+.calendar-best { color: var(--primary); }
+.trip-price-calendar button { min-height: 44px; }
+.trip-date-sheet { display:flex; flex-direction:column; }
+.trip-date-sheet > div { min-height:0; flex:1; }
+.trip-date-sheet > button { width:44px; height:44px; display:flex; align-items:center; justify-content:center; }
+.trip-date-sheet > button .sr-only { display:none; }

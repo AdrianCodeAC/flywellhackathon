@@ -65,8 +65,8 @@ export function bookingLinks(input: TripInput, city: string) {
   return {
     booking: `https://www.booking.com/searchresults.html?${new URLSearchParams({ ss: city, checkin: input.departure, checkout: input.returnDate, group_adults: String(input.adults), group_children: String(input.children), no_rooms: "1" })}`,
     airbnb: `https://www.airbnb.com/s/${encodeURIComponent(city)}/homes?${new URLSearchParams({ checkin: input.departure, checkout: input.returnDate, adults: String(input.adults), children: String(input.children) })}`,
-    google: `https://www.google.com/travel/flights?q=${encodeURIComponent(`${input.origin} to ${input.destinationIata ?? city} ${input.departure} return ${input.returnDate} ${guests} passengers${input.direct ? " nonstop" : ""}`)}`,
-    skyscanner: `https://www.skyscanner.net/transport/flights/${input.origin.toLowerCase()}/${(input.destinationIata ?? city).toLowerCase()}/${input.departure.slice(2).replaceAll("-","")}/${input.returnDate.slice(2).replaceAll("-","")}/?${new URLSearchParams({ adults: String(input.adults), children: String(input.children), adultsv2: String(input.adults), cabinclass: "economy", preferdirects: String(input.direct) })}`,
+    google: `https://www.google.com/travel/flights?q=${encodeURIComponent(`${input.origin} to ${input.destinationIata ?? city} ${input.departure}${input.oneWay?' one way':` return ${input.returnDate}`} ${guests} passengers${input.direct ? " nonstop" : ""}`)}`,
+    skyscanner: `https://www.skyscanner.net/transport/flights/${input.origin.toLowerCase()}/${(input.destinationIata ?? city).toLowerCase()}/${input.departure.slice(2).replaceAll("-","")}/${input.oneWay?'':input.returnDate.slice(2).replaceAll("-","")+ '/'}?${new URLSearchParams({ adults: String(input.adults), children: String(input.children), adultsv2: String(input.adults), cabinclass: "economy", preferdirects: String(input.direct) })}`,
   };
 }
 export function stayCosts(input: TripInput, advice: TripAdvice, flight: Flight | undefined, rate: number) {
