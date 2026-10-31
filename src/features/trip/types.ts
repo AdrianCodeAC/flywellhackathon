@@ -41,7 +41,7 @@ export type TripResult = { input: TripInput; destination: Destination; flights?:
 export type TripEvent = { type: "destination"; destination: Destination } | { type: "suggestions"; destinations: Destination[] } | { type: "flights"; value: FlightResult } | { type: "advice"; value: TripAdvice } | { type: "extras"; value: Extras } | { type: "error"; section: string; message: string } | { type: "done"; cached?: boolean };
 export function nights(from: string, to: string) { return Math.round((Date.parse(to) - Date.parse(from)) / 86400000); }
 export function tripCacheKey(input: TripInput) { return `trip-v2:${JSON.stringify(input)}`; }
-export function rememberedTab(value: string | null) { return value === "arrival" || value === "preflight" ? value : "plan"; }
+export function rememberedTab(value: string | null) { return value === "trips" || value === "preflight" ? value : "plan"; }
 
 export function comfortScore(f: Pick<Flight, "stops" | "duration" | "layover" | "departure" | "arrival">) {
   const night = (s: string | null) => s ? Number(s.slice(11,13)) >= 23 || Number(s.slice(11,13)) < 6 : false;

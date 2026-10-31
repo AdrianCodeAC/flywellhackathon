@@ -12,9 +12,9 @@ export function AppHeader() {
   const { t } = useTranslation();
   const [offline, setOffline] = useState(false);
   const location = useLocation();
-  const arrival = location.pathname === "/arrival";
-  const preflight = location.pathname === "/preflight";
-  const plan = !arrival && !preflight;
+  const trips = location.pathname.startsWith("/trips");
+  const ticket = location.pathname === "/preflight";
+  const plan = location.pathname === "/" || location.pathname === "/flights";
 
   useEffect(() => { if (arrival || preflight) localStorage.setItem("flywell:tab", arrival ? "arrival" : "preflight"); }, [arrival, preflight]);
 

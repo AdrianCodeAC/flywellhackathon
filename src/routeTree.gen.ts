@@ -19,6 +19,8 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as ApiTripRouteImport } from './routes/api.trip'
 import { Route as ApiTripChatRouteImport } from './routes/api.trip-chat'
+import { Route as TripsIndexRouteImport } from './routes/trips.index'
+import { Route as TripsTripIdRouteImport } from './routes/trips.$tripId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -69,6 +71,16 @@ const ApiTripChatRoute = ApiTripChatRouteImport.update({
   path: '/api/trip-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TripsIndexRoute = TripsIndexRouteImport.update({
+  id: '/trips/',
+  path: '/trips/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TripsTripIdRoute = TripsTripIdRouteImport.update({
+  id: '/trips/$tripId',
+  path: '/trips/$tripId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,6 +92,8 @@ export interface FileRoutesByFullPath {
   '/account': typeof AuthenticatedAccountRoute
   '/api/trip': typeof ApiTripRoute
   '/api/trip-chat': typeof ApiTripChatRoute
+  '/trips/$tripId': typeof TripsTripIdRoute
+  '/trips/': typeof TripsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,6 +105,8 @@ export interface FileRoutesByTo {
   '/account': typeof AuthenticatedAccountRoute
   '/api/trip': typeof ApiTripRoute
   '/api/trip-chat': typeof ApiTripChatRoute
+  '/trips/$tripId': typeof TripsTripIdRoute
+  '/trips': typeof TripsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,6 +120,8 @@ export interface FileRoutesById {
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/api/trip': typeof ApiTripRoute
   '/api/trip-chat': typeof ApiTripChatRoute
+  '/trips/$tripId': typeof TripsTripIdRoute
+  '/trips/': typeof TripsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +135,8 @@ export interface FileRouteTypes {
     | '/account'
     | '/api/trip'
     | '/api/trip-chat'
+    | '/trips/$tripId'
+    | '/trips/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,6 +148,8 @@ export interface FileRouteTypes {
     | '/account'
     | '/api/trip'
     | '/api/trip-chat'
+    | '/trips/$tripId'
+    | '/trips'
   id:
     | '__root__'
     | '/'
@@ -140,6 +162,8 @@ export interface FileRouteTypes {
     | '/_authenticated/account'
     | '/api/trip'
     | '/api/trip-chat'
+    | '/trips/$tripId'
+    | '/trips/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -152,6 +176,8 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiTripRoute: typeof ApiTripRoute
   ApiTripChatRoute: typeof ApiTripChatRoute
+  TripsTripIdRoute: typeof TripsTripIdRoute
+  TripsIndexRoute: typeof TripsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -226,6 +252,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTripChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trips/': {
+      id: '/trips/'
+      path: '/trips'
+      fullPath: '/trips/'
+      preLoaderRoute: typeof TripsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trips/$tripId': {
+      id: '/trips/$tripId'
+      path: '/trips/$tripId'
+      fullPath: '/trips/$tripId'
+      preLoaderRoute: typeof TripsTripIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -250,6 +290,8 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ApiTripRoute: ApiTripRoute,
   ApiTripChatRoute: ApiTripChatRoute,
+  TripsTripIdRoute: TripsTripIdRoute,
+  TripsIndexRoute: TripsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
