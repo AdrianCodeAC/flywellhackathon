@@ -35,7 +35,7 @@ export function ArrivalAssistant({ iata, embedded = false, onIataChange }: { iat
   const [airport, setAirport] = useState<Airport | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [section, setSection] = useState<ArrivalSection | null>(null);
-  const [target, setTarget] = useState<Target | null>(null);
+  const [target, setTarget] = useState<RouteTarget | null>(null);
   const [messages, setMessages] = useState<ArrivalMessage[]>([]);
   const current = useRef("");
 
