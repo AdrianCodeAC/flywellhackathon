@@ -69,75 +69,140 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ==========================================================================
+ * 1. PALETA DE BAZĂ — schimbă culorile de aici și se schimbă toată aplicația.
+ *    Base palette — change a value here and every element that uses it follows.
+ * ========================================================================== */
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --palette-white: oklch(1 0 0);                    /* #FFFFFF  White */
+  --palette-pearl-aqua: oklch(0.833 0.091 176.1);   /* #84DCC6  Pearl Aqua (culoarea de bază) */
+  --palette-aquamarine: oklch(0.932 0.104 163.9);   /* #A5FFD6  Aquamarine */
+  --palette-powder-blush: oklch(0.811 0.107 25.3);  /* #FFA69E  Powder Blush */
+  --palette-grapefruit: oklch(0.708 0.185 21.9);    /* #FF686B  Grapefruit Pink */
+
+  /* Nuanțe derivate (aceeași culoare, mai închisă/deschisă) pentru text lizibil și fundaluri. */
+  --palette-green-mist: oklch(0.985 0.014 170);     /* fundal de pagină */
+  --palette-green-soft: oklch(0.955 0.04 168);      /* fundaluri ușoare */
+  --palette-green-line: oklch(0.9 0.035 172);       /* contururi */
+  --palette-green-deep: oklch(0.48 0.085 176);      /* butoane, linkuri */
+  --palette-green-ink: oklch(0.27 0.04 178);        /* text */
+  --palette-green-muted: oklch(0.47 0.03 176);      /* text secundar */
+  --palette-blush-soft: oklch(0.965 0.028 25);      /* fundal cald */
+  --palette-blush-deep: oklch(0.58 0.12 30);        /* text cald */
+  --palette-grapefruit-deep: oklch(0.56 0.19 22);   /* avertizări, text roșu */
 }
 
+/* ==========================================================================
+ * 2. ROLURI PE ELEMENTE — fiecare element își ia culoarea de aici.
+ *    Element roles — point any role at another palette color to restyle it alone.
+ * ========================================================================== */
+:root {
+  /* Pagină și text */
+  --ui-page: var(--palette-green-mist);
+  --ui-text: var(--palette-green-ink);
+  --ui-text-muted: var(--palette-green-muted);
+  --ui-card: var(--palette-white);
+  --ui-border: var(--palette-green-line);
+  --ui-focus: var(--palette-pearl-aqua);
+  /* Butoane principale, linkuri, elemente active */
+  --ui-button: var(--palette-green-deep);
+  --ui-button-text: var(--palette-white);
+  /* Butoane/etichete secundare */
+  --ui-button-soft: var(--palette-green-soft);
+  --ui-button-soft-text: var(--palette-green-deep);
+  /* Evidențieri (hover, selecție, chip-uri) */
+  --ui-highlight: var(--palette-aquamarine);
+  --ui-highlight-text: var(--palette-green-ink);
+  /* Accent cald și pericol */
+  --ui-warm: var(--palette-powder-blush);
+  --ui-warm-soft: var(--palette-blush-soft);
+  --ui-danger: var(--palette-grapefruit-deep);
+  --ui-danger-text: var(--palette-white);
+  /* Banner (imaginea de sus) */
+  --ui-hero-overlay: oklch(0.27 0.04 178 / 62%);
+  --ui-hero-text: var(--palette-white);
+  /* Cele patru opțiuni de sosire: mâncare, transport, vizite, întreabă AI */
+  --ui-food: var(--palette-grapefruit-deep);
+  --ui-food-soft: var(--palette-blush-soft);
+  --ui-ride: var(--palette-green-deep);
+  --ui-ride-soft: var(--palette-green-soft);
+  --ui-visit: var(--palette-blush-deep);
+  --ui-visit-soft: color-mix(in oklch, var(--palette-powder-blush) 25%, var(--palette-white));
+  --ui-ask: var(--palette-green-ink);
+  --ui-ask-soft: color-mix(in oklch, var(--palette-aquamarine) 45%, var(--palette-white));
+  /* Umbră */
+  --ui-shadow: 0 12px 35px oklch(0.27 0.04 178 / 9%);
+
+  /* Legături către componentele de bază (nu e nevoie să le schimbi). */
+  --radius: 0.5rem;
+  --background: var(--ui-page);
+  --foreground: var(--ui-text);
+  --card: var(--ui-card);
+  --card-foreground: var(--ui-text);
+  --popover: var(--ui-card);
+  --popover-foreground: var(--ui-text);
+  --primary: var(--ui-button);
+  --primary-foreground: var(--ui-button-text);
+  --secondary: var(--ui-button-soft);
+  --secondary-foreground: var(--ui-button-soft-text);
+  --muted: var(--palette-green-soft);
+  --muted-foreground: var(--ui-text-muted);
+  --accent: var(--ui-highlight);
+  --accent-foreground: var(--ui-highlight-text);
+  --destructive: var(--ui-danger);
+  --destructive-foreground: var(--ui-danger-text);
+  --border: var(--ui-border);
+  --input: var(--ui-border);
+  --ring: var(--ui-focus);
+  --chart-1: var(--palette-green-deep);
+  --chart-2: var(--palette-pearl-aqua);
+  --chart-3: var(--palette-grapefruit);
+  --chart-4: var(--palette-powder-blush);
+  --chart-5: var(--palette-aquamarine);
+  --sidebar: var(--ui-card);
+  --sidebar-foreground: var(--ui-text);
+  --sidebar-primary: var(--ui-button);
+  --sidebar-primary-foreground: var(--ui-button-text);
+  --sidebar-accent: var(--ui-highlight);
+  --sidebar-accent-foreground: var(--ui-highlight-text);
+  --sidebar-border: var(--ui-border);
+  --sidebar-ring: var(--ui-focus);
+  --hero-foreground: var(--ui-hero-text);
+  --hero-shade: var(--ui-hero-overlay);
+  --food-tone: var(--ui-food);
+  --food-soft: var(--ui-food-soft);
+  --ride-tone: var(--ui-ride);
+  --ride-soft: var(--ui-ride-soft);
+  --visit-tone: var(--ui-visit);
+  --visit-soft: var(--ui-visit-soft);
+  --ask-tone: var(--ui-ask);
+  --ask-soft: var(--ui-ask-soft);
+  --shadow-travel: var(--ui-shadow);
+}
+
+/* Mod întunecat (dacă va fi activat): aceleași roluri, nuanțe închise. */
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --ui-page: oklch(0.2 0.025 178);
+  --ui-text: oklch(0.96 0.01 170);
+  --ui-text-muted: oklch(0.76 0.03 172);
+  --ui-card: oklch(0.25 0.03 178);
+  --ui-border: oklch(0.36 0.03 178);
+  --ui-button: var(--palette-pearl-aqua);
+  --ui-button-text: var(--palette-green-ink);
+  --ui-button-soft: oklch(0.3 0.04 176);
+  --ui-button-soft-text: var(--palette-aquamarine);
+  --ui-highlight: oklch(0.34 0.05 168);
+  --ui-highlight-text: var(--palette-aquamarine);
+  --ui-danger: var(--palette-grapefruit);
+  --ui-food: var(--palette-grapefruit);
+  --ui-food-soft: oklch(0.3 0.05 22);
+  --ui-ride: var(--palette-pearl-aqua);
+  --ui-ride-soft: oklch(0.3 0.04 176);
+  --ui-visit: var(--palette-powder-blush);
+  --ui-visit-soft: oklch(0.3 0.04 25);
+  --ui-ask: var(--palette-aquamarine);
+  --ui-ask-soft: oklch(0.3 0.04 164);
+  --muted: oklch(0.28 0.03 178);
 }
 
 @layer base {
@@ -151,54 +216,6 @@
   }
 }
 
-/* Flywell editorial travel system: all visual roles live here. */
-:root {
-  --radius: 0.5rem;
-  --background: oklch(0.985 0.002 170);
-  --foreground: oklch(0.25 0.025 175);
-  --card: oklch(1 0 0);
-  --card-foreground: var(--foreground);
-  --popover: var(--card);
-  --popover-foreground: var(--foreground);
-  --primary: oklch(0.505 0.095 180);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.945 0.025 170);
-  --secondary-foreground: var(--primary);
-  --muted: oklch(0.95 0.008 170);
-  --muted-foreground: oklch(0.49 0.018 170);
-  --accent: oklch(0.935 0.028 170);
-  --accent-foreground: var(--foreground);
-  --border: oklch(0.9 0.012 170);
-  --input: var(--border);
-  --ring: var(--primary);
-  --hero-foreground: oklch(1 0 0);
-  --hero-shade: oklch(0.2 0.04 175 / 55%);
-  --food-tone: oklch(0.58 0.16 32);
-  --food-soft: oklch(0.96 0.025 32);
-  --ride-tone: oklch(0.51 0.09 180);
-  --ride-soft: oklch(0.95 0.025 180);
-  --visit-tone: oklch(0.52 0.1 245);
-  --visit-soft: oklch(0.95 0.025 245);
-  --ask-tone: oklch(0.52 0.11 325);
-  --ask-soft: oklch(0.96 0.025 325);
-  --shadow-travel: 0 12px 35px oklch(0.25 0.025 175 / 7%);
-}
-.dark {
-  --background: oklch(0.2 0.018 175);
-  --foreground: oklch(0.96 0.006 175);
-  --card: oklch(0.25 0.018 175);
-  --primary: oklch(0.73 0.11 180);
-  --primary-foreground: oklch(0.2 0.018 175);
-  --secondary: oklch(0.3 0.025 175);
-  --muted: oklch(0.28 0.015 175);
-  --muted-foreground: oklch(0.74 0.01 175);
-  --accent: oklch(0.32 0.03 175);
-  --border: oklch(0.36 0.018 175);
-  --food-soft: oklch(0.3 0.035 32);
-  --ride-soft: oklch(0.3 0.03 180);
-  --visit-soft: oklch(0.3 0.03 245);
-  --ask-soft: oklch(0.3 0.03 325);
-}
 body { font-family: var(--font-sans); letter-spacing: 0; }
 button, a, input { -webkit-tap-highlight-color: transparent; }
 h1, h2, h3 { letter-spacing: 0; }
@@ -278,64 +295,63 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-price-calendar .rdp-weekdays > th { flex:0 0 calc(100% / 7); min-width:0; }
 @media (min-width:768px) { .trip-price-calendar { width:680px; } }
 
-/* Airport guide: virtual airport map drawn from OpenStreetMap geometry. */
+/* Airport guide: virtual airport map drawn from OpenStreetMap geometry. Colors come from the palette above. */
 :root {
-  --map-ground: oklch(0.965 0.012 150);
-  --map-apron: oklch(0.91 0.008 240);
-  --map-taxiway: oklch(0.86 0.02 85);
-  --map-runway: oklch(0.42 0.012 250);
-  --map-runway-line: oklch(0.98 0 0);
-  --map-terminal: oklch(0.99 0.004 180);
-  --map-terminal-edge: oklch(0.58 0.07 180);
-  --map-departures: oklch(0.93 0.045 180);
-  --map-arrivals: oklch(0.93 0.04 245);
-  --map-gate: oklch(0.3 0.03 250);
-  --map-gate-text: oklch(1 0 0);
-  --map-mine: oklch(0.66 0.17 50);
-  --map-step: var(--primary);
-  --map-step-text: var(--primary-foreground);
-  --map-transport: var(--visit-tone);
-  --map-food: var(--food-tone);
-  --map-money: oklch(0.55 0.11 140);
-  --map-services: var(--ask-tone);
-  --map-toilets: oklch(0.5 0.08 220);
+  --map-ground: color-mix(in oklch, var(--palette-aquamarine) 18%, var(--palette-white));
+  --map-apron: oklch(0.93 0.012 176);
+  --map-taxiway: oklch(0.88 0.02 176);
+  --map-runway: var(--palette-green-ink);
+  --map-runway-line: var(--palette-white);
+  --map-terminal: var(--palette-white);
+  --map-terminal-edge: var(--palette-green-deep);
+  --map-departures: color-mix(in oklch, var(--palette-pearl-aqua) 40%, var(--palette-white));
+  --map-arrivals: color-mix(in oklch, var(--palette-powder-blush) 35%, var(--palette-white));
+  --map-gate: var(--palette-green-ink);
+  --map-gate-text: var(--palette-white);
+  --map-mine: var(--palette-grapefruit);
+  --map-step: var(--palette-green-deep);
+  --map-step-text: var(--palette-white);
+  --map-transport: var(--palette-green-deep);
+  --map-food: var(--palette-grapefruit-deep);
+  --map-money: oklch(0.5 0.09 164);
+  --map-services: var(--palette-blush-deep);
+  --map-toilets: var(--palette-green-ink);
   --map-gates: var(--map-gate);
-  --map-grass-dot: oklch(0.88 0.045 145);
-  --map-apron-edge: oklch(0.86 0.01 240);
-  --map-taxi-line: oklch(0.82 0.15 90);
-  --map-terminal-shade: oklch(0.93 0.012 180);
-  --map-departures-shade: oklch(0.86 0.07 180);
-  --map-arrivals-shade: oklch(0.86 0.06 245);
-  --map-wall: oklch(0.62 0.05 190);
-  --map-skylight: oklch(1 0 0 / 0.22);
-  --map-building-shadow: oklch(0.3 0.03 200 / 0.28);
-  --map-plane: oklch(0.99 0 0);
-  --map-plane-edge: oklch(0.45 0.02 250);
-  --map-step-passed: oklch(0.55 0.08 180);
-  --map-frame-shadow: 0 12px 30px -16px oklch(0.3 0.05 190 / 0.45);
-  --map-control-shadow: 0 4px 14px -4px oklch(0.25 0.03 200 / 0.35);
+  --map-grass-dot: color-mix(in oklch, var(--palette-pearl-aqua) 45%, var(--palette-white));
+  --map-apron-edge: var(--palette-green-line);
+  --map-taxi-line: var(--palette-powder-blush);
+  --map-terminal-shade: var(--palette-green-soft);
+  --map-departures-shade: var(--palette-pearl-aqua);
+  --map-arrivals-shade: var(--palette-powder-blush);
+  --map-wall: color-mix(in oklch, var(--palette-green-deep) 70%, var(--palette-pearl-aqua));
+  --map-skylight: oklch(1 0 0 / 0.25);
+  --map-building-shadow: oklch(0.27 0.04 178 / 0.25);
+  --map-plane: var(--palette-white);
+  --map-plane-edge: var(--palette-green-muted);
+  --map-step-passed: color-mix(in oklch, var(--palette-green-deep) 55%, var(--palette-pearl-aqua));
+  --map-frame-shadow: 0 12px 30px -16px oklch(0.27 0.04 178 / 0.45);
+  --map-control-shadow: 0 4px 14px -4px oklch(0.27 0.04 178 / 0.35);
 }
 .dark {
-  --map-ground: oklch(0.24 0.015 175);
-  --map-apron: oklch(0.3 0.01 240);
-  --map-taxiway: oklch(0.38 0.02 85);
-  --map-runway: oklch(0.16 0.01 250);
-  --map-terminal: oklch(0.36 0.02 180);
-  --map-departures: oklch(0.38 0.05 180);
-  --map-arrivals: oklch(0.38 0.05 245);
-  --map-gate: oklch(0.85 0.02 250);
-  --map-gate-text: oklch(0.2 0.02 250);
-  --map-grass-dot: oklch(0.3 0.03 160);
-  --map-apron-edge: oklch(0.35 0.01 240);
-  --map-taxi-line: oklch(0.7 0.13 90);
-  --map-terminal-shade: oklch(0.31 0.02 180);
-  --map-departures-shade: oklch(0.32 0.05 180);
-  --map-arrivals-shade: oklch(0.32 0.05 245);
-  --map-wall: oklch(0.2 0.02 190);
+  --map-ground: oklch(0.24 0.025 176);
+  --map-apron: oklch(0.3 0.02 176);
+  --map-taxiway: oklch(0.36 0.02 176);
+  --map-runway: oklch(0.16 0.015 178);
+  --map-terminal: oklch(0.36 0.03 176);
+  --map-departures: oklch(0.4 0.05 176);
+  --map-arrivals: oklch(0.4 0.05 25);
+  --map-gate: var(--palette-aquamarine);
+  --map-gate-text: var(--palette-green-ink);
+  --map-grass-dot: oklch(0.3 0.03 170);
+  --map-apron-edge: oklch(0.35 0.02 176);
+  --map-terminal-shade: oklch(0.31 0.03 176);
+  --map-departures-shade: oklch(0.33 0.05 176);
+  --map-arrivals-shade: oklch(0.33 0.05 25);
+  --map-wall: oklch(0.2 0.02 178);
   --map-skylight: oklch(1 0 0 / 0.08);
   --map-building-shadow: oklch(0 0 0 / 0.45);
-  --map-plane: oklch(0.92 0 0);
-  --map-step-passed: oklch(0.5 0.06 180);
+  --map-plane: oklch(0.92 0.01 170);
+  --map-step-passed: oklch(0.5 0.06 176);
 }
 .airport-map { height: min(62vh, 520px); min-height: 340px; background: var(--map-ground); touch-action: none; box-shadow: var(--map-frame-shadow); }
 .map-canvas { animation: map-arrive 0.7s ease-out both; }
@@ -416,24 +432,24 @@ h1, h2, h3 { letter-spacing: 0; }
 @keyframes step-pulse { from { transform: scale(1); opacity: 0.45; } to { transform: scale(2.4); opacity: 0; } }
 @keyframes gate-glow { 50% { transform: scale(1.18); } }
 
-/* In-flight help: calm night-sky screen that works offline. */
+/* In-flight help: calm deep-green night screen that works offline. */
 :root {
-  --help-bg: oklch(0.22 0.045 230);
-  --help-bg-2: oklch(0.3 0.07 200);
-  --help-fg: oklch(0.97 0.01 200);
-  --help-muted: oklch(0.82 0.03 210);
+  --help-bg: oklch(0.22 0.035 180);
+  --help-bg-2: oklch(0.34 0.06 172);
+  --help-fg: var(--palette-white);
+  --help-muted: color-mix(in oklch, var(--palette-aquamarine) 55%, var(--palette-white));
   --help-panel: oklch(1 0 0 / 8%);
-  --help-panel-edge: oklch(1 0 0 / 14%);
-  --help-calm: oklch(0.78 0.11 185);
-  --help-glow: oklch(0.72 0.12 260);
-  --help-alert: oklch(0.6 0.2 25);
-  --help-alert-soft: oklch(0.6 0.2 25 / 22%);
-  --help-care: oklch(0.8 0.12 75);
-  --help-card: oklch(0.78 0.09 300);
-  --help-crew-bg: oklch(0.985 0.004 90);
-  --help-crew-fg: oklch(0.2 0.02 30);
-  --panic: oklch(0.6 0.19 25);
-  --panic-fg: oklch(1 0 0);
+  --help-panel-edge: oklch(1 0 0 / 16%);
+  --help-calm: var(--palette-pearl-aqua);
+  --help-glow: var(--palette-aquamarine);
+  --help-alert: var(--palette-grapefruit-deep);
+  --help-alert-soft: oklch(0.56 0.19 22 / 24%);
+  --help-care: var(--palette-powder-blush);
+  --help-card: var(--palette-aquamarine);
+  --help-crew-bg: var(--palette-white);
+  --help-crew-fg: var(--palette-green-ink);
+  --panic: var(--palette-grapefruit-deep);
+  --panic-fg: var(--palette-white);
 }
 .panic-button { background: var(--panic); color: var(--panic-fg); isolation: isolate; }
 .panic-button:hover { background: color-mix(in oklch, var(--panic) 88%, black); }
@@ -478,27 +494,23 @@ h1, h2, h3 { letter-spacing: 0; }
   .panic-ring, .help-aurora, .crew-bell, .help-tile-alert .help-tile-icon, .map-route-ahead, .map-step-pulse, .map-gate-halo, .map-canvas, .help-screen { animation: none; }
 }
 
-/* Seat advice: cabin map and safety statistics. */
+/* Seat advice: cabin map. */
 :root {
-  --seat-body: oklch(0.985 0.004 200);
-  --seat-edge: oklch(0.8 0.02 200);
-  --seat-wing: oklch(0.9 0.015 220);
-  --seat-plain: oklch(0.88 0.01 220);
-  --seat-good: oklch(0.82 0.08 170);
-  --seat-best: var(--primary);
-  --seat-avoid: oklch(0.72 0.14 30);
-  --seat-exit: oklch(0.66 0.17 50);
-  --stat-warn: oklch(0.66 0.17 40);
-  --stat-neutral: oklch(0.5 0.07 220);
-  --stat-track: oklch(0.93 0.008 220);
+  --seat-body: var(--palette-white);
+  --seat-edge: var(--palette-green-line);
+  --seat-wing: var(--palette-green-soft);
+  --seat-plain: oklch(0.9 0.012 176);
+  --seat-good: var(--palette-pearl-aqua);
+  --seat-best: var(--palette-green-deep);
+  --seat-avoid: var(--palette-powder-blush);
+  --seat-exit: var(--palette-grapefruit);
 }
 .dark {
-  --seat-body: oklch(0.3 0.015 200);
-  --seat-edge: oklch(0.45 0.02 200);
-  --seat-wing: oklch(0.36 0.015 220);
-  --seat-plain: oklch(0.42 0.01 220);
-  --seat-good: oklch(0.5 0.08 170);
-  --stat-track: oklch(0.32 0.01 220);
+  --seat-body: oklch(0.3 0.02 176);
+  --seat-edge: oklch(0.45 0.03 176);
+  --seat-wing: oklch(0.36 0.03 176);
+  --seat-plain: oklch(0.42 0.015 176);
+  --seat-good: oklch(0.55 0.08 176);
 }
 .seat-cabin { background: color-mix(in oklch, var(--card) 70%, var(--secondary)); }
 .seat-body { fill: var(--seat-body); stroke: var(--seat-edge); stroke-width: 1.2; }
@@ -519,7 +531,4 @@ h1, h2, h3 { letter-spacing: 0; }
 .seat-legend.seat-avoid { background: var(--seat-avoid); }
 .seat-legend.seat-exit { background: var(--seat-exit); }
 .seat-legend.seat-wing { background: var(--seat-wing); border: 1px solid var(--seat-edge); }
-.stat-track { background: var(--stat-track); }
-.stat-warn { background: var(--stat-warn); }
-.stat-neutral { background: var(--stat-neutral); }
 @media (prefers-reduced-motion: reduce) { .seat { transition: none; } }
