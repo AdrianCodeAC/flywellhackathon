@@ -248,3 +248,15 @@ h1, h2, h3 { letter-spacing: 0; }
   .arrival-main > section { animation: none; }
   .arrival-option { transition: none; }
 }
+
+.trip-hero { height: 310px; }
+.trip-hero .arrival-hero-content { padding-top: 46px; }
+.trip-search { box-shadow: var(--shadow-travel); }
+.trip-meter { appearance: none; border: 0; border-radius: 4px; background: var(--muted); --meter-tone: var(--primary); }
+.trip-meter::-webkit-meter-bar { background: var(--muted); border: 0; border-radius: 4px; }
+.trip-meter::-webkit-meter-optimum-value { background: var(--meter-tone); border-radius: 4px; }
+.trip-meter::-moz-meter-bar { background: var(--meter-tone); border-radius: 4px; }
+.trip-meter-food { --meter-tone: var(--food-tone); }
+.trip-meter-accommodation { --meter-tone: var(--visit-tone); }
+.trip-meter-activities { --meter-tone: var(--ask-tone); }
+@media (max-width: 639px) { .trip-hero { height: 295px; } .trip-hero .arrival-hero-content { padding: 32px 24px; } }

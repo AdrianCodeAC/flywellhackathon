@@ -24,3 +24,5 @@
 - Nominatim calls are serialized at one-second intervals within each running service instance; public deployment needs a centralized queue for a cross-instance guarantee. Why: the public provider limit applies across users.
 
 - Shared arrival option tiles live in ArrivalOptions and are reused on the page and in the dialog; travel visual roles are centralized in styles.css. Why: keeps navigation styling consistent without changing data services.
+- Trip planning lives in src/features/trip with server-only external integrations, progressive NDJSON search and AI SDK chat streams; public UI starts at index while /arrival remains a direct entry. Why: isolates planning from existing arrival behaviour.
+- Trip conversations use one owner-scoped row per user and authenticated access; trip search caches store only public destination advice, never chat messages. Why: protects private discussions while sharing nonpersonal searches.

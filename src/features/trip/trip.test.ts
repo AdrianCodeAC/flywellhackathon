@@ -1,0 +1,17 @@
+import { describe, expect, it } from "vitest";
+import { SIX_HOURS, bookingLinks, comfortScore, dateMatches, nights, rankFlights, rememberedTab, stayCosts, tripCacheKey, tripInputSchema, type Flight, type TripAdvice, type TripInput } from "./types";
+const input:TripInput={destination:"Barcelona",destinationIata:"BCN",origin:"CRA",departure:"2027-11-12",returnDate:"2027-11-16",adults:2,children:0,flexible:false,budget:"medium",direct:false,bag:false,lang:"ro"};
+const advice:TripAdvice={areas:[{name:"a",reason:"r",nightlyMinEur:50,nightlyMaxEur:100},{name:"b",reason:"r",nightlyMinEur:60,nightlyMaxEur:110},{name:"c",reason:"r",nightlyMinEur:70,nightlyMaxEur:120}],foodPerPersonEur:[10,20],transportPerPersonEur:[5,10],activitiesPerPersonEur:[5,15],documents:"check",currency:"EUR",wellbeing:["1","2","3"]};
+const f:Flight={id:"1",airline:"W4",departure:"2027-11-12T12:00:00Z",returnDate:"2027-11-16T12:00:00Z",price:200,stops:0,duration:180,layover:null,arrival:null,score:100,link:"https://www.aviasales.com",currency:"RON"};
+describe("Trip planner rules",()=>{
+  it("opens Plan first and remembers Arrival",()=>{expect(rememberedTab(null)).toBe("plan");expect(rememberedTab("arrival")).toBe("arrival");});
+  it("counts 12–16 November as four nights",()=>expect(nights(input.departure,input.returnDate)).toBe(4));
+  it("uses a six hour cache and separates currencies/options",()=>{expect(SIX_HOURS).toBe(21600000);expect(tripCacheKey(input)).not.toBe(tripCacheKey({...input,lang:"en"}));});
+  it("flexibility includes exactly ±3 days",()=>{expect(dateMatches("2027-11-09",input.departure,true)).toBe(true);expect(dateMatches("2027-11-08",input.departure,true)).toBe(false);expect(dateMatches("2027-11-11",input.departure,false)).toBe(false);});
+  it("penalizes night departures, stops, duration and long layovers",()=>{expect(comfortScore(f)).toBe(100);expect(comfortScore({...f,departure:"2027-11-12T23:30:00Z"})).toBe(85);expect(comfortScore({...f,stops:1})).toBe(82);expect(comfortScore({...f,duration:240})).toBe(98);expect(comfortScore({...f,layover:180})).toBe(98);});
+  it("does not include invented flights in costs",()=>{const cost=stayCosts(input,advice,undefined,1);expect(cost.rows[0]?.range).toBeNull();expect(cost.total).toEqual([360,840]);expect(cost.flightsIncluded).toBe(false);});
+  it("scales costs to two people and four nights in RON",()=>{const cost=stayCosts(input,advice,f,5);expect(cost.rows[0]?.range).toEqual([400,400]);expect(cost.rows[1]?.range).toEqual([1000,2400]);expect(cost.total).toEqual([2200,4600]);});
+  it("ranks cheapest and comfort separately",()=>{const cheaper={...f,id:"2",price:100,score:60};expect(rankFlights([f,cheaper])[1]?.flight.id).toBe("2");expect(rankFlights([f,cheaper])[2]?.flight.id).toBe("1");expect(rankFlights([])).toEqual([]);});
+  it("prefills hotel dates and guests",()=>{const u=new URL(bookingLinks(input,"Barcelona").booking);expect(u.searchParams.get("checkin")).toBe("2027-11-12");expect(u.searchParams.get("checkout")).toBe("2027-11-16");expect(u.searchParams.get("group_adults")).toBe("2");});
+  it("rejects return before departure",()=>expect(tripInputSchema.safeParse({...input,returnDate:"2027-11-10"}).success).toBe(false));
+});

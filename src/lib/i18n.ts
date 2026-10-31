@@ -18,6 +18,10 @@ if (!i18n.isInitialized) {
     returnNull: false,
   });
 }
+// Refresh resource bundles when translations change during hot reload.
+// Otherwise the long-lived SSR instance can keep the old dictionaries.
+i18n.addResourceBundle("en", "translation", en, true, true);
+i18n.addResourceBundle("ro", "translation", ro, true, true);
 
 export function pickLanguage(stored: string | null, navigatorLang: string | undefined): Language {
   if (stored === "en" || stored === "ro") return stored;
