@@ -76,16 +76,18 @@
 :root {
   --palette-navy: oklch(0.311 0.038 267.4);     /* #283044 Midnight Navy (text, butoane) */
   --palette-steel: oklch(0.688 0.059 236.6);    /* #78A1BB Steel Blue (culoarea de bază) */
-  --palette-mint: oklch(0.961 0.014 155.6);     /* #EBF5EE Mint White (fundal de pagină) */
+  --palette-cream: oklch(0.948 0.0177 81.3);    /* #F4EDE1 Crem (fundal de pagină) */
+  --palette-cream-soft: oklch(0.974 0.0143 84.6); /* #FBF6EC Crem foarte deschis (carduri) */
+  --palette-cream-deep: oklch(0.931 0.0234 82.1); /* #F0E7D7 Crem mai închis (câmpuri de completat) */
   --palette-pine: oklch(0.536 0.082 175.3);     /* #2E7D6B Pine (accent rece, folosit puțin) */
   --palette-gold: oklch(0.810 0.158 78.9);      /* #F7B32B Gold (accent cald principal) */
-  --palette-white: oklch(1 0 0);                /* #FFFFFF Alb (carduri, text pe fundal închis) */
+  --palette-white: oklch(1 0 0);                /* #FFFFFF Alb (text pe fundal închis) */
 
   /* Nuanțe derivate (aceeași culoare, mai închisă/deschisă) pentru text lizibil și fundaluri. */
-  --palette-steel-soft: oklch(0.955 0.012 250); /* fundaluri ușoare */
-  --palette-line: oklch(0.885 0.014 250);       /* contururi */
+  --palette-steel-soft: oklch(0.955 0.012 250); /* fundaluri ușoare răcoroase (transport, hartă) */
+  --palette-line: oklch(0.892 0.0322 82.8);     /* #E6DAC4 contururi crem */
   --palette-deep: oklch(0.50 0.075 245);        /* linkuri, etichete, butoane secundare */
-  --palette-muted: oklch(0.48 0.032 248);        /* text secundar */
+  --palette-muted: oklch(0.528 0.0235 81.7);    /* #726A5C text secundar, cald */
   --palette-gold-soft: oklch(0.965 0.045 85);   /* fundal auriu foarte deschis */
   --palette-gold-deep: oklch(0.55 0.12 72);     /* text auriu / amber */
   --palette-pine-soft: oklch(0.936 0.027 170.3); /* #D9F0E7 fundal pin very deschis */
@@ -100,21 +102,21 @@
  * ========================================================================== */
 :root {
   /* Pagină și text */
-  --ui-page: var(--palette-mint);
+  --ui-page: var(--palette-cream);
   --ui-text: var(--palette-navy);
   --ui-text-muted: var(--palette-muted);
-  --ui-card: var(--palette-white);
+  --ui-card: var(--palette-cream-soft);
   --ui-border: var(--palette-line);
   --ui-focus: var(--palette-steel);
-  --ui-input: color-mix(in oklab, var(--palette-steel) 14%, var(--palette-white));
+  --ui-input: var(--palette-cream-deep);
   /* Butoane principale, linkuri, elemente active */
   --ui-button: var(--palette-navy);
   --ui-button-text: var(--palette-white);
   /* Butoane/etichete secundare */
-  --ui-button-soft: var(--palette-steel-soft);
+  --ui-button-soft: var(--palette-cream-deep);
   --ui-button-soft-text: var(--palette-deep);
   /* Evidențieri (hover, selecție, chip-uri) */
-  --ui-highlight: color-mix(in oklab, var(--palette-steel) 35%, var(--palette-white));
+  --ui-highlight: color-mix(in oklab, var(--palette-steel) 22%, var(--palette-cream-soft));
   --ui-highlight-text: var(--palette-navy);
   /* Accent cald și pericol */
   --ui-warm: var(--palette-gold);
@@ -128,12 +130,12 @@
   --ui-food: var(--palette-gold-deep);
   --ui-food-soft: var(--palette-gold-soft);
   --ui-ride: var(--palette-deep);
-  --ui-ride-soft: var(--palette-steel-soft);
+  --ui-ride-soft: var(--palette-cream-deep);
   --ui-visit: var(--palette-pine-deep);
-  --ui-visit-soft: var(--palette-pine-soft);
+  --ui-visit-soft: color-mix(in oklab, var(--palette-pine) 12%, var(--palette-cream-soft));
 
   --ui-ask: var(--palette-navy);
-  --ui-ask-soft: color-mix(in oklab, var(--palette-mint) 75%, var(--palette-white));
+  --ui-ask-soft: color-mix(in oklab, var(--palette-cream) 70%, var(--palette-white));
   /* Umbră */
   --ui-shadow: 0 12px 35px oklch(0.311 0.038 267.4 / 10%);
 
@@ -149,7 +151,7 @@
   --primary-foreground: var(--ui-button-text);
   --secondary: var(--ui-button-soft);
   --secondary-foreground: var(--ui-button-soft-text);
-  --muted: var(--palette-steel-soft);
+  --muted: var(--palette-cream-deep);
   --muted-foreground: var(--ui-text-muted);
   --accent: var(--ui-highlight);
   --accent-foreground: var(--ui-highlight-text);
@@ -291,6 +293,19 @@ h1, h2, h3 { letter-spacing: 0; }
 .calendar-expensive { color: var(--food-tone); background: var(--food-soft); }
 .calendar-no-price { color: var(--muted-foreground); }
 .calendar-best { color: var(--primary); }
+/* The chosen days turn solid navy, so their number must be cream whatever the
+   price colour was — otherwise cocoa-on-navy makes the date unreadable. */
+.trip-price-calendar [data-range-start="true"],
+.trip-price-calendar [data-range-end="true"],
+.trip-price-calendar [data-selected-single="true"] {
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+.trip-price-calendar [data-range-start="true"] .calendar-best,
+.trip-price-calendar [data-range-end="true"] .calendar-best,
+.trip-price-calendar [data-selected-single="true"] .calendar-best {
+  color: var(--palette-gold);
+}
 .trip-price-calendar button { min-height: 44px; }
 .trip-date-sheet { display:flex; flex-direction:column; }
 .trip-date-sheet > div { min-height:0; flex:1; }
@@ -306,7 +321,7 @@ h1, h2, h3 { letter-spacing: 0; }
 
 /* Airport guide: virtual airport map drawn from OpenStreetMap geometry. Colors come from the palette above. */
 :root {
-  --map-ground: color-mix(in oklab, var(--palette-mint) 65%, var(--palette-white));
+  --map-ground: color-mix(in oklab, var(--palette-cream) 65%, var(--palette-white));
   --map-apron: oklch(0.93 0.012 220);
   --map-taxiway: oklch(0.88 0.02 220);
   --map-runway: var(--palette-navy);
@@ -454,7 +469,7 @@ h1, h2, h3 { letter-spacing: 0; }
   --help-alert: var(--palette-alert);
   --help-alert-soft: oklch(0.42 0.11 350 / 24%);
   --help-care: var(--palette-gold);
-  --help-card: var(--palette-mint);
+  --help-card: var(--palette-cream);
   --help-crew-bg: var(--palette-white);
   --help-crew-fg: var(--palette-navy);
   --panic: var(--palette-alert);
