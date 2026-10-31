@@ -58,7 +58,8 @@ export function PreflightForm({
     void getAirportByIata(pass.to).then((a) => a && setDestination(a));
     setDate(flightDate(pass.julianDay));
     const name = AIRLINES.find((a) => a.codes.includes(pass.carrier))?.name ?? pass.carrier;
-    setAirline(`${name} ${pass.carrier} ${pass.flight}`);
+    // Known airline: just its name ("Wizz Air"); unknown: the carrier code so rule lookups still match.
+    setAirline(name);
     setError("");
     setScanned(
       t("preflight.scan.done", {
