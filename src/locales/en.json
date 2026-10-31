@@ -1112,5 +1112,97 @@
     "useMine": "Use my location",
     "locating": "Finding you…",
     "you": "Your location"
+  },
+  "flight": {
+    "title": "Flight status and reminders",
+    "number": "Flight number",
+    "time": "Departure time ({{iata}})",
+    "liveLater": "Live status (delays, gate, baggage belt) appears from the day before your flight.",
+    "needNumber": "Add the flight number to see live status.",
+    "loading": "Checking your flight…",
+    "lookup": {
+      "notFound": "No live data for this flight yet. Check the airport departures screens.",
+      "unconfigured": "Live flight status is not available right now.",
+      "error": "Live status could not be loaded. Try again in a few minutes."
+    },
+    "state": {
+      "scheduled": "On schedule",
+      "active": "In the air",
+      "landed": "Landed",
+      "cancelled": "Cancelled",
+      "incident": "Incident",
+      "diverted": "Diverted"
+    },
+    "delay_one": "Delayed {{count}} min",
+    "delay_few": "Delayed {{count}} min",
+    "delay_other": "Delayed {{count}} min",
+    "gate": "Terminal and gate",
+    "terminal": "Terminal {{terminal}}",
+    "gateValue": "Gate {{gate}}",
+    "gateUnknown": "Gate not announced yet",
+    "departs": "Departure",
+    "changed": "{{from}} → now {{to}}",
+    "baggage": "Baggage belt at {{iata}}",
+    "refresh": "Refresh status",
+    "source": "Live data: AviationStack, refreshed every few minutes. Airport screens always have the final word.",
+    "remindersTitle": "Reminders",
+    "needTime": "Add the departure time to get a check-in reminder and a reminder to leave for the airport.",
+    "reminder": {
+      "checkIn": "Online check-in: most airlines have it open by now.",
+      "leave": "Leave for the airport in 30 minutes (set off at {{time}})."
+    },
+    "travel": "Minutes to get to the airport",
+    "notifyEnable": "Turn on notifications",
+    "notifyOn": "Notifications on",
+    "calendar": "Add to calendar",
+    "notifyHint": "Notifications ring while Flywell is open or in the background. The calendar reminders ring even when it is closed.",
+    "notifyDenied": "Notifications are blocked for this site. Allow them in your browser settings, or use the calendar.",
+    "notifyUnsupported": "This browser cannot show notifications. On iPhone, add Flywell to the Home Screen first, or use the calendar.",
+    "notify": {
+      "testTitle": "Flywell reminders are on",
+      "testBody": "We will remind you about check-in and when to leave for the airport.",
+      "checkIn": {
+        "title": "Check in for your flight to {{city}}",
+        "body": "Online check-in should be open now for {{flight}}. Check in and save your boarding pass."
+      },
+      "leave": {
+        "title": "Leave for the airport in 30 minutes",
+        "body": "Set off at {{time}} for {{flight}}. Passport or ID, boarding pass, liquids bag."
+      }
+    }
+  },
+  "prm": {
+    "button": "Assistance for reduced mobility",
+    "title": "Assistance for passengers with disabilities or reduced mobility",
+    "intro": "In the EU, help at the airport and on board is free of charge (Regulation (EC) No 1107/2006).",
+    "step": {
+      "request": {
+        "title": "Ask at least 48 hours before the flight",
+        "body": "Tell the airline, travel agent or tour operator you booked with, usually under Manage booking or by phone. Say exactly what help you need, using the code airlines use:"
+      },
+      "arrive": {
+        "title": "Go to the assistance point on time",
+        "body": "Be at the airport's assistance point at the time the airline gave you in writing. If you got no time, be there at least 2 hours before departure."
+      },
+      "equipment": {
+        "title": "Your equipment travels free",
+        "body": "Wheelchairs and other mobility equipment are carried free (up to two items). Recognised assistance dogs may travel in the cabin, subject to national rules."
+      },
+      "complain": {
+        "title": "If something goes wrong",
+        "body": "If help was refused or your equipment was damaged, complain to the airline or the airport first, then to the national enforcement body."
+      }
+    },
+    "code": {
+      "WCHR": "Can climb steps and move in the cabin, but needs a wheelchair for long distances",
+      "WCHS": "Cannot climb steps, can move in the cabin",
+      "WCHC": "Needs help all the way to the seat",
+      "BLND": "Blind or visually impaired",
+      "DEAF": "Deaf or hard of hearing",
+      "DPNA": "Intellectual or developmental disability needing help"
+    },
+    "linkYourEurope": "Your Europe: passengers with reduced mobility",
+    "linkRegulation": "Regulation (EC) No 1107/2006 (EUR-Lex)",
+    "outsideEu": "Outside the EU, rules depend on the country and airline: ask the airline when you book."
   }
 }

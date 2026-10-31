@@ -1112,5 +1112,97 @@
     "useMine": "Folosește locația mea",
     "locating": "Te căutăm…",
     "you": "Locația ta"
+  },
+  "flight": {
+    "title": "Starea zborului și mementouri",
+    "number": "Numărul zborului",
+    "time": "Ora plecării ({{iata}})",
+    "liveLater": "Starea în timp real (întârzieri, poartă, banda de bagaje) apare cu o zi înainte de zbor.",
+    "needNumber": "Adaugă numărul zborului ca să vezi starea în timp real.",
+    "loading": "Verificăm zborul…",
+    "lookup": {
+      "notFound": "Încă nu există date live pentru acest zbor. Urmărește ecranele de plecări din aeroport.",
+      "unconfigured": "Starea zborului în timp real nu este disponibilă momentan.",
+      "error": "Starea zborului nu s-a putut încărca. Încearcă din nou peste câteva minute."
+    },
+    "state": {
+      "scheduled": "Conform programului",
+      "active": "În aer",
+      "landed": "A aterizat",
+      "cancelled": "Anulat",
+      "incident": "Incident",
+      "diverted": "Redirecționat"
+    },
+    "delay_one": "Întârziere {{count}} min",
+    "delay_few": "Întârziere {{count}} min",
+    "delay_other": "Întârziere {{count}} de min",
+    "gate": "Terminal și poartă",
+    "terminal": "Terminalul {{terminal}}",
+    "gateValue": "Poarta {{gate}}",
+    "gateUnknown": "Poarta nu a fost anunțată încă",
+    "departs": "Plecare",
+    "changed": "{{from}} → acum {{to}}",
+    "baggage": "Banda de bagaje la {{iata}}",
+    "refresh": "Actualizează starea",
+    "source": "Date live: AviationStack, actualizate la câteva minute. Ecranele din aeroport au mereu ultimul cuvânt.",
+    "remindersTitle": "Mementouri",
+    "needTime": "Adaugă ora plecării ca să primești un memento pentru check-in și unul pentru plecarea spre aeroport.",
+    "reminder": {
+      "checkIn": "Check-in online: la majoritatea companiilor e deja deschis.",
+      "leave": "Pleacă spre aeroport în 30 de minute (pornești la {{time}})."
+    },
+    "travel": "Minute până la aeroport",
+    "notifyEnable": "Activează notificările",
+    "notifyOn": "Notificări active",
+    "calendar": "Adaugă în calendar",
+    "notifyHint": "Notificările sună cât Flywell e deschis sau în fundal. Mementourile din calendar sună și cu aplicația închisă.",
+    "notifyDenied": "Notificările sunt blocate pentru acest site. Permite-le din setările browserului sau folosește calendarul.",
+    "notifyUnsupported": "Acest browser nu poate afișa notificări. Pe iPhone, adaugă întâi Flywell pe ecranul principal sau folosește calendarul.",
+    "notify": {
+      "testTitle": "Mementourile Flywell sunt active",
+      "testBody": "Îți amintim de check-in și de momentul în care să pleci spre aeroport.",
+      "checkIn": {
+        "title": "Fă check-in pentru zborul spre {{city}}",
+        "body": "Check-in-ul online ar trebui să fie deschis acum pentru {{flight}}. Fă check-in și salvează cartea de îmbarcare."
+      },
+      "leave": {
+        "title": "Pleacă spre aeroport în 30 de minute",
+        "body": "Pornește la {{time}} pentru {{flight}}. Pașaport sau buletin, carte de îmbarcare, punga cu lichide."
+      }
+    }
+  },
+  "prm": {
+    "button": "Asistență pentru mobilitate redusă",
+    "title": "Asistență pentru persoane cu dizabilități sau cu mobilitate redusă",
+    "intro": "În UE, ajutorul în aeroport și la bord este gratuit (Regulamentul (CE) nr. 1107/2006).",
+    "step": {
+      "request": {
+        "title": "Cere asistența cu cel puțin 48 de ore înainte de zbor",
+        "body": "Anunță compania aeriană, agenția sau tour-operatorul de la care ai cumpărat biletul, de obicei din „Gestionează rezervarea” sau telefonic. Spune exact ce ajutor îți trebuie, cu codul folosit de companii:"
+      },
+      "arrive": {
+        "title": "Mergi la timp la punctul de asistență",
+        "body": "Fii la punctul de asistență din aeroport la ora pe care ți-a comunicat-o în scris compania. Dacă nu ai primit o oră, ajunge cu cel puțin 2 ore înainte de plecare."
+      },
+      "equipment": {
+        "title": "Echipamentul tău se transportă gratuit",
+        "body": "Scaunul cu rotile și alte echipamente de mobilitate se transportă gratuit (până la două piese). Câinii de asistență recunoscuți pot călători în cabină, conform regulilor naționale."
+      },
+      "complain": {
+        "title": "Dacă ceva nu merge",
+        "body": "Dacă ți s-a refuzat ajutorul sau echipamentul a fost deteriorat, fă o plângere întâi la companie sau la aeroport, apoi la organismul național de aplicare."
+      }
+    },
+    "code": {
+      "WCHR": "Poți urca scări și te poți deplasa în cabină, dar ai nevoie de scaun cu rotile pe distanțe lungi",
+      "WCHS": "Nu poți urca scări, dar te poți deplasa în cabină",
+      "WCHC": "Ai nevoie de ajutor până la scaun",
+      "BLND": "Persoană nevăzătoare sau cu deficiențe de vedere",
+      "DEAF": "Persoană surdă sau cu deficiențe de auz",
+      "DPNA": "Dizabilitate intelectuală sau de dezvoltare care necesită ajutor"
+    },
+    "linkYourEurope": "Your Europe: pasageri cu mobilitate redusă",
+    "linkRegulation": "Regulamentul (CE) nr. 1107/2006 (EUR-Lex)",
+    "outsideEu": "În afara UE, regulile depind de țară și de companie: întreabă compania aeriană când rezervi."
   }
 }

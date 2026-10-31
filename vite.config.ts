@@ -31,6 +31,8 @@ export default defineConfig({
           globPatterns: ["**/*.{js,css,png,svg,ico,webmanifest,woff2}", "data/airports.json"],
           navigateFallback: null,
           cleanupOutdatedCaches: true,
+          // Opens the trip when a flight reminder is tapped.
+          importScripts: ["/sw-notify.js"],
           runtimeCaching: [
             {
               urlPattern: ({ request, url }) => request.mode === "navigate" && !url.pathname.startsWith("/~oauth"),

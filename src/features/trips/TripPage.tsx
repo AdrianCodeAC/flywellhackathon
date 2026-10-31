@@ -11,6 +11,7 @@ import { PreflightChat } from "@/features/preflight/PreflightChat";
 import { ArrivalAssistant } from "@/features/arrival/ArrivalAssistant";
 import { deleteTripEverywhere } from "@/features/account/sync";
 import { DuringFlight } from "./DuringFlight";
+import { FlightCard } from "./FlightCard";
 import { defaultTab, TRIP_TABS, type MyTrip, type TripTab } from "./model";
 import { useMyTrips } from "./store";
 
@@ -99,6 +100,7 @@ function TripView({ trip, trips, tab }: { trip: MyTrip; trips: MyTrip[]; tab: Tr
       </div>
 
       {panel("before", <div style={{ "--checklist-top": "calc(env(safe-area-inset-top) + 12.25rem)" } as CSSProperties}>
+        <FlightCard trip={trip} />
         <PreflightChecklist input={trip.input} returnTo={`/trips/${trip.id}`} hideJetLag onArrival={() => setTab("arrival")}
           onEdit={() => void navigate({ to: "/preflight", search: { from: "", to: "", date: "", edit: trip.id } })} />
         <PreflightChat input={trip.input} />

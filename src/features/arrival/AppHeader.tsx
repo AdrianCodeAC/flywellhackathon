@@ -5,6 +5,7 @@ import { LANGUAGES, setLanguage, syncClientLanguage, type Language } from "@/lib
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
 import { AccountButton } from "@/features/account/AccountButton";
+import { useFlightReminders } from "@/features/trips/reminders";
 
 /** Sticky header: always-visible EN/RO switcher plus the offline banner. */
 export function AppHeader() {
@@ -14,6 +15,7 @@ export function AppHeader() {
   const trips = location.pathname.startsWith("/trips");
   const ticket = location.pathname === "/preflight";
   const plan = location.pathname === "/" || location.pathname === "/flights";
+  useFlightReminders();
 
   useEffect(() => { if (trips || ticket) localStorage.setItem("flywell:tab", trips ? "trips" : "preflight"); }, [trips, ticket]);
 

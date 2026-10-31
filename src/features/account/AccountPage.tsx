@@ -17,6 +17,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { initials } from "./AccountButton";
 import { MedicalCardEditor } from "./MedicalCardEditor";
+import { AssistanceInfo } from "./AssistanceInfo";
 import { makeTrip, tripIdFor } from "@/features/trips/model";
 import { getTrip, removeTrip, upsertTrip } from "@/features/trips/store";
 import { CHOSEN_FLIGHT_KEY } from "./device";
@@ -118,6 +119,7 @@ export function AccountPage() {
             <Input id="profile-name" className="h-11" value={name} maxLength={80} placeholder={t("account.name")} onChange={(e) => { setName(e.target.value); setNameState("idle"); }} />
             <Button type="submit" variant="outline" className="min-h-11" disabled={nameState === "saving"}>{nameState === "saved" ? t("account.nameSaved") : t("account.saveName")}</Button>
           </form>
+          <AssistanceInfo />
         </div>
       </section>
 

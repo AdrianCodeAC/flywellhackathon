@@ -56,6 +56,7 @@ Fiecare călătorie salvată se deschide cu trei taburi: **Înainte de zbor**, *
 
 - Te poți autentifica cu Google sau Apple, prin Lovable Cloud Auth.
 - Călătoriile salvate se sincronizează între dispozitive.
+- Din profil, butonul **„Asistență pentru mobilitate redusă”** explică cum ceri asistența gratuită în aeroport (Regulamentul (CE) nr. 1107/2006): cu cel puțin 48 de ore înainte, codurile folosite de companii (WCHR, WCHC, BLND etc.) și legături oficiale.
 - Fiecare călătorie reunește checklist-ul, ajutorul din timpul zborului și asistentul de sosire.
 - Tabul **În timpul zborului** funcționează complet fără internet: tot ce conține este salvat pe telefon.
 
@@ -112,6 +113,13 @@ Dacă o companie nu transportă animale, aplicația afișează doar acest lucru.
 - cât durează estimativ adaptarea.
 
 **Vremea la sosire.** Prognoza pentru ziua zborului (până la 15 zile înainte) și recomandări de îmbrăcăminte.
+
+**Starea zborului și mementouri.** Numărul zborului se completează din bilet. În ziua zborului, cardul arată starea în timp real: întârzieri, terminal și poartă, banda de bagaje la sosire. Ora plecării se completează din program, iar aplicația calculează două mementouri:
+
+- check-in-ul online, cu 24 de ore înainte de zbor;
+- „Pleacă spre aeroport în 30 de minute”, în funcție de cât durează drumul până la aeroport.
+
+Mementourile apar ca notificări cât timp aplicația e deschisă sau în fundal. Pot fi adăugate și în calendarul telefonului, unde sună și cu aplicația închisă.
 
 **Ghidul aeroportului.** Arată doar pașii de care are nevoie pasagerul, la plecare și la sosire, pe o hartă interactivă desenată din datele OpenStreetMap:
 
@@ -208,14 +216,15 @@ Pentru dezvoltare locală cu AI, serverul trebuie să aibă acces la variabilele
 
 Variabilele se păstrează în `.env.local`, fișier exclus din Git (regula `*.local` din `.gitignore`). Cheile nu se adaugă niciodată în repository.
 
-| Variabilă                                            | Obligatorie                            | Rol                                                                                |
-| ---------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------- |
-| `LOVABLE_API_KEY`                                    | În producție                           | Acces la Lovable AI Gateway; setată automat de Lovable Cloud                       |
-| `GROQ_API_KEY`                                       | Local, dacă lipsește `LOVABLE_API_KEY` | Alternativă gratuită pentru AI ([console.groq.com](https://console.groq.com/keys)) |
-| `TRAVELPAYOUTS_TOKEN`                                | Pentru oferte de zboruri               | Acces la API-ul Travelpayouts                                                      |
-| `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`           | Da                                     | Conexiunea la Lovable Cloud, pe server                                             |
-| `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` | Da                                     | Conexiunea la Lovable Cloud, în browser                                            |
-| `SUPABASE_SERVICE_ROLE_KEY`                          | Pentru cache-ul partajat               | Acces de server la baza de date                                                    |
+| Variabilă                                            | Obligatorie                            | Rol                                                                                                                                |
+| ---------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `LOVABLE_API_KEY`                                    | În producție                           | Acces la Lovable AI Gateway; setată automat de Lovable Cloud                                                                       |
+| `GROQ_API_KEY`                                       | Local, dacă lipsește `LOVABLE_API_KEY` | Alternativă gratuită pentru AI ([console.groq.com](https://console.groq.com/keys))                                                 |
+| `AVIATIONSTACK_KEY`                                  | Pentru starea zborului în timp real    | Cheie gratuită de pe [aviationstack.com](https://aviationstack.com/) (100 de cereri pe lună; răspunsurile sunt păstrate 10 minute) |
+| `TRAVELPAYOUTS_TOKEN`                                | Pentru oferte de zboruri               | Acces la API-ul Travelpayouts                                                                                                      |
+| `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`           | Da                                     | Conexiunea la Lovable Cloud, pe server                                                                                             |
+| `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` | Da                                     | Conexiunea la Lovable Cloud, în browser                                                                                            |
+| `SUPABASE_SERVICE_ROLE_KEY`                          | Pentru cache-ul partajat               | Acces de server la baza de date                                                                                                    |
 
 Dacă nu este configurat niciun serviciu AI, aplicația funcționează în continuare. Checklist-ul și răspunsurile din regulile locale rămân disponibile.
 

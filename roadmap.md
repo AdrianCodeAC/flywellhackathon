@@ -55,3 +55,6 @@
 - [x] No AI checklist items that repeat fixed ones (e.g. "No visa needed" next to "Your ID card or passport is enough").
 - [x] On arrival food/sights: card distances and "Show route" start from the same point (live location when nearby, else the airport); short trips use walking routes.
 - [x] Help → Call the crew: phone vibrates and plays a ring to get attention.
+- [x] Flight status (AviationStack, 10 min shared cache, only around the flight day) and reminders (check-in 24 h before, leave for the airport 30 min before setting off) as notifications while the app is open plus a calendar file with alarms.
+- [x] Profile: small button with free PRM assistance under Regulation (EC) No 1107/2006 (48 h notice, assistance point, SSR codes, official links).
+- [ ] Set AVIATIONSTACK_KEY in Lovable Cloud secrets; check live status on a real flight day.
