@@ -140,20 +140,38 @@ export function kindFromWikidataTypes(qids: string[]): Place["kind"] {
   return "other";
 }
 
-/** Typed items within the radius that have an English or Romanian article, most-described first. */
-export function sightsSparql(lat: number, lon: number, radiusM: number): string {
-  const types = SIGHT_TYPES.flatMap(([, ids]) => ids.map((q) => `wd:${q}`)).join(" ");
-  // Rank inside a subquery first, so article lookups run only for the top items.
-  return `SELECT ?item ?c ?l ?types (SAMPLE(?enA) AS ?en) (SAMPLE(?roA) AS ?ro) WHERE {
-  { SELECT ?item (SAMPLE(?coord) AS ?c) (MAX(?links) AS ?l) (GROUP_CONCAT(DISTINCT STRAFTER(STR(?type), "entity/"); separator=" ") AS ?types) WHERE {
-    SERVICE wikibase:around { ?item wdt:P625 ?coord . bd:serviceParam wikibase:center "Point(${lon.toFixed(5)} ${lat.toFixed(5)})"^^geo:wktLiteral . bd:serviceParam wikibase:radius "${(radiusM / 1000).toFixed(1)}" . }
-    VALUES ?type { ${types} }
-    ?item wdt:P31 ?type ; wikibase:sitelinks ?links .
-  } GROUP BY ?item ORDER BY DESC(?l) LIMIT 90 }
-  OPTIONAL { ?enA schema:about ?item ; schema:isPartOf <https://en.wikipedia.org/> . }
-  OPTIONAL { ?roA schema:about ?item ; schema:isPartOf <https://ro.wikipedia.org/> . }
-  FILTER(BOUND(?enA) || BOUND(?roA))
-} GROUP BY ?item ?c ?l ?types ORDER BY DESC(?l) LIMIT 60`;
+/** How many notable items to ask for per kind; the order is also the interleave priority. */
+export const SIGHT_LIMITS: Partial<Record<Place["kind"], number>> = {
+  museum: 14,
+  park: 12,
+  castle: 8,
+  church: 10,
+  attraction: 12,
+  monument: 8,
+  viewpoint: 4,
+};
+
+/** Wikidata full-text search: items of these classes near a point, most notable first. */
+export function wikidataSearchUrl(qids: string[], lat: number, lon: number, radiusM: number, limit: number): string {
+  const query = `haswbstatement:${qids.map((q) => `P31=${q}`).join("|")} nearcoord:${Math.round(radiusM / 1000)}km,${lat.toFixed(4)},${lon.toFixed(4)}`;
+  const params = new URLSearchParams({
+    action: "query",
+    list: "search",
+    srsearch: query,
+    srlimit: String(limit),
+    srprop: "",
+    format: "json",
+    origin: "*",
+  });
+  return `https://www.wikidata.org/w/api.php?${params}`;
+}
+
+/** Round-robin by kind so one category never crowds out the others. */
+export function interleaveByKind<T extends { kind: Place["kind"] }>(groups: T[][]): T[] {
+  const out: T[] = [];
+  for (let i = 0; groups.some((g) => i < g.length); i++)
+    for (const g of groups) if (g[i]) out.push(g[i]!);
+  return out;
 }
 
 export function sourceCacheKey(

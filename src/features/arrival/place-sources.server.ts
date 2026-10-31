@@ -2,9 +2,11 @@ import { loggedFetch } from "./external-http";
 import {
   categorizeSight,
   FOOD_CATEGORIES,
-  kindFromWikidataTypes,
-  sightsSparql,
+  interleaveByKind,
+  SIGHT_LIMITS,
+  SIGHT_TYPES,
   widerFoodRadius,
+  wikidataSearchUrl,
   foodSearchUrl,
   mergeSightLanguages,
   parseFoodHits,
@@ -127,19 +129,9 @@ async function wikipediaSights(
   });
 }
 
-interface SparqlRow {
-  item: { value: string };
-  c: { value: string };
-  types: { value: string };
-  en?: { value: string };
-  ro?: { value: string };
-}
-const titleFromUrl = (url: string) =>
-  decodeURIComponent(url.split("/wiki/")[1] ?? "").replace(/_/g, " ");
-
 /**
- * Notable sights from Wikidata: typed items (parks, museums, churches…) inside the
- * radius, ranked by how many Wikipedias describe them, then Wikipedia intros.
+ * Notable sights: one Wikidata search per kind (parks, museums, churches…) near the
+ * centre, ranked by Wikidata's notability, then Wikipedia intros, photos and coordinates.
  */
 async function wikidataSights(
   lang: "ro" | "en",
@@ -147,81 +139,90 @@ async function wikidataSights(
   lon: number,
   radiusM: number,
 ): Promise<Place[]> {
-  const res = await loggedFetch("https://query.wikidata.org/sparql", {
-    method: "POST",
-    headers: {
-      Accept: "application/sparql-results+json",
-      "Content-Type": "application/x-www-form-urlencoded",
-      "User-Agent": USER_AGENT,
-    },
-    body: new URLSearchParams({ query: sightsSparql(lat, lon, radiusM) }),
-    signal: AbortSignal.timeout(14_000),
+  const kinds = SIGHT_TYPES.filter(([kind]) => SIGHT_LIMITS[kind]);
+  const groups = await Promise.all(
+    kinds.map(async ([kind, qids]) => {
+      const data = (await wikiJson(
+        wikidataSearchUrl(qids, lat, lon, radiusM, SIGHT_LIMITS[kind] ?? 8),
+      )) as { query?: { search?: { title: string }[] } };
+      return (data.query?.search ?? []).map((r) => ({ kind, qid: r.title }));
+    }),
+  );
+  const seenQ = new Set<string>();
+  const ranked = interleaveByKind(groups).filter((i) => !seenQ.has(i.qid) && seenQ.add(i.qid));
+  if (!ranked.length) return [];
+
+  // Article titles in Romanian / English.
+  const titles = new Map<string, { ro?: string; en?: string }>();
+  for (let i = 0; i < ranked.length; i += 50) {
+    const ids = ranked.slice(i, i + 50).map((r) => r.qid).join("|");
+    const data = (await wikiJson(
+      `https://www.wikidata.org/w/api.php?action=wbgetentities&props=sitelinks&sitefilter=enwiki%7Crowiki&format=json&origin=*&ids=${encodeURIComponent(ids)}`,
+    )) as { entities?: Record<string, { sitelinks?: Record<string, { title: string }> }> };
+    for (const [q, e] of Object.entries(data.entities ?? {}))
+      titles.set(q, { ro: e.sitelinks?.["rowiki"]?.title, en: e.sitelinks?.["enwiki"]?.title });
+  }
+  const items = ranked.flatMap((r) => {
+    const t = titles.get(r.qid);
+    const l: "ro" | "en" | undefined =
+      lang === "ro" && t?.ro ? "ro" : t?.en ? "en" : t?.ro ? "ro" : undefined;
+    const title = l ? t?.[l] : undefined;
+    return l && title ? [{ ...r, lang: l, title }] : [];
   });
-  if (!res.ok) throw new Error(`Wikidata ${res.status}`);
-  const rows = ((await res.json()) as { results?: { bindings?: SparqlRow[] } }).results?.bindings ?? [];
-  const items = rows.flatMap((r) => {
-    const m = r.c.value.match(/Point\(([-\d.eE]+) ([-\d.eE]+)\)/);
-    if (!m) return [];
-    const pLon = Number(m[1]),
-      pLat = Number(m[2]);
-    const useRo = lang === "ro" && r.ro;
-    const url = useRo ? r.ro!.value : (r.en?.value ?? r.ro?.value);
-    if (!url) return [];
+
+  const details = new Map<string, PageRow & { coordinates?: { lat: number; lon: number }[] }>();
+  await Promise.all(
+    (["ro", "en"] as const).flatMap((l) => {
+      const list = items.filter((i) => i.lang === l).map((i) => i.title);
+      const batches: string[][] = [];
+      for (let i = 0; i < list.length; i += 20) batches.push(list.slice(i, i + 20));
+      return batches.map(async (batch) => {
+        try {
+          const data = (await wikiJson(
+            `https://${l}.wikipedia.org/w/api.php?action=query&prop=extracts%7Cpageimages%7Ccoordinates&exintro=1&explaintext=1&exsentences=2&exlimit=20&pithumbsize=200&pilimit=20&colimit=20&redirects=1&format=json&origin=*&titles=${encodeURIComponent(batch.join("|"))}`,
+          )) as {
+            query?: {
+              pages?: Record<string, PageRow & { coordinates?: { lat: number; lon: number }[] }>;
+              normalized?: { from: string; to: string }[];
+              redirects?: { from: string; to: string }[];
+            };
+          };
+          const alias = new Map<string, string>();
+          for (const n of [...(data.query?.normalized ?? []), ...(data.query?.redirects ?? [])])
+            alias.set(n.from, n.to);
+          const byTitle = new Map(Object.values(data.query?.pages ?? {}).map((p) => [p.title, p]));
+          for (const t of batch) {
+            let key = t;
+            for (let hop = 0; hop < 3 && alias.has(key); hop++) key = alias.get(key)!;
+            const page = byTitle.get(key);
+            if (page) details.set(`${l}:${t}`, page);
+          }
+        } catch (error) {
+          console.warn(`[Arrival source] Wikipedia intros unavailable language=${l}`, error);
+        }
+      });
+    }),
+  );
+
+  return items.flatMap((i) => {
+    const page = details.get(`${i.lang}:${i.title}`);
+    const coord = page?.coordinates?.[0];
+    if (!coord) return [];
+    const description = page?.extract?.trim();
     return [
       {
-        qid: r.item.value.split("/").pop() ?? "",
-        lang: (useRo || !r.en ? "ro" : "en") as "ro" | "en",
-        title: titleFromUrl(url),
-        lat: pLat,
-        lon: pLon,
-        kind: kindFromWikidataTypes(r.types.value.split(" ")),
-      },
+        id: `wd:${i.qid}`,
+        name: i.title,
+        kind: i.kind,
+        lat: coord.lat,
+        lon: coord.lon,
+        distance: Math.round(distanceMeters([lat, lon], [coord.lat, coord.lon])),
+        ...(description ? { description } : {}),
+        ...(page?.thumbnail?.source ? { thumbnail: page.thumbnail.source } : {}),
+        wikidata: i.qid,
+        articleUrl: `https://${i.lang}.wikipedia.org/wiki/${encodeURIComponent(i.title.replace(/ /g, "_"))}`,
+      } satisfies Place,
     ];
-  });
-  const details = new Map<string, PageRow>();
-  for (const l of ["ro", "en"] as const) {
-    const titles = items.filter((i) => i.lang === l).map((i) => i.title);
-    for (let i = 0; i < titles.length; i += 20) {
-      try {
-        const data = (await wikiJson(
-          `https://${l}.wikipedia.org/w/api.php?action=query&prop=extracts%7Cpageimages&exintro=1&explaintext=1&exsentences=2&exlimit=20&pithumbsize=200&pilimit=20&redirects=1&format=json&origin=*&titles=${encodeURIComponent(titles.slice(i, i + 20).join("|"))}`,
-        )) as {
-          query?: {
-            pages?: Record<string, PageRow>;
-            normalized?: { from: string; to: string }[];
-            redirects?: { from: string; to: string }[];
-          };
-        };
-        const alias = new Map<string, string>();
-        for (const n of [...(data.query?.normalized ?? []), ...(data.query?.redirects ?? [])])
-          alias.set(n.from, n.to);
-        const byTitle = new Map(Object.values(data.query?.pages ?? {}).map((p) => [p.title, p]));
-        for (const t of titles.slice(i, i + 20)) {
-          let key = t;
-          for (let hop = 0; hop < 3 && alias.has(key); hop++) key = alias.get(key)!;
-          const page = byTitle.get(key);
-          if (page) details.set(`${l}:${t}`, page);
-        }
-      } catch (error) {
-        console.warn(`[Arrival source] Wikipedia intros unavailable language=${l}`, error);
-      }
-    }
-  }
-  return items.map((i) => {
-    const page = details.get(`${i.lang}:${i.title}`);
-    const description = page?.extract?.trim();
-    return {
-      id: `wd:${i.qid}`,
-      name: i.title,
-      kind: i.kind === "other" ? categorizeSight(i.title, description) : i.kind,
-      lat: i.lat,
-      lon: i.lon,
-      distance: Math.round(distanceMeters([lat, lon], [i.lat, i.lon])),
-      ...(description ? { description } : {}),
-      ...(page?.thumbnail?.source ? { thumbnail: page.thumbnail.source } : {}),
-      wikidata: i.qid,
-      articleUrl: `https://${i.lang}.wikipedia.org/wiki/${encodeURIComponent(i.title.replace(/ /g, "_"))}`,
-    } satisfies Place;
   });
 }
 
