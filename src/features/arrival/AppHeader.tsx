@@ -4,6 +4,7 @@ import { Plane, WifiOff } from "lucide-react";
 import { LANGUAGES, setLanguage, syncClientLanguage, type Language } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
+import { PanicButton } from "@/features/inflight/PanicButton";
 
 /** Sticky header: always-visible EN/RO switcher plus the offline banner. */
 export function AppHeader() {
@@ -40,7 +41,10 @@ export function AppHeader() {
           <span className="text-xl font-bold">{t("design.brand")}<span className="text-primary">.</span></span>
         </Link>
         <span className="hidden text-xs font-medium uppercase text-muted-foreground sm:block">{t("design.companion")}</span>
-        <LanguageSwitcher />
+        <div className="flex items-center gap-2">
+          <PanicButton />
+          <LanguageSwitcher />
+        </div>
       </div>
       <nav aria-label={t("trip.navigation")} className="mx-auto flex max-w-6xl gap-1 px-3 pb-2 sm:px-8">
         <Button asChild variant={plan ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-2 text-sm sm:flex-none sm:px-3"><Link to="/" aria-current={plan ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "plan")}>{t("trip.planTab")}</Link></Button>
