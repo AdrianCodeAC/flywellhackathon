@@ -15,4 +15,5 @@ describe("Trip planner rules",()=>{
   it("prefills hotel dates and guests",()=>{const u=new URL(bookingLinks(input,"Barcelona").booking);expect(u.searchParams.get("checkin")).toBe("2027-11-12");expect(u.searchParams.get("checkout")).toBe("2027-11-16");expect(u.searchParams.get("group_adults")).toBe("2");});
   it("rejects return before departure",()=>expect(tripInputSchema.safeParse({...input,returnDate:"2027-11-10"}).success).toBe(false));
   it("searches adjacent months for flexible dates",()=>{expect(searchMonths("2027-11-01",true)).toEqual(["2027-10","2027-11"]);expect(searchMonths("2027-11-30",true)).toEqual(["2027-11","2027-12"]);});
+  it("rejects impossible calendar dates",()=>expect(tripInputSchema.safeParse({...input,departure:"2027-02-30",returnDate:"2027-03-05"}).success).toBe(false));
 });

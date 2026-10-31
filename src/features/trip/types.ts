@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const SIX_HOURS = 6 * 60 * 60 * 1000;
+export function validDate(value:string){const time=Date.parse(value);return Number.isFinite(time)&&new Date(time).toISOString().slice(0,10)===value;}
 export const tripInputSchema = z.object({
   destination: z.string().trim().min(2).max(200),
   destinationIata: z.string().regex(/^[A-Z]{3}$/).nullable(),
@@ -14,7 +15,7 @@ export const tripInputSchema = z.object({
   direct: z.boolean(),
   bag: z.boolean(),
   lang: z.enum(["en", "ro"]),
-}).refine((v) => Number.isFinite(Date.parse(v.departure)) && Number.isFinite(Date.parse(v.returnDate)) && nights(v.departure, v.returnDate) > 0 && nights(v.departure, v.returnDate) <= 90 && v.departure >= new Date().toISOString().slice(0,10), { message: "Invalid travel dates", path: ["returnDate"] })
+}).refine((v) => validDate(v.departure) && validDate(v.returnDate) && nights(v.departure, v.returnDate) > 0 && nights(v.departure, v.returnDate) <= 90 && v.departure >= new Date().toISOString().slice(0,10), { message: "Invalid travel dates", path: ["returnDate"] })
   .refine((v) => v.adults + v.children <= 9, { message: "Maximum 9 travellers", path: ["children"] });
 export type TripInput = z.infer<typeof tripInputSchema>;
 export type Destination = { iata: string; city: string; country: string; lat: number; lon: number };

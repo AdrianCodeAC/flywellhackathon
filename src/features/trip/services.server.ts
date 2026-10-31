@@ -102,7 +102,7 @@ export async function handleTrip(request: Request): Promise<Response> {
       input={...input,destination:destination.city,destinationIata:destination.iata};
       emit({type:"destination",destination});
       const key=tripCacheKey(input)+preference;
-      const cached=await readTripCache<TripResult>(key).catch(()=>undefined);
+      const cached=preference?undefined:await readTripCache<TripResult>(key).catch(()=>undefined);
       if(cached){
         if(cached.flights)emit({type:"flights",value:cached.flights});
         if(cached.advice)emit({type:"advice",value:cached.advice});
@@ -119,7 +119,7 @@ export async function handleTrip(request: Request): Promise<Response> {
       const extraTask=extras(input,destination,request.signal).then(value=>{result.extras=value;emit({type:"extras",value});});
       const flightTask=flights(input,request.signal).then(value=>{result.flights=value;emit({type:"flights",value});});
       await Promise.all([adviceTask,extraTask,flightTask]);
-      if(result.advice)await writeTripCache(key,result).catch(()=>{});
+      if(result.advice&&!preference)await writeTripCache(key,result).catch(()=>{});
       emit({type:"done"});
     }catch(e){emit({type:"error",section:"search",message:safeAiError(e,input.lang)});}
     finally{controller.close();}
