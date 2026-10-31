@@ -52,14 +52,14 @@ Meniul principal are trei intrări:
 
 Fiecare călătorie salvată se deschide cu trei taburi: **Înainte de zbor**, **În timpul zborului** și **La sosire**.
 
-### 0. Cont și călătorii salvate (`/trips`, `/account`)
+### 1. Cont și călătorii salvate (`/trips`, `/account`)
 
 - Te poți autentifica cu Google sau Apple, prin Lovable Cloud Auth.
 - Călătoriile salvate se sincronizează între dispozitive.
 - Fiecare călătorie reunește checklist-ul, ajutorul din timpul zborului și asistentul de sosire.
 - Tabul **În timpul zborului** funcționează complet fără internet: tot ce conține este salvat pe telefon.
 
-### 1. Planificare: oferte de zboruri (`/` și `/flights`)
+### 2. Planificare: oferte de zboruri (`/` și `/flights`)
 
 - Caută zboruri după aeroportul de plecare. Destinația se completează automat și sugerează rute care au prețuri reale.
 - Arată un calendar de prețuri pe zile, atât pentru dus, cât și pentru dus-întors.
@@ -68,7 +68,7 @@ Fiecare călătorie salvată se deschide cu trei taburi: **Înainte de zbor**, *
 - Un chat permite ajustarea planului de călătorie.
 - După alegerea destinației, aplicația recomandă ce loc să alegi în avion, în funcție de preferințe.
 
-### 2. Înainte de zbor: agentul de reglementări (`/preflight`)
+### 3. Înainte de zbor: agentul de reglementări (`/preflight`)
 
 **Checklist personalizat.** Se generează din aeroporturi, dată, cetățenie, tipul de bagaj și situații speciale: copii, medicamente, animale de companie. Este împărțit în șase categorii:
 
@@ -120,7 +120,7 @@ Dacă o companie nu transportă animale, aplicația afișează doar acest lucru.
 
 Harta se salvează pe telefon, ca să poată fi folosită și fără internet.
 
-### 3. În timpul zborului: butonul de ajutor
+### 4. În timpul zborului: butonul de ajutor
 
 Butonul **„Ajutor”** este accesibil din orice ecran și funcționează și în modul avion, la fel ca tabul **În timpul zborului**. Conține:
 
@@ -130,7 +130,7 @@ Butonul **„Ajutor”** este accesibil din orice ecran și funcționează și �
 - un ghid pentru simptome frecvente: atac de panică, greață, presiune în urechi, amețeală, dureri de cap, turbulențe;
 - cardul medical personal, care aici se poate doar citi (se modifică din cont).
 
-### 4. După aterizare: agentul de sosire (`/arrival`)
+### 5. După aterizare: agentul de sosire (`/arrival`)
 
 - **Vremea curentă** la destinație și recomandări de îmbrăcăminte.
 - **Unde mănânci.** Restaurante și cafenele din centru sau din zona aeroportului, cu filtre și program de funcționare. Pe lângă aeroporturile mici, căutarea se extinde automat dacă găsește prea puține locuri.
@@ -260,7 +260,9 @@ Suita de teste (Vitest) acoperă:
 - interpretarea datelor meteo;
 - pașii ghidului de aeroport;
 - căutarea aeroporturilor, programele de funcționare și legăturile către hărți;
-- planificarea zborurilor.
+- planificarea zborurilor și modelul călătoriilor salvate;
+- regulile pentru animale de companie și recomandările de loc;
+- sincronizarea contului și funcționarea fără internet.
 
 Un test verifică în plus că fișierele de traducere în engleză și română au aceleași chei și că textul românesc folosește diacriticele corecte (ș, ț).
 
