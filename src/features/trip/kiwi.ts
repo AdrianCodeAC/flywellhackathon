@@ -25,6 +25,16 @@ export type KiwiItinerary = {
 };
 export type KiwiPayload = { currency?: string; resultsCount?: number; itineraries?: KiwiItinerary[] };
 
+/** The service answers as a stream: pull the single JSON line out of it. */
+export function readStreamJson(text: string): unknown {
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith("data:")) continue;
+    try { return JSON.parse(trimmed.slice(5).trim()); } catch { /* keep scanning */ }
+  }
+  try { return JSON.parse(text); } catch { return null; }
+}
+
 /** Kiwi wants dd/mm/yyyy and its own spelling of the options the traveller picked. */
 export function kiwiArgs(input: TripInput, currency: string) {
   const day = (value: string) => `${value.slice(8, 10)}/${value.slice(5, 7)}/${value.slice(0, 4)}`;

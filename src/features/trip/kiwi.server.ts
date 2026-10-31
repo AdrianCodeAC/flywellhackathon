@@ -2,7 +2,7 @@
 // The parsing rules live in kiwi.ts; nothing here needs a key or an account.
 import { bookingLinks, type FlightResult, type TripInput } from "./types";
 import { readTripCache, writeTripCache } from "./cache.server";
-import { KIWI_MCP_URL, KIWI_TTL, kiwiArgs, parseKiwi, type KiwiPayload } from "./kiwi";
+import { KIWI_MCP_URL, KIWI_TTL, kiwiArgs, parseKiwi, readStreamJson, type KiwiPayload } from "./kiwi";
 
 export { KIWI_TTL };
 
@@ -10,15 +10,6 @@ function mcpBody(args: Record<string, string | number | boolean>) {
   return JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "search-flight", arguments: args } });
 }
 
-/** The service answers as a stream: pull the single JSON line out of it. */
-export function readStreamJson(text: string): unknown {
-  for (const line of text.split("\n")) {
-    const trimmed = line.trim();
-    if (!trimmed.startsWith("data:")) continue;
-    try { return JSON.parse(trimmed.slice(5).trim()); } catch { /* keep scanning */ }
-  }
-  try { return JSON.parse(text); } catch { return null; }
-}
 
 export function kiwiCacheKey(input: TripInput, currency: string) {
   return `kiwi-v1:${input.origin}:${input.destinationIata ?? input.destination}:${input.departure}:${input.oneWay ? "ow" : input.returnDate}:${input.flexible ? "f3" : "f0"}:${input.adults + input.children}:${input.direct ? "direct" : "any"}:${currency}`;

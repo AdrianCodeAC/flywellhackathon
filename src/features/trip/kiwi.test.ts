@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { kiwiArgs, kiwiTime, parseKiwi, type KiwiPayload } from "./kiwi";
-import { readStreamJson } from "./kiwi.server";
+import { kiwiArgs, kiwiTime, parseKiwi, readStreamJson, type KiwiPayload } from "./kiwi";
 import type { TripInput } from "./types";
 
 const roundTrip: TripInput = {
