@@ -85,7 +85,7 @@
   --palette-steel-soft: oklch(0.955 0.012 250); /* fundaluri ușoare */
   --palette-line: oklch(0.885 0.014 250);       /* contururi */
   --palette-deep: oklch(0.50 0.075 245);        /* linkuri, etichete, butoane secundare */
-  --palette-muted: oklch(0.55 0.03 248);        /* text secundar */
+  --palette-muted: oklch(0.48 0.032 248);        /* text secundar */
   --palette-clay-soft: oklch(0.95 0.025 45);    /* fundal cald */
   --palette-clay-deep: oklch(0.52 0.06 45);     /* text cald */
   --palette-alert: oklch(0.50 0.11 45);         /* avertizări (rust cald, din cocoa/clay) */
