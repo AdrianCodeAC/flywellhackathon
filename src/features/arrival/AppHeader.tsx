@@ -3,11 +3,16 @@ import { useTranslation } from "react-i18next";
 import { Plane, WifiOff } from "lucide-react";
 import { LANGUAGES, setLanguage, syncClientLanguage, type Language } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
+import { Link, useLocation } from "@tanstack/react-router";
 
 /** Sticky header: always-visible EN/RO switcher plus the offline banner. */
 export function AppHeader() {
   const { t } = useTranslation();
   const [offline, setOffline] = useState(false);
+  const location = useLocation();
+  const arrival = location.pathname === "/arrival";
+
+  useEffect(() => { localStorage.setItem("flywell:tab", arrival ? "arrival" : "plan"); }, [arrival]);
 
   // Apply the saved / phone language only after hydration so server and client HTML match.
   useEffect(() => {
@@ -28,13 +33,17 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 pt-[env(safe-area-inset-top)] backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
-        <a href="/arrival" className="flex min-h-11 items-center gap-2.5" aria-label={t("app.title")}>
+        <Link to="/" onClick={() => localStorage.setItem("flywell:tab", "plan")} className="flex min-h-11 items-center gap-2.5" aria-label={t("design.brand")}>
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"><Plane className="h-5 w-5 -rotate-12" /></span>
           <span className="text-xl font-bold">{t("design.brand")}<span className="text-primary">.</span></span>
-        </a>
+        </Link>
         <span className="hidden text-xs font-medium uppercase text-muted-foreground sm:block">{t("design.companion")}</span>
         <LanguageSwitcher />
       </div>
+      <nav aria-label={t("trip.navigation")} className="mx-auto flex max-w-6xl gap-1 px-3 pb-2 sm:px-8">
+        <Button asChild variant={!arrival ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-3 text-sm sm:flex-none"><Link to="/" aria-current={!arrival ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "plan")}>{t("trip.planTab")}</Link></Button>
+        <Button asChild variant={arrival ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-3 text-sm sm:flex-none"><Link to="/arrival" search={{iata:""}} aria-current={arrival ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "arrival")}>{t("trip.arrivalTab")}</Link></Button>
+      </nav>
       {offline && (
         <div
           role="status"

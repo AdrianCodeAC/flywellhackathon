@@ -13,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { registerAppServiceWorker } from "../lib/pwa-register";
+import { TripAuthProvider } from "@/features/trip/auth";
 
 function NotFoundComponent() {
   return (
@@ -127,7 +128,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <TripAuthProvider><Outlet /></TripAuthProvider>
     </QueryClientProvider>
   );
 }
