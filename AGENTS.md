@@ -28,3 +28,4 @@
 - Trip conversations use one owner-scoped row per user and authenticated access; trip search caches store only public destination advice, never chat messages. Why: protects private discussions while sharing nonpersonal searches.
 - Trip discovery uses server functions for airport-exact fare validation, route inventory, price calendars and city thumbnails; pure discovery rules are independently tested. Why: cached metro-city fares cannot prove a route from a particular airport.
 - One-way inputs set returnDate equal to departure as a transport sentinel; UI omits return and shows only daily non-flight estimates. Why: preserves the existing trip-agent input contract without inventing a stay length.
+- All-flight browsing has a dedicated /flights route; selecting a fare hands a validated input to the planner through origin-scoped session storage and a runTrip navigation flag. Why: preserves the search fields while keeping the results page independently navigable.

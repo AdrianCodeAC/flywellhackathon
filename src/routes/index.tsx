@@ -27,5 +27,5 @@ export const Route = createFileRoute("/")({
 function Home(){
   const navigate=useNavigate();
   useEffect(()=>{if(rememberedTab(localStorage.getItem("flywell:tab"))==="arrival")void navigate({to:"/arrival",search:{iata:""},replace:true});},[navigate]);
-  return <TripPlanner runTrip={Route.useSearch().runTrip}/>;
+  return <TripPlanner runTrip={Route.useSearch().runTrip??false}/>;
 }

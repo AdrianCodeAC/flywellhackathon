@@ -37,7 +37,7 @@ export function TripPlanner({runTrip=false}:{runTrip?:boolean}){
     }catch(e){if(!controller.signal.aborted)setError(e instanceof Error?e.message:t("trip.searchError"));}
     finally{if(abort.current===controller)setBusy(false);}
   },[t]);
-  useEffect(()=>{if(!runTrip)return;const raw=sessionStorage.getItem('flywell:chosen-flight');if(!raw)return;sessionStorage.removeItem('flywell:chosen-flight');try{const saved=tripInputSchema.safeParse(JSON.parse(raw));if(saved.success)void search(saved.data);}catch{}},[runTrip,search]);
+  useEffect(()=>{if(!runTrip)return;const raw=sessionStorage.getItem('flywell:chosen-flight');if(!raw)return;try{const saved=tripInputSchema.safeParse(JSON.parse(raw));if(saved.success)void search(saved.data);}catch{}},[runTrip,search]);
   useEffect(()=>{
     if(!user||restored.current===user.id)return;restored.current=user.id;
     void load().then(row=>{if(row&&!abort.current){const saved=tripInputSchema.safeParse(row.trip_input);if(saved.success)void search(saved.data);}}).catch(()=>{});
