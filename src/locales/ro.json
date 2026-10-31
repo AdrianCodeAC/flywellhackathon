@@ -938,23 +938,12 @@
       "middle": "mijloc (B, E)",
       "aisle": "culoar (C, D)"
     },
-    "front": "Față",
-    "middle": "Mijloc",
-    "rear": "Spate",
     "legendBest": "Cele mai bune locuri",
     "legendGood": "Rând bun",
     "legendAvoid": "De evitat",
     "legendExit": "Ieșire",
     "legendWing": "Aripă",
     "comfortOnly": "Sfat de confort — nu are la bază date de siguranță.",
-    "aircraftNote": "Desenat pe un avion obișnuit cu 30 de rânduri (A320 / Boeing 737). Rândurile de la aripă și de la ieșiri diferă pe avionul tău; verifică harta locurilor când îți alegi locul.",
-    "statsTitle": "Ce spun datele despre siguranță",
-    "turbTitle": "Răniri grave din cauza turbulențelor la membrii echipajului fără centură, pe zone ale cabinei (companii din SUA, 2009–2018)",
-    "turbNote": "Din {{total}} de persoane rănite grav de turbulențe, doar {{belted}} pasager purta centura, iar {{rear}}% dintre pasagerii răniți erau în spatele cabinei.",
-    "crashTitle": "Rata deceselor pe treimi ale cabinei în 17 accidente cu supraviețuitori (SUA, 1985–2000)",
-    "crashNote": "Locurile din mijloc, în spate: {{rear}}%; locurile de pe culoar, la mijloc: {{aisle}}%. Eșantionul e mic, iar FAA spune că niciun loc nu e mereu cel mai sigur — fiecare accident e diferit.",
-    "exitTitle": "Contează cât de aproape ești de o ieșire",
-    "exitNote": "Într-un studiu pe 105 accidente, rândul de la ieșire și rândurile de lângă el au avut cele mai mari șanse de supraviețuire; până la {{rows}} rânduri de o ieșire, oamenii au avut încă șanse mai mari să scape dintr-un incendiu.",
-    "bottomLine": "Zborul este foarte sigur. Cel mai mult ajută două lucruri: centura prinsă cât stai pe scaun și să știi unde e cea mai apropiată ieșire."
+    "aircraftNote": "Desenat pe un avion obișnuit cu 30 de rânduri (A320 / Boeing 737). Rândurile de la aripă și de la ieșiri diferă pe avionul tău; verifică harta locurilor când îți alegi locul."
   }
 }
