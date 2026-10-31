@@ -19,21 +19,21 @@ function observed(row:Row,latest:Row[]){
  const link=String(row['link']??'');const date=new URLSearchParams(link.split('?')[1]??'').get('search_date');
  return date&&/^\d{8}$/.test(date)?`${date.slice(4)}-${date.slice(2,4)}-${date.slice(0,2)}T00:00:00Z`:'';
 }
-export async function discover(origin:string,lang:string,includeStop:boolean,base:string,token:string):Promise<Discovery>{
- const key=`discovery-v4:${origin}:${lang}:${includeStop}`;const cached=await readTripCache<Discovery>(key);if(cached)return cached;
+export async function discover(origin:string,lang:string,includeStop:boolean,base:string,token:string,period?:{from:string;to:string}):Promise<Discovery>{
+ const key=`discovery-v5:${origin}:${lang}:${includeStop}:${JSON.stringify(period??null)}`;const cached=await readTripCache<Discovery>(key);if(cached)return cached;
  try{
   const currency=lang==='ro'?'RON':'EUR';
   const [routes,latest,rows,airports]=await Promise.all([directRoutes(origin),api('/v2/prices/latest',{origin,currency:currency.toLowerCase(),limit:'1000',sorting:'price',period_type:'year'},token).catch(()=>[]),Promise.all(['true','false'].map(one_way=>api('/aviasales/v3/prices_for_dates',{origin,currency:currency.toLowerCase(),limit:'1000',unique:'false',sorting:'price',one_way},token))).then(rows=>rows.flat()),fetch(new URL('/data/airports.json',base)).then(r=>r.json()) as Promise<[string,string,string,string,number,number][]> ,includeStop?api('/v1/city-directions',{origin,currency:currency.toLowerCase()},token).catch(()=>[]):Promise.resolve([])]);
   const fares:RouteFare[]=[];
   for(const row of rows){
    const code=String(row['destination_airport']??row['destination']),a=airports.find(a=>a[0]===code);const foundAt=observed(row,latest),price=Number(row['price']),stops=Number(row['transfers']),departure=String(row['departure_at']??'');
-   if(!a||row['origin_airport']!==origin||!recentFare(foundAt)||!Number.isFinite(price)||!(price>0)||!Number.isInteger(stops)||stops<0||stops>(includeStop?1:0)||!Number.isFinite(Date.parse(departure))||departure.slice(0,10)<new Date().toISOString().slice(0,10))continue;
+   if(!a||row['origin_airport']!==origin||!recentFare(foundAt)||!Number.isFinite(price)||!(price>0)||!Number.isInteger(stops)||stops<0||stops>(period?10:includeStop?1:0)||!Number.isFinite(Date.parse(departure))||departure.slice(0,10)<new Date().toISOString().slice(0,10))continue;
    const returnDate=String(row['return_at']??'');const link=String(row['link']??'');
    const f:RouteFare={id:`${code}:${departure}:${returnDate}:${price}`,destinationIata:code,city:a[2]||a[1],country:a[3],foundAt,airline:String(row['airline']??''),departure,returnDate,price,currency,stops,duration:typeof row['duration']==='number'?row['duration']:null,layover:null,arrival:null,score:0,link:link.startsWith('/')&&!link.startsWith('//')?`https://www.aviasales.com${link}`:'https://www.google.com/travel/flights'};f.score=comfortScore(f);fares.push(f);
   }
   // Legacy inventory omits current CRA routes; a recent airport-exact direct fare is stronger evidence.
   for(const fare of fares)if(fare.stops===0)routes.add(fare.destinationIata);
-  const active=reachable(fares,routes,includeStop);const allowed=new Set(active.map(f=>f.destinationIata));const value:Discovery={routes:active,fares:fares.filter(f=>allowed.has(f.destinationIata)).sort((a,b)=>a.price-b.price),unavailable:false,fetchedAt:new Date().toISOString()};await writeTripCache(key,value);return value;
+  const active=reachable(fares,routes,includeStop);const allowed=new Set(active.map(f=>f.destinationIata));const value:Discovery={routes:active,fares:fares.filter(f=>period?f.departure.slice(0,10)>=period.from&&f.departure.slice(0,10)<=period.to&&(!f.returnDate||f.returnDate.slice(0,10)<=period.to):allowed.has(f.destinationIata)).sort((a,b)=>a.price-b.price),unavailable:false,fetchedAt:new Date().toISOString()};await writeTripCache(key,value);return value;
  }catch{return {routes:[],fares:[],unavailable:true,fetchedAt:new Date().toISOString()};}
 }
 export async function priceCalendar(origin:string,destination:string,month:string,lang:string,oneWay:boolean,token:string):Promise<PriceDay[]>{
