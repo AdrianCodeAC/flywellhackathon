@@ -46,6 +46,7 @@ export function loadCard(): MedicalCard {
 export function saveCard(card: MedicalCard) {
   try {
     localStorage.setItem(KEY, JSON.stringify(card));
+    window.dispatchEvent(new Event(CARD_EVENT));
   } catch {
     /* storage unavailable */
   }
