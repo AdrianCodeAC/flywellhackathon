@@ -51,3 +51,5 @@
 - [x] During the flight works fully offline (everything in that tab cached on the phone); remove the medical card block from the During tab (only in account and inside Help).
 - [x] Move seat advice ("Pick the right seat") out of Before you fly into Plan a trip, shown after a destination is chosen.
 - [x] Trip page checklist: progress stays visible while scrolling; a button to tick a whole category at once.
+- [x] AI chats answer only travel/flight topics; long chats scroll to the end.
+- [x] No AI checklist items that repeat fixed ones (e.g. "No visa needed" next to "Your ID card or passport is enough").

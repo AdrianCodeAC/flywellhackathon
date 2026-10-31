@@ -83,12 +83,24 @@ describe("pet entry rules per destination", () => {
   });
 });
 
-import { isPetItem } from "./ai.functions";
+import { isPetItem, repeatsChecklist } from "./ai-dedupe";
 describe("AI pet duplicates", () => {
   it("drops AI checklist items about pets", () => {
     expect(isPetItem({ title: "Pașaport european și microcip pentru animal", source: "euPets" })).toBe(true);
     expect(isPetItem({ title: "Verifică vaccinarea antirabică din timp", source: "euPets" })).toBe(true);
     expect(isPetItem({ title: "Pet passport", source: null })).toBe(true);
     expect(isPetItem({ title: "No e-cigarettes in Thailand", source: null })).toBe(false);
+  });
+});
+
+describe("AI items never repeat the fixed checklist", () => {
+  it("drops 'no visa needed' when an ID card / passport item exists", () => {
+    expect(repeatsChecklist({ title: "No visa needed for a short visit" }, ["idCardOk"])).toBe(true);
+    expect(repeatsChecklist({ title: "Nu ai nevoie de viză pentru Spania" }, ["idCardOk"])).toBe(true);
+    expect(repeatsChecklist({ title: "Lichide în bagajul de mână" }, ["liquids"])).toBe(true);
+  });
+  it("keeps genuinely new, trip-specific items", () => {
+    expect(repeatsChecklist({ title: "E-cigarettes are banned in Thailand" }, ["idCardOk", "liquids"])).toBe(false);
+    expect(repeatsChecklist({ title: "Siesta: shops close 14:00–17:00" }, ["idCardOk"])).toBe(false);
   });
 });

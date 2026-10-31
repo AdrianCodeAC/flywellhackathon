@@ -97,7 +97,7 @@ export function PreflightChat({ input }: { input: PreflightInput | null }) {
         ))}
       </div>
       {(messages.length > 0 || busy) && (
-        <Conversation className="relative mt-5 max-h-[60dvh] min-h-48">
+        <Conversation className="relative mt-5 h-[min(60dvh,34rem)] min-h-64">
           <ConversationContent className="px-0">
             {messages.map((m) => (
               <Message key={m.id} from={m.role} className="w-full">
