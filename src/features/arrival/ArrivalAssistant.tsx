@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useHydrated } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { ArrowDown, Compass, MapPin, Plane } from "lucide-react";
@@ -35,6 +35,7 @@ export function ArrivalAssistant({ iata, embedded = false, onIataChange }: { iat
   const [section, setSection] = useState<ArrivalSection | null>(null);
   const [target, setTarget] = useState<Target | null>(null);
   const [messages, setMessages] = useState<ArrivalMessage[]>([]);
+  const current = useRef("");
 
   // Initial airport: the given code wins, then (standalone only) the last one used.
   useEffect(() => {
@@ -44,10 +45,10 @@ export function ArrivalAssistant({ iata, embedded = false, onIataChange }: { iat
     getAirportByIata(code)
       .then((a) => {
         if (cancelled || !a) return;
-        setAirport((prev) => {
-          if (prev?.iata !== a.iata) { setMessages([]); setSection(null); }
-          return a;
-        });
+        // A different airport starts a fresh chat and closes any open section.
+        if (current.current && current.current !== a.iata) { setMessages([]); setSection(null); }
+        current.current = a.iata;
+        setAirport(a);
         prefetchFood(a);
         prefetchSights(a);
         if (iata && !embedded) setSheetOpen(true);
@@ -58,6 +59,7 @@ export function ArrivalAssistant({ iata, embedded = false, onIataChange }: { iat
 
   const select = (a: Airport) => {
     if (airport?.iata !== a.iata) setMessages([]);
+    current.current = a.iata;
     setAirport(a);
     prefetchFood(a);
     prefetchSights(a);
