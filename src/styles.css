@@ -534,3 +534,29 @@ h1, h2, h3 { letter-spacing: 0; }
 .seat-legend.seat-exit { background: var(--seat-exit); }
 .seat-legend.seat-wing { background: var(--seat-wing); border: 1px solid var(--seat-edge); }
 @media (prefers-reduced-motion: reduce) { .seat { transition: none; } }
+
+/* My trips: trip list, stage tabs and the in-flight tab. Colors come from the element roles above. */
+.trip-start { display: flex; align-items: center; gap: 14px; min-height: 84px; padding: 16px; border-radius: 16px; border: 1px solid var(--border); background: var(--ui-ride-soft); transition: transform 160ms, box-shadow 160ms; }
+.trip-start:hover { transform: translateY(-2px); box-shadow: var(--shadow-travel); }
+.trip-start-warm { background: var(--ui-visit-soft); }
+.trip-start-icon { display: flex; flex-shrink: 0; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; background: var(--ui-button); color: var(--ui-button-text); }
+.trip-start-warm .trip-start-icon { background: var(--ui-food); color: var(--ui-danger-text); }
+.trip-card { display: flex; align-items: center; border-radius: 16px; border: 1px solid var(--border); background: var(--card); transition: box-shadow 160ms, border-color 160ms; }
+.trip-card:hover { border-color: var(--ui-focus); box-shadow: var(--shadow-travel); }
+.trip-card-code { display: flex; flex-shrink: 0; width: 56px; height: 56px; align-items: center; justify-content: center; border-radius: 14px; background: var(--ui-highlight); color: var(--ui-highlight-text); font-weight: 800; letter-spacing: 0.04em; }
+.trip-status { display: inline-block; border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: var(--ui-button-soft); color: var(--ui-button-soft-text); }
+.trip-status-today, .trip-status-away { background: var(--ui-warm-soft); color: var(--ui-food); }
+.trip-status-past { background: var(--muted); color: var(--muted-foreground); }
+.trip-tabs { background: color-mix(in oklab, var(--card) 94%, transparent); border: 1px solid var(--border); box-shadow: var(--shadow-travel); backdrop-filter: blur(8px); }
+.trip-tab { display: flex; min-height: 56px; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 12px; padding: 6px 4px; font-size: 12px; font-weight: 600; line-height: 1.15; text-align: center; color: var(--muted-foreground); transition: background 160ms, color 160ms; }
+.trip-tab:hover { color: var(--foreground); }
+.trip-tab[aria-selected="true"] { background: var(--ui-button); color: var(--ui-button-text); }
+@media (min-width: 640px) { .trip-tab { flex-direction: row; gap: 8px; font-size: 14px; } }
+.trip-offline-chip { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 600; background: var(--ui-highlight); color: var(--ui-highlight-text); }
+.trip-help-tile { display: flex; align-items: center; gap: 12px; min-height: 76px; padding: 14px; border-radius: 16px; border: 1px solid var(--border); background: var(--card); transition: border-color 160ms, transform 160ms; }
+.trip-help-tile:hover { border-color: var(--tile-tone); transform: translateY(-2px); }
+.trip-help-icon { display: flex; flex-shrink: 0; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; background: var(--tile-tone); color: var(--tile-text); }
+.trip-help-calm { --tile-tone: var(--palette-pearl-aqua); --tile-text: var(--palette-green-ink); }
+.trip-help-alert { --tile-tone: var(--ui-danger); --tile-text: var(--ui-danger-text); }
+.trip-help-care { --tile-tone: var(--palette-powder-blush); --tile-text: var(--palette-green-ink); }
+@media (prefers-reduced-motion: reduce) { .trip-start, .trip-help-tile { transition: none; } }

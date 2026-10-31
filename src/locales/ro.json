@@ -786,7 +786,7 @@
     },
     "card": {
       "title": "Fișa mea medicală",
-      "privacy": "Salvată doar pe acest telefon. Nu se trimite nicăieri, deci merge și în modul avion.",
+      "privacy": "Se editează doar din cont. Copia de pe telefon merge și în modul avion.",
       "autosave": "Se salvează automat.",
       "name": "Nume",
       "seat": "Locul",
@@ -806,7 +806,10 @@
         "bloodType": "ex. A+",
         "contactName": "ex. Ana Popescu (sora)",
         "contactPhone": "+40 7…"
-      }
+      },
+      "editInAccount": "Editează în cont",
+      "signInToEdit": "Conectează-te ca să-ți adaugi fișa",
+      "notFilled": "—"
     }
   },
   "account": {
@@ -849,13 +852,13 @@
     "nameSaved": "Salvat",
     "savedTrips": "Călătorii salvate",
     "plannedTrips": "Călătorii planificate",
-    "checklists": "Liste înainte de zbor",
+    "checklists": "Călătoriile mele",
     "tripChat": "Discuția de călătorie",
     "chatSummary": "Mesaje: {{count}} · {{destination}}",
     "continueChat": "Continuă discuția",
     "noChat": "Nicio discuție încă. Planifică o călătorie și întreabă agentul orice.",
     "emptyTrips": "Nicio călătorie salvată. Apasă „Salvează călătoria” pe o călătorie planificată.",
-    "emptyChecklists": "Nicio listă salvată. Apasă „Salvează lista” înainte de zbor.",
+    "emptyChecklists": "Nicio călătorie încă. Adaugă un zbor din „Am deja bilet”.",
     "open": "Deschide",
     "delete": "Șterge",
     "deleteConfirm": "Ștergi „{{title}}”?",
@@ -867,7 +870,11 @@
     "saved": "Salvat în cont",
     "saveError": "Nu s-a putut salva. Încearcă din nou.",
     "loadError": "Elementele salvate nu au putut fi încărcate.",
-    "invalidEmail": "Folosește o adresă de e-mail reală, pe care o poți deschide."
+    "invalidEmail": "Folosește o adresă de e-mail reală, pe care o poți deschide.",
+    "medicalPrivacy": "Salvată în cont și păstrată pe acest telefon, ca butonul Ajutor să o arate și în modul avion. Doar tu o poți vedea.",
+    "medicalSaving": "Se salvează…",
+    "medicalSaved": "Salvată în cont",
+    "medicalError": "Nu s-a putut salva în cont — rămâne pe acest telefon."
   },
   "seats": {
     "eyebrow": "Unde să stai",
@@ -945,5 +952,59 @@
     "legendWing": "Aripă",
     "comfortOnly": "Sfat de confort — nu are la bază date de siguranță.",
     "aircraftNote": "Desenat pe un avion obișnuit cu 30 de rânduri (A320 / Boeing 737). Rândurile de la aripă și de la ieșiri diferă pe avionul tău; verifică harta locurilor când îți alegi locul."
+  },
+  "trips": {
+    "eyebrow": "Zborurile tale",
+    "title": "Călătoriile mele",
+    "subtitle": "Fiecare zbor adăugat are propriile secțiuni Înainte de zbor, În timpul zborului și La sosire.",
+    "planHint": "Găsește zboruri, cazare și costul călătoriei.",
+    "ticketHint": "Scanează cartea de îmbarcare sau scrie zborul.",
+    "empty": "Nicio călătorie încă. Planifică una sau adaugă un zbor deja rezervat.",
+    "signInSync": "Conectează-te ca să ai călătoriile și fișa medicală pe orice telefon.",
+    "signIn": "Conectează-te",
+    "synced": "Salvată în cont",
+    "deviceOnly": "Doar pe acest telefon",
+    "status": {
+      "upcoming": "Urmează",
+      "today": "Zbori azi",
+      "away": "În călătorie",
+      "past": "Trecută"
+    },
+    "delete": "Șterge călătoria",
+    "deleteConfirm": "Ștergi {{title}} din călătoriile tale?",
+    "stages": "Etapele călătoriei",
+    "tab": {
+      "before": "Înainte de zbor",
+      "during": "În timpul zborului",
+      "arrival": "La sosire"
+    },
+    "switch": "Schimbă călătoria",
+    "notFound": "Această călătorie nu este pe acest telefon.",
+    "backToTrips": "Călătoriile mele",
+    "arrivalIn": "La sosire în {{city}}",
+    "addToTrips": "Adaugă la călătoriile mele",
+    "adding": "Se adaugă…",
+    "addError": "Nu am putut adăuga zborul. Încearcă din nou.",
+    "during": {
+      "subtitle": "Totul de aici merge și în modul avion",
+      "help": "Ajutor la bord",
+      "cardReady": "Fișa ta medicală este pe acest telefon, gata de arătat echipajului.",
+      "cardMissing": "Adaugă fișa medicală în cont înainte de zbor, ca să o ai aici și în modul avion.",
+      "showCard": "Arată fișa",
+      "editCard": "Editează în cont",
+      "signInCard": "Conectează-te ca să o adaugi",
+      "tipsTitle": "La bord",
+      "tips": [
+        "Ține centura prinsă cât timp stai pe scaun.",
+        "Bea apă des și limitează alcoolul și cafeaua.",
+        "Ridică-te, întinde-te și mișcă gleznele la fiecare oră-două.",
+        "La coborâre, înghite, cască sau mestecă, ca să scadă presiunea din urechi."
+      ]
+    }
+  },
+  "ticket": {
+    "eyebrow": "Am deja bilet",
+    "title": "Adaugă zborul tău",
+    "subtitle": "Scanează cartea de îmbarcare sau scrie detaliile zborului. Primești tot ce-ți trebuie înainte, în timpul și după zbor, salvat în Călătoriile mele."
   }
 }

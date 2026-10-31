@@ -786,7 +786,7 @@
     },
     "card": {
       "title": "My medical card",
-      "privacy": "Saved only on this phone. Nothing is sent anywhere, so it works in airplane mode.",
+      "privacy": "Edited only in your account. This copy stays on the phone, so it works in airplane mode.",
       "autosave": "Saved automatically.",
       "name": "Name",
       "seat": "Seat",
@@ -806,7 +806,10 @@
         "bloodType": "e.g. A+",
         "contactName": "e.g. Ana Popescu (sister)",
         "contactPhone": "+40 7…"
-      }
+      },
+      "editInAccount": "Edit in my account",
+      "signInToEdit": "Sign in to add your card",
+      "notFilled": "—"
     }
   },
   "account": {
@@ -849,13 +852,13 @@
     "nameSaved": "Saved",
     "savedTrips": "Saved trips",
     "plannedTrips": "Planned trips",
-    "checklists": "Before-you-fly checklists",
+    "checklists": "My trips",
     "tripChat": "Trip chat",
     "chatSummary": "Messages: {{count}} · {{destination}}",
     "continueChat": "Continue the chat",
     "noChat": "No trip chat yet. Plan a trip and ask the agent anything.",
     "emptyTrips": "No saved trips yet. Tap “Save trip” on a planned trip.",
-    "emptyChecklists": "No saved checklists yet. Tap “Save checklist” before you fly.",
+    "emptyChecklists": "No trips yet. Add a flight with “I already have a ticket”.",
     "open": "Open",
     "delete": "Delete",
     "deleteConfirm": "Delete “{{title}}”?",
@@ -867,7 +870,11 @@
     "saved": "Saved in your account",
     "saveError": "Could not save. Try again.",
     "loadError": "Saved items could not be loaded.",
-    "invalidEmail": "Use a real email address you can open."
+    "invalidEmail": "Use a real email address you can open.",
+    "medicalPrivacy": "Saved in your account and kept on this phone, so the Help button shows it even in airplane mode. Only you can see it.",
+    "medicalSaving": "Saving…",
+    "medicalSaved": "Saved in your account",
+    "medicalError": "Couldn't save to your account — it's still on this phone."
   },
   "seats": {
     "eyebrow": "Where to sit",
@@ -945,5 +952,59 @@
     "legendWing": "Wing",
     "comfortOnly": "Comfort tip — there is no safety data behind it.",
     "aircraftNote": "Drawn on a typical 30-row plane (A320 / Boeing 737). Wing and exit rows differ on your aircraft; check the seat map when you choose your seat."
+  },
+  "trips": {
+    "eyebrow": "Your flights",
+    "title": "My trips",
+    "subtitle": "Each flight you add gets its own Before you fly, During the flight and On arrival.",
+    "planHint": "Find flights, a place to stay and the cost.",
+    "ticketHint": "Scan your boarding pass or type your flight.",
+    "empty": "No trips yet. Plan one, or add a flight you have already booked.",
+    "signInSync": "Sign in to keep your trips and medical card on every phone.",
+    "signIn": "Sign in",
+    "synced": "Saved in your account",
+    "deviceOnly": "Only on this phone",
+    "status": {
+      "upcoming": "Upcoming",
+      "today": "Flying today",
+      "away": "On the trip",
+      "past": "Past"
+    },
+    "delete": "Remove trip",
+    "deleteConfirm": "Remove {{title}} from your trips?",
+    "stages": "Trip stages",
+    "tab": {
+      "before": "Before you fly",
+      "during": "During the flight",
+      "arrival": "On arrival"
+    },
+    "switch": "Switch trip",
+    "notFound": "This trip isn't on this phone.",
+    "backToTrips": "My trips",
+    "arrivalIn": "On arrival in {{city}}",
+    "addToTrips": "Add to my trips",
+    "adding": "Adding…",
+    "addError": "Could not add this flight. Please try again.",
+    "during": {
+      "subtitle": "Everything here works in airplane mode",
+      "help": "Help on board",
+      "cardReady": "Your medical card is on this phone, ready to show the crew.",
+      "cardMissing": "Add your medical card in your account before you fly, so it opens here even in airplane mode.",
+      "showCard": "Show my card",
+      "editCard": "Edit in my account",
+      "signInCard": "Sign in to add it",
+      "tipsTitle": "On board",
+      "tips": [
+        "Keep your seat belt fastened whenever you are seated.",
+        "Drink water regularly and go easy on alcohol and coffee.",
+        "Stand up, stretch and move your ankles every hour or two.",
+        "On descent, swallow, yawn or chew to ease the pressure in your ears."
+      ]
+    }
+  },
+  "ticket": {
+    "eyebrow": "I already have a ticket",
+    "title": "Add your flight",
+    "subtitle": "Scan your boarding pass or type the flight details. You get everything for before, during and after the flight, saved in My trips."
   }
 }

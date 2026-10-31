@@ -28,6 +28,7 @@ export function MedicalCardEditor({ userId }: { userId: string }) {
 
   useEffect(() => {
     setCard(loadCard());
+    if (window.location.hash === "#medical-card") requestAnimationFrame(() => document.getElementById("medical-card")?.scrollIntoView({ block: "start" }));
     // The account copy may arrive after the page opens; don't overwrite what is being typed.
     const refresh = () => { if (!editing.current) setCard(loadCard()); };
     window.addEventListener(CARD_EVENT, refresh);
