@@ -29,7 +29,7 @@ const PHOTO_HOST = /(^|\.)(upload|thumb)\.wikimedia\.org$/i;
 // Logos, flags, maps and drawings sit next to photos in the same folders but say nothing about how a city looks.
 const NOT_A_PHOTO = /(^|[_\-.\/])(logo|logos|flag|flags|map|maps|locator|seal|seals|crest|crests|banner|banners|icon|icons|diagram|diagrams|chart|charts|illustration|illustrations|sketch|sketches|drapel|stem[aă]|hart[aă])([_\-.\/]|$)|coat[- ]of[- ]arms|position[- ]map|location[- ]map/i;
 
-export function cleanPhotoUrl(url: string) { return url.split('?')[0]; }
+export function cleanPhotoUrl(url: string): string { return url.split('?')[0] ?? url; }
 
 export function isWikimediaPhoto(url: string | undefined | null): url is string {
   if (!url || !/^https:\/\//i.test(url)) return false;
@@ -62,8 +62,9 @@ export function pickCommonsPhoto(pages: CommonsPage[], city: string): string | n
     const info = page.imageinfo?.[0];
     return !!info && info.mime === 'image/jpeg' && (info.width ?? 0) >= 600 && isWikimediaPhoto(info.thumburl) && (page.title ?? '').toLowerCase().includes(wanted);
   });
-  if (!usable.length) return null;
-  const source = usable[0].imageinfo?.[0]?.thumburl;
+  const first = usable[0];
+  const source = first?.imageinfo?.[0]?.thumburl;
   return source ? cleanPhotoUrl(source) : null;
+
 }
 
