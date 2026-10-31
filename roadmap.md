@@ -24,7 +24,7 @@
 - [x] Creative visual redesign: shared theme, arrival page, search and options, phone/desktop EN/RO verification.
 
 - [x] Trip planner: spec, navigation, search, real flight API, AI advice, costs, extras, adjustment chat, 6h cache, EN/RO 375px tests.
-- [ ] Verify account-saved adjustment chat end-to-end — waiting for a signed-in user; no auth users exist to mint a test session.
+- [ ] Verify account-saved adjustment chat end-to-end — needs the AI key on the live site.
 - [x] Update trip search: From/price-backed To, real price calendar and one-way, flight recommendations; verified CRA/OTP/BGY EN/RO at 375px and real CRA–BGY/CRA–MAD flows.
 - Provider limits: absent cached price does not prove no flight; legacy route inventory misses CRA routes, so recent airport-exact direct fares supplement it. Price-drop groups remain hidden without a real historical baseline.
 - [x] Make To free autocomplete with route hints; all-flights period page, sorting/filters/grouping, trip handoff; checked CRA/OTP 12–16 Nov EN/RO 375px (2 CRA fares, 18 OTP fares), real CRA–MAD handoff.
@@ -36,3 +36,5 @@
 - [x] Weather + what to wear: now on the arrival page, flight-day forecast in pre-flight results (Open-Meteo).
 - [x] Airport guide after the pre-flight checklist: only the steps this passenger needs (check-in/bag drop, security, passport control, gate; on arrival passport, baggage claim, customs, exit/transport), drawn on a virtual airport map from OpenStreetMap, saved on the phone for offline use.
 - [x] In-flight help (panic) button: animated calm screen with breathing, show-to-crew card, symptom guide and on-device medical card; works in airplane mode.
+
+- [x] Accounts: header sign-in button, /auth (Google, Apple first on iPhone, Lovable, email/password + reset), profile (name, photo), /account with saved planned trips, saved pre-flight checklists and the trip chat.

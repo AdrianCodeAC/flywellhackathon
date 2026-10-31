@@ -19,6 +19,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Shimmer } from "@/components/ai-elements/shimmer";
 import { AirportGuide } from "@/features/airport/AirportGuide";
+import { SaveButton } from "@/features/account/SaveButton";
+import { OPEN_PREFLIGHT_KEY } from "@/features/account/device";
 import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
 import { AirlineBaggage } from "./AirlineBaggage";
 import { JetLagCard } from "./JetLagCard";
@@ -145,9 +147,35 @@ export function PreflightChecklist({
             {input.airline && ` · ${input.airline}`}
           </p>
         </div>
-        <Button variant="outline" className="min-h-11" onClick={onEdit}>
-          {t("trip.edit")}
-        </Button>
+        <div className="flex flex-wrap items-start gap-2">
+          <SaveButton
+            kind="preflight"
+            itemKey={storageKey}
+            title={`${input.origin.city} → ${input.destination.city}`}
+            travelDate={input.date}
+            label={t("account.saveChecklist")}
+            returnTo={`/preflight?from=${input.origin.iata}&to=${input.destination.iata}&date=${input.date}`}
+            onSignedOut={() => sessionStorage.setItem(OPEN_PREFLIGHT_KEY, JSON.stringify(input))}
+            onLoaded={(stored) => {
+              const saved = (stored as { ticks?: unknown } | null)?.ticks;
+              if (!Array.isArray(saved)) return;
+              const extra = saved.filter((v): v is string => typeof v === "string");
+              setTicks((current) => {
+                const next = [...new Set([...current, ...extra])];
+                try {
+                  localStorage.setItem(storageKey, JSON.stringify(next));
+                } catch {
+                  /* storage unavailable */
+                }
+                return next;
+              });
+            }}
+            data={{ input, ticks: ticks.filter((id) => rows.some((r) => r.id === id)), total: rows.length }}
+          />
+          <Button variant="outline" className="min-h-11" onClick={onEdit}>
+            {t("trip.edit")}
+          </Button>
+        </div>
       </div>
 
       <div className="mt-5" aria-live="polite">

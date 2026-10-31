@@ -22,6 +22,20 @@
       "when": 1793406831969,
       "tag": "0002_trip_conversation_and_cache",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793445328475,
+      "tag": "0003_accounts_profiles_saved_trips",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793445343431,
+      "tag": "0004_avatars_private_read",
+      "breakpoints": true
     }
   ]
 }
