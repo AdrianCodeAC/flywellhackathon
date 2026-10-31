@@ -4,3 +4,4 @@
 - Discovery uses server functions for airport-exact fare validation, route inventory, price calendars and city thumbnails; pure discovery rules are tested. Why: cached metro-city fares cannot prove a route from a particular airport.
 - One-way inputs set returnDate equal to departure as a transport sentinel; UI omits return and shows only daily non-flight estimates. Why: keeps the trip-agent input contract without inventing a stay length.
 - /flights browses all fares; selecting one hands a validated input to the planner via origin-scoped session storage and a runTrip flag. Why: keeps search fields while the results page stays navigable.
+- Live fares from a hosted Google Flights reader (SEARCHAPI_KEY or SERPAPI_KEY) are tried before the cached Travelpayouts fares, and every result is labelled live or cached. Why: the user wants accurate prices, and a missing key must never break the search.
