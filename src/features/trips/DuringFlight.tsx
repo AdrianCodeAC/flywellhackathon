@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckCircle2, WifiOff } from "lucide-react";
 import { PanicButton } from "@/features/inflight/PanicButton";
-import { JetLagCard } from "@/features/preflight/JetLagCard";
 import { keepPagesOffline, type OfflineState } from "@/lib/offline-pages";
 import type { MyTrip } from "./model";
 
@@ -34,7 +33,6 @@ export function DuringFlight({ trip }: { trip: MyTrip }) {
         <p className="text-sm text-muted-foreground">{t("trips.during.helpHint")}</p>
       </div>
 
-      <JetLagCard input={trip.input} />
 
       <section className="mt-8">
         <h3 className="text-lg font-semibold">{t("trips.during.tipsTitle")}</h3>

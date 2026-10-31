@@ -57,3 +57,4 @@
 - [x] Help → Call the crew: phone vibrates and plays a ring to get attention.
 - [ ] Plan a trip: live, non-cached flight prices — provider, parser, fallback and labels are built and tested; waiting on a provider key (SEARCHAPI_KEY or SERPAPI_KEY) added to the deployment.
 - [ ] Recolor to the new palette (navy, steel, mint, plum, gold) with much less pink, and switch the typeface to Inter everywhere.
+- [x] Jet lag coach: show in Before you fly tab of a trip, not During
