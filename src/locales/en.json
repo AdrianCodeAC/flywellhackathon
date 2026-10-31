@@ -492,6 +492,9 @@
         "title": "EU rights: depends on the airline",
         "detail": "Flights into the EU are covered by Regulation 261/2004 only if the airline is an EU airline. Keep receipts and the boarding pass if something goes wrong."
       }
-    }
+    },
+    "offlineAnswer": "The AI agent is not available right now, so here is what the official rules say:",
+    "offlineNoMatch": "The AI agent is not available right now and I could not match your question to an official rule. Try asking about documents, liquids, batteries, baggage, customs or delays.",
+    "offlineNoTrip": "The AI agent is not available right now. Fill in your flight above, or ask about liquids, batteries, baggage, customs or delays."
   }
 }

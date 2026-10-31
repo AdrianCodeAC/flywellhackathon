@@ -31,3 +31,4 @@
 - All-flight browsing has a dedicated /flights route; selecting a fare hands a validated input to the planner through origin-scoped session storage and a runTrip navigation flag. Why: preserves the search fields while keeping the results page independently navigable.
 
 - Pre-flight lives in src/features/preflight; rules.ts builds the checklist deterministically and only cites the hand-checked SOURCES catalogue; the AI adds at most 6 marked items and may cite sources only by id. Why: official-regulation advice must not depend on the AI or on model-invented URLs.
+- Arrival/pre-flight AI uses the Lovable gateway when LOVABLE_API_KEY exists, else Groq (GROQ_API_KEY in git-ignored .env.local) for free local development. Why: the Lovable key is only available on the deployment.

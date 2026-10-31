@@ -492,6 +492,9 @@
         "title": "Drepturi UE: depinde de companie",
         "detail": "Zborurile spre UE sunt acoperite de Regulamentul 261/2004 doar dacă operatorul este o companie din UE. Păstrează bonurile și cartea de îmbarcare dacă apare o problemă."
       }
-    }
+    },
+    "offlineAnswer": "Agentul AI nu este disponibil acum, așa că iată ce spun regulile oficiale:",
+    "offlineNoMatch": "Agentul AI nu este disponibil acum și nu am găsit o regulă oficială pentru întrebarea ta. Întreabă despre acte, lichide, baterii, bagaje, vamă sau întârzieri.",
+    "offlineNoTrip": "Agentul AI nu este disponibil acum. Completează zborul mai sus sau întreabă despre lichide, baterii, bagaje, vamă sau întârzieri."
   }
 }

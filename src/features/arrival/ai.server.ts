@@ -24,9 +24,21 @@ function responsesOptions() {
   };
 }
 
+/** Free fallback for local development: Groq's OpenAI-compatible API (GROQ_API_KEY in .env.local). */
+const GROQ_URL = "https://api.groq.com/openai/v1";
+const GROQ_MODEL = "openai/gpt-oss-120b";
+
+/** Lovable AI Gateway when deployed; Groq when only a Groq key is configured. */
 function gatewayModel() {
   const apiKey = process.env["LOVABLE_API_KEY"];
-  if (!apiKey) throw new Error("AI is not configured");
+  if (!apiKey) {
+    const groqKey = process.env["GROQ_API_KEY"];
+    if (!groqKey) throw new Error("AI is not configured");
+    return {
+      model: createOpenAI({ baseURL: GROQ_URL, apiKey: groqKey }).chat(GROQ_MODEL),
+      providerOptions: {},
+    };
+  }
   const run = createLovableAiGatewayRunIdFetch();
   const provider = createOpenAI({
     baseURL: GATEWAY_URL,
@@ -34,7 +46,7 @@ function gatewayModel() {
     headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
     fetch: run.fetch,
   });
-  return provider.responses(MODEL);
+  return { model: provider.responses(MODEL), providerOptions: responsesOptions() };
 }
 
 function userTurn(prompt: string): ModelMessage[] {
@@ -44,10 +56,9 @@ function userTurn(prompt: string): ModelMessage[] {
 /** Plain-text answer, streamed and consumed server-side. */
 export async function askText(instructions: string, prompt: string): Promise<string> {
   const result = streamText({
-    model: gatewayModel(),
+    ...gatewayModel(),
     instructions,
     messages: userTurn(prompt),
-    providerOptions: responsesOptions(),
   });
   return (await result.text) ?? "";
 }
@@ -67,11 +78,10 @@ export async function askObject<S extends z.ZodTypeAny>(
   prompt: string,
 ): Promise<z.infer<S>> {
   const result = streamText({
-    model: gatewayModel(),
+    ...gatewayModel(),
     instructions,
     messages: userTurn(prompt),
     output: Output.object({ schema }),
-    providerOptions: responsesOptions(),
   });
   try {
     return await result.output;

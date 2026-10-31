@@ -16,6 +16,7 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { Shimmer } from "@/components/ai-elements/shimmer";
 import { askPreflight } from "./ai.functions";
+import { matchRules } from "./fallback";
 import { SOURCES, describeTrip, type PreflightInput, type SourceId } from "./rules";
 
 interface ChatMessage {
@@ -57,8 +58,19 @@ export function PreflightChat({ input }: { input: PreflightInput | null }) {
         { id: crypto.randomUUID(), role: "assistant", text: answer.text, sources: answer.sources },
       ]);
     } catch {
-      setError(t("preflight.chatError"));
-      setDraft(q);
+      // AI unavailable (or not configured locally): answer from the official checklist rules.
+      const rules = matchRules(q, input);
+      const text = rules.length
+        ? [
+            t("preflight.offlineAnswer"),
+            ...rules.map(
+              (r) =>
+                `**${t(`preflight.rule.${r.key}.title`, r.params ?? {})}** — ${t(`preflight.rule.${r.key}.detail`, r.params ?? {})}`,
+            ),
+          ].join("\n\n")
+        : t(input ? "preflight.offlineNoMatch" : "preflight.offlineNoTrip");
+      const sources = [...new Set(rules.flatMap((r) => (r.source ? [r.source] : [])))];
+      setMessages([...next, { id: crypto.randomUUID(), role: "assistant", text, sources }]);
     } finally {
       setBusy(false);
     }

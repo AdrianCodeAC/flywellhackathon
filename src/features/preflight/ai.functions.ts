@@ -27,6 +27,10 @@ export const chatAnswerSchema = z.object({
 });
 export type PreflightAnswer = z.infer<typeof chatAnswerSchema>;
 
+/** Some models write Romanian with cedilla ş/ţ; the app uses comma-below ș/ț. */
+const fixRo = (text: string) =>
+  text.replace(/ş/g, "ș").replace(/Ş/g, "Ș").replace(/ţ/g, "ț").replace(/Ţ/g, "Ț");
+
 const sourceList = SOURCE_IDS.map((id) => `${id}: ${SOURCES[id].name} (${SOURCES[id].url})`).join(
   "\n",
 );
@@ -56,13 +60,19 @@ export const preflightAdvice = createServerFn({ method: "POST" })
       adviceSchema,
       rules(data.lang) +
         " Return up to 6 checklist items that are specific to this trip (destination entry rules, the airline's known cabin-bag policy, " +
-        "local rules at the destination such as banned medicines or e-cigarettes, seasonal events, strikes you know are common). " +
+        "local rules at the destination such as banned medicines or e-cigarettes, weather or seasonal conditions). Do not speculate about strikes or events you cannot confirm. " +
         "Do NOT repeat generic topics already covered: " +
         data.covered.join(", ") +
-        ". Each detail at most 40 words. Return an empty list rather than guessing.",
+        ". Write BOTH title and detail in the response language. Each detail at most 40 words. " +
+        "Set source to null unless one of the listed sources directly covers the item. Return an empty list rather than guessing.",
       describeTrip(data),
     );
-    return { items: advice.items.filter((i) => i.title.trim() && i.detail.trim()).slice(0, 6) };
+    return {
+      items: advice.items
+        .filter((i) => i.title.trim() && i.detail.trim())
+        .slice(0, 6)
+        .map((i) => ({ ...i, title: fixRo(i.title), detail: fixRo(i.detail) })),
+    };
   });
 
 const askInput = z.object({
@@ -95,5 +105,5 @@ export const askPreflight = createServerFn({ method: "POST" })
         .filter(Boolean)
         .join("\n\n"),
     );
-    return { text: answer.text.trim(), sources: [...new Set(answer.sources)] };
+    return { text: fixRo(answer.text.trim()), sources: [...new Set(answer.sources)] };
   });

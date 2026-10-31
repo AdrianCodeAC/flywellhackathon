@@ -105,3 +105,22 @@ describe("pre-flight checklist", () => {
     }
   });
 });
+
+describe("offline chat answers", () => {
+  it("matches common questions to the right rule", async () => {
+    const { matchRules } = await import("./fallback");
+    const first = (q: string, input: PreflightInput | null = null) => matchRules(q, input)[0]?.key;
+    expect(first("Pot lua un parfum de 150 ml în bagajul de mână?")).toBe("liquids");
+    expect(first("Can I take my power bank?")).toBe("powerBank");
+    expect(first("Zborul meu a întârziat 4 ore. Ce drepturi am?", trip())).toBe("eu261");
+    expect(first("Îmi ajunge buletinul?", trip())).toBe("idCardOk");
+    expect(
+      first(
+        "Îmi ajunge buletinul?",
+        trip({ destination: { iata: "LTN", city: "London", countryCode: "GB" } }),
+      ),
+    ).toBe("passportNeeded");
+    expect(matchRules("Îmi ajunge buletinul?", null)).toEqual([]);
+    expect(matchRules("hello", trip())).toEqual([]);
+  });
+});
