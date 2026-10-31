@@ -60,4 +60,4 @@
 - [x] Jet lag coach: show in Before you fly tab of a trip, not During
 - [x] Replace the pink accent with pine #2E7D6B (gold stays the warm accent) and make flight cards show real city photos (Wikimedia thumbnail host fixed); checked 22 destinations EN/RO, 375px.
 - [x] All surfaces cream (page #F4EDE1, cards #FBF6EC, fields #F0E7D7): no mint, no pure-white panel on cream, no pink; checked EN/RO 375px.
-- [ ] Plan a trip: explicit round-trip option; a round trip saves BOTH legs (outbound and return) to My trips.
+- [x] Plan a trip: explicit round-trip choice (Dus-întors · Doar dus) and a round trip saves BOTH legs to My trips (outbound + home-bound, each with its own tabs); checked CRA–BGY 25–29 Nov in Romanian at 375px.
