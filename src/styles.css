@@ -127,9 +127,9 @@
   --ui-ride: var(--palette-green-deep);
   --ui-ride-soft: var(--palette-green-soft);
   --ui-visit: var(--palette-blush-deep);
-  --ui-visit-soft: color-mix(in oklch, var(--palette-powder-blush) 25%, var(--palette-white));
+  --ui-visit-soft: color-mix(in oklab, var(--palette-powder-blush) 25%, var(--palette-white));
   --ui-ask: var(--palette-green-ink);
-  --ui-ask-soft: color-mix(in oklch, var(--palette-aquamarine) 45%, var(--palette-white));
+  --ui-ask-soft: color-mix(in oklab, var(--palette-aquamarine) 45%, var(--palette-white));
   /* Umbră */
   --ui-shadow: 0 12px 35px oklch(0.27 0.04 178 / 9%);
 
@@ -297,15 +297,15 @@ h1, h2, h3 { letter-spacing: 0; }
 
 /* Airport guide: virtual airport map drawn from OpenStreetMap geometry. Colors come from the palette above. */
 :root {
-  --map-ground: color-mix(in oklch, var(--palette-aquamarine) 18%, var(--palette-white));
+  --map-ground: color-mix(in oklab, var(--palette-aquamarine) 18%, var(--palette-white));
   --map-apron: oklch(0.93 0.012 176);
   --map-taxiway: oklch(0.88 0.02 176);
   --map-runway: var(--palette-green-ink);
   --map-runway-line: var(--palette-white);
   --map-terminal: var(--palette-white);
   --map-terminal-edge: var(--palette-green-deep);
-  --map-departures: color-mix(in oklch, var(--palette-pearl-aqua) 40%, var(--palette-white));
-  --map-arrivals: color-mix(in oklch, var(--palette-powder-blush) 35%, var(--palette-white));
+  --map-departures: color-mix(in oklab, var(--palette-pearl-aqua) 40%, var(--palette-white));
+  --map-arrivals: color-mix(in oklab, var(--palette-powder-blush) 35%, var(--palette-white));
   --map-gate: var(--palette-green-ink);
   --map-gate-text: var(--palette-white);
   --map-mine: var(--palette-grapefruit);
@@ -317,18 +317,18 @@ h1, h2, h3 { letter-spacing: 0; }
   --map-services: var(--palette-blush-deep);
   --map-toilets: var(--palette-green-ink);
   --map-gates: var(--map-gate);
-  --map-grass-dot: color-mix(in oklch, var(--palette-pearl-aqua) 45%, var(--palette-white));
+  --map-grass-dot: color-mix(in oklab, var(--palette-pearl-aqua) 45%, var(--palette-white));
   --map-apron-edge: var(--palette-green-line);
   --map-taxi-line: var(--palette-powder-blush);
   --map-terminal-shade: var(--palette-green-soft);
   --map-departures-shade: var(--palette-pearl-aqua);
   --map-arrivals-shade: var(--palette-powder-blush);
-  --map-wall: color-mix(in oklch, var(--palette-green-deep) 70%, var(--palette-pearl-aqua));
+  --map-wall: color-mix(in oklab, var(--palette-green-deep) 70%, var(--palette-pearl-aqua));
   --map-skylight: oklch(1 0 0 / 0.25);
   --map-building-shadow: oklch(0.27 0.04 178 / 0.25);
   --map-plane: var(--palette-white);
   --map-plane-edge: var(--palette-green-muted);
-  --map-step-passed: color-mix(in oklch, var(--palette-green-deep) 55%, var(--palette-pearl-aqua));
+  --map-step-passed: color-mix(in oklab, var(--palette-green-deep) 55%, var(--palette-pearl-aqua));
   --map-frame-shadow: 0 12px 30px -16px oklch(0.27 0.04 178 / 0.45);
   --map-control-shadow: 0 4px 14px -4px oklch(0.27 0.04 178 / 0.35);
 }
@@ -437,7 +437,7 @@ h1, h2, h3 { letter-spacing: 0; }
   --help-bg: oklch(0.22 0.035 180);
   --help-bg-2: oklch(0.34 0.06 172);
   --help-fg: var(--palette-white);
-  --help-muted: color-mix(in oklch, var(--palette-aquamarine) 55%, var(--palette-white));
+  --help-muted: color-mix(in oklab, var(--palette-aquamarine) 55%, var(--palette-white));
   --help-panel: oklch(1 0 0 / 8%);
   --help-panel-edge: oklch(1 0 0 / 16%);
   --help-calm: var(--palette-pearl-aqua);
