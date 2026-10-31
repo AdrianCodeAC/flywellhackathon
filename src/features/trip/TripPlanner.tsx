@@ -7,15 +7,19 @@ import cityImage from "@/assets/arrival-craiova.jpg";
 import { TripSearch } from "./TripSearch";
 import { TripResults } from "./TripResults";
 import { tripInputSchema, type Destination, type TripEvent, type TripInput, type TripResult } from "./types";
+import { useTripUser } from "./auth";
+import { useServerFn } from "@tanstack/react-start";
+import { loadTripConversation } from "./conversation.functions";
 
 export function TripPlanner(){
   const {t}=useTranslation();const [input,setInput]=useState<TripInput>();const [result,setResult]=useState<TripResult>();const [busy,setBusy]=useState(false),[editing,setEditing]=useState(true),[error,setError]=useState("");const [suggestions,setSuggestions]=useState<Destination[]>([]);
   const abort=useRef<AbortController|null>(null);const resultRef=useRef<HTMLDivElement>(null);
+  const user=useTripUser();const load=useServerFn(loadTripConversation);const restored=useRef<string|null>(null);
   useEffect(()=>()=>abort.current?.abort(),[]);
   const search=useCallback(async(raw:TripInput,preference?:string)=>{
     const parsed=tripInputSchema.safeParse(raw);if(!parsed.success){setError(t("trip.invalidInput"));return;}
     abort.current?.abort();const controller=new AbortController();abort.current=controller;
-    setInput(raw);setResult(previous=>preference?previous:undefined);setError("");setBusy(true);setEditing(false);setSuggestions([]);
+    setInput(raw);setError("");setBusy(true);setEditing(false);setSuggestions([]);
     try{
       const response=await fetch("/api/trip",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...raw,preference}),signal:controller.signal});
       if(!response.ok||!response.body)throw new Error(t("trip.searchError"));
@@ -33,6 +37,10 @@ export function TripPlanner(){
     }catch(e){if(!controller.signal.aborted)setError(e instanceof Error?e.message:t("trip.searchError"));}
     finally{if(abort.current===controller)setBusy(false);}
   },[t]);
+  useEffect(()=>{
+    if(!user||restored.current===user.id)return;restored.current=user.id;
+    void load().then(row=>{if(row){const saved=tripInputSchema.safeParse(row.trip_input);if(saved.success)void search(saved.data);}}).catch(()=>{});
+  },[user,load,search]);
   return <><AppHeader/>
     {editing&&<section className="arrival-hero trip-hero"><img src={cityImage} alt="" className="arrival-hero-image" width={1920} height={1088} fetchPriority="high"/><div className="arrival-hero-shade"/><div className="arrival-hero-content"><p className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase"><Plane className="size-4"/>{t("trip.eyebrow")}</p><h1 className="font-display text-5xl font-normal sm:text-7xl">{t("trip.title")}</h1><p className="mt-4 max-w-md leading-relaxed text-hero-foreground/90">{t("trip.subtitle")}</p></div><span className="arrival-photo-caption"><MapPin className="size-3"/>{t("design.photoLocation")}</span></section>}
     <main className="mx-auto max-w-6xl px-5 pb-[max(3rem,env(safe-area-inset-bottom))] pt-8 sm:px-8">
