@@ -7,7 +7,7 @@
 import { cachedText, DAY } from "@/features/arrival/content-cache.server";
 import { loggedFetch } from "@/features/arrival/external-http";
 import { nominatimQueued } from "@/features/arrival/place-sources.server";
-import { isPassengerTerminal, parseOsmMap, type AirportLayout, type OsmElement } from "./layout";
+import { isPassengerTerminal, parseOsmMap, terminalWayBoxes, type AirportLayout, type OsmElement } from "./layout";
 
 const USER_AGENT = "Flywell/1.0 (+https://flywellhackathon.lovable.app; airport passenger guide)";
 type Box = [number, number, number, number]; // south, west, north, east
@@ -77,13 +77,33 @@ async function osmMap(box: Box): Promise<OsmElement[] | undefined> {
   }
 }
 
+/**
+ * Some terminals are not in the Nominatim index; look in small map tiles around
+ * the airport point instead (centre first, then the eight neighbours).
+ */
+async function scanForTerminals(lat: number, lon: number): Promise<Box[]> {
+  const h = 0.0045;
+  const w = h / Math.cos((lat * Math.PI) / 180);
+  const tile = (i: number, j: number): Box => [lat + (2 * j - 1) * h, lon + (2 * i - 1) * w, lat + (2 * j + 1) * h, lon + (2 * i + 1) * w];
+  const centre = terminalWayBoxes((await osmMap(tile(0, 0))) ?? []);
+  if (centre.length) return centre;
+  const ring = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]] as const;
+  const found: Box[] = [];
+  for (let k = 0; k < ring.length; k += 4) {
+    const batch = await Promise.all(ring.slice(k, k + 4).map(([i, j]) => osmMap(tile(i, j))));
+    for (const els of batch) found.push(...terminalWayBoxes(els ?? []));
+  }
+  return found;
+}
+
 export async function buildAirportLayout(
   iata: string,
   lat: number,
   lon: number,
 ): Promise<AirportLayout | undefined> {
-  const terminals = await terminalBoxes(lat, lon);
-  for (const box of candidateBoxes(lat, lon, terminals.map((t) => t.box))) {
+  let boxes = (await terminalBoxes(lat, lon)).map((t) => t.box);
+  if (!boxes.length) boxes = await scanForTerminals(lat, lon);
+  for (const box of candidateBoxes(lat, lon, boxes)) {
     const elements = await osmMap(box);
     if (elements) return parseOsmMap(iata, elements, box);
   }

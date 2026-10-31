@@ -149,6 +149,26 @@ export function terminalRole(name: string | undefined): TerminalRole {
   return "mixed";
 }
 
+/** Bounding boxes [s, w, n, e] of passenger terminal ways in a raw OSM response. */
+export function terminalWayBoxes(elements: OsmElement[]): [number, number, number, number][] {
+  const nodes = new Map<number, OsmNode>();
+  for (const e of elements) if (e.type === "node") nodes.set(e.id, e);
+  return elements.flatMap((e) => {
+    const t = e.tags;
+    if (e.type !== "way" || !t) return [];
+    if (!(t["aeroway"] === "terminal" || t["building"] === "terminal")) return [];
+    if (!isPassengerTerminal(t["name"])) return [];
+    const pts = e.nodes.flatMap((id) => (nodes.has(id) ? [nodes.get(id)!] : []));
+    if (!pts.length) return [];
+    return [[
+      Math.min(...pts.map((p) => p.lat)),
+      Math.min(...pts.map((p) => p.lon)),
+      Math.max(...pts.map((p) => p.lat)),
+      Math.max(...pts.map((p) => p.lon)),
+    ] as [number, number, number, number]];
+  });
+}
+
 export const isPassengerTerminal = (name: string | undefined) => !name || !NOT_PASSENGER.test(name);
 
 /** Douglas–Peucker in degree space; tolerance ~3 m keeps outlines recognisable. */
@@ -271,7 +291,7 @@ export function parseOsmMap(
     if (el.type === "way") {
       const points = wayPoints(el);
       if (!points.length) continue;
-      if (tags["aeroway"] === "terminal") {
+      if (tags["aeroway"] === "terminal" || (tags["building"] === "terminal" && !tags["aeroway"])) {
         addTerminal(name, [points]);
         continue;
       }
