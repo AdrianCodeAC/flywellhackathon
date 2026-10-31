@@ -980,7 +980,7 @@
     "eyebrow": "Where to sit",
     "title": "The right seat for you",
     "situations": "Your situation",
-    "subtitle": "Pick your situation and the plane shows where to aim and what to avoid. Rows differ between aircraft, so match them to your airline's seat map.",
+    "subtitle": "Choosing a seat when you book? Pick your situation and the plane shows where to aim and what to avoid. Rows differ between aircraft, so match them to the airline's seat map.",
     "situation": {
       "child": "With a child",
       "turbulence": "Fewer bumps",
