@@ -249,7 +249,7 @@ function Bars({ title, rows, max, format, tone }: { title: string; rows: { label
                 whileInView={{ width: `${(r.value / max) * 100}%` }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: i * 0.12, ease: "easeOut" }}
-                style={reduce ? { width: `${(r.value / max) * 100}%` } : undefined}
+                style={reduce ? { width: `${(r.value / max) * 100}%` } : {}}
               />
             </span>
             <span className="text-right font-semibold tabular-nums">{format(r.value)}%</span>
