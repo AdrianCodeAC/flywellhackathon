@@ -180,7 +180,7 @@ function Breathe() {
           <span className="block font-display text-6xl tabular-nums">{left}</span>
         </span>
       </div>
-      <p className="help-muted text-sm">{t("help.breathe.cycles", { count: cycles })}</p>
+      <p className="help-muted min-h-5 text-sm">{cycles > 0 && t("help.breathe.cycles", { count: cycles })}</p>
       <label className="mt-4 flex min-h-11 items-center gap-3 text-sm">
         <Vibrate className="size-4" />
         {t("help.breathe.haptics")}
@@ -218,6 +218,9 @@ function Crew({ card, onSeat, onEdit }: { card: MedicalCard; onSeat: (s: string)
             value={card.seat}
             onChange={(e) => onSeat(e.target.value.toUpperCase().slice(0, 4))}
             placeholder="14C"
+            spellCheck={false}
+            autoComplete="off"
+            aria-label={t("help.crew.seat")}
             className="crew-seat h-14 w-28 text-center text-2xl font-bold"
           />
         </label>
