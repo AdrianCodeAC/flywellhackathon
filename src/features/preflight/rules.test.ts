@@ -56,7 +56,7 @@ describe("pre-flight checklist", () => {
 
   it("adds Romanian parental consent, medication and pet items when flagged", () => {
     const list = keys(trip({ children: true, medication: true, pet: true }));
-    expect(list).toEqual(expect.arrayContaining(["childrenRo", "medication", "pet", "babyFood"]));
+    expect(list).toEqual(expect.arrayContaining(["childrenRo", "medication", "pet_eu", "petAirlineUnknown", "babyFood"]));
   });
 
   it("recommends more time at the airport outside Schengen", () => {

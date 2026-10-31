@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { SeatAdvice } from "@/features/preflight/SeatAdvice";
 import { ArrowUpRight, Plane, BedDouble, Wallet, Sun, FileCheck, Heart, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,6 +33,7 @@ export function TripResults({result,busy,onEdit,onAdjust}:{result:TripResult;bus
       {flights?.baggageUnknown&&<p className="mt-3 text-sm text-muted-foreground">{t("trip.bagUnknown")}</p>}
     </section>
     {input.oneWay&&<p className="text-sm text-muted-foreground">{t("trip.oneWayCosts")}</p>}
+    <SeatAdvice input={{children:input.children>0}}/>
     <section><Heading icon={<BedDouble className="size-5"/>} title={t("trip.stay")}/>{advice?<div className="grid gap-4 md:grid-cols-3">{advice.areas.map(a=><article key={a.name} className="rounded-lg border bg-card p-5"><p className="text-xs font-semibold text-primary">{t("trip.estimate")}</p><h3 className="mt-2 text-lg font-semibold">{a.name}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{a.reason}</p><p className="my-4 font-semibold">{money(a.nightlyMinEur*(rate??1),estimatesCurrency)}–{money(a.nightlyMaxEur*(rate??1),estimatesCurrency)} <span className="text-xs font-normal">{t("trip.perNight")}</span></p><div className="flex flex-wrap gap-2">{["booking","airbnb"].map(k=><Button asChild variant="outline" className="min-h-11 flex-1 px-2" key={k}><a href={input.oneWay?(k==="booking"?`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(destination.city+" "+a.name)}`:`https://www.airbnb.com/s/${encodeURIComponent(destination.city)}/homes`):bookingLinks(input,`${destination.city} ${a.name}`)[k as "booking"|"airbnb"]} target="_blank" rel="noreferrer">{t(`trip.${k}`)}<ArrowUpRight className="size-3"/></a></Button>)}</div></article>)}</div>:result.adviceError?<p role="alert" className="text-sm text-destructive">{result.adviceError}</p>:<Loading/>}</section>
     <section><Heading icon={<Wallet className="size-5"/>} title={t("trip.cost")}/>{costs?<>
       <p className="text-xs font-semibold text-primary">{t("trip.estimate")} · {costs.flightsIncluded?t("trip.realFlightsIncluded"):t("trip.excludesFlights")}</p>

@@ -49,6 +49,14 @@ function rules(lang: "en" | "ro"): string {
   );
 }
 
+const PET_SOURCES = new Set(["euPets", "euPetsEntry", "gbPets", "usDogs", "usAnimals", "trPets", "aePets"]);
+/** Pet rules come only from rules.ts; AI duplicates are dropped. */
+export function isPetItem(i: { title: string; detail?: string; source?: string | null }): boolean {
+  if (i.source && PET_SOURCES.has(i.source)) return true;
+  const text = i.title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  return /\b(pet|pets|animal\w*|dog|dogs|cat|cats|caine|caini|pisic\w*|dihor\w*|ferret\w*)\b/.test(text);
+}
+
 /** Up to 6 extra checklist items specific to this route, airline and passenger. */
 export const preflightAdvice = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
@@ -64,12 +72,13 @@ export const preflightAdvice = createServerFn({ method: "POST" })
         "Do NOT repeat generic topics already covered: " +
         data.covered.join(", ") +
         ". Write BOTH title and detail in the response language. Each detail at most 40 words. " +
+        "Never add items about pets or animals: the checklist already has the hand-checked airline and destination pet rules. " +
         "Set source to null unless one of the listed sources directly covers the item. Return an empty list rather than guessing.",
       describeTrip(data),
     );
     return {
       items: advice.items
-        .filter((i) => i.title.trim() && i.detail.trim())
+        .filter((i) => i.title.trim() && i.detail.trim() && !isPetItem(i))
         .slice(0, 6)
         .map((i) => ({ ...i, title: fixRo(i.title), detail: fixRo(i.detail) })),
     };

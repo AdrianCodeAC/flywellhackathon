@@ -2,10 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
 import {
+  CheckCheck,
   CloudSun,
   ExternalLink,
   FileText,
   Gavel,
+  ListChecks,
   Luggage,
   PlaneLanding,
   ShieldCheck,
@@ -21,10 +23,10 @@ import { Shimmer } from "@/components/ai-elements/shimmer";
 import { AirportGuide } from "@/features/airport/AirportGuide";
 import { SaveButton } from "@/features/account/SaveButton";
 import { OPEN_PREFLIGHT_KEY } from "@/features/account/device";
-import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
+import { isPetItem, preflightAdvice, type PreflightAdvice } from "./ai.functions";
 import { AirlineBaggage } from "./AirlineBaggage";
+import { PetPolicyCard } from "./PetPolicyCard";
 import { JetLagCard } from "./JetLagCard";
-import { SeatAdvice } from "./SeatAdvice";
 import { WeatherCard } from "@/features/arrival/WeatherCard";
 import { getAirportByIata } from "@/features/arrival/services";
 import { FORECAST_DAYS } from "@/features/arrival/weather";
@@ -118,7 +120,7 @@ export function PreflightChecklist({
       detail: t(`preflight.rule.${i.key}.detail`, i.params ?? {}),
       source: i.source,
     })),
-    ...(advice?.items ?? []).map((i, n) => ({
+    ...(advice?.items ?? []).filter((i) => !isPetItem(i)).map((i, n) => ({
       ...i,
       id: `ai-${n}-${i.title.slice(0, 24)}`,
       ai: true,
@@ -126,8 +128,9 @@ export function PreflightChecklist({
   ];
   const done = rows.filter((r) => ticks.includes(r.id)).length;
 
-  const toggle = (id: string, on: boolean) => {
-    const next = on ? [...new Set([...ticks, id])] : ticks.filter((v) => v !== id);
+  const toggle = (id: string, on: boolean) => toggleMany([id], on);
+  const toggleMany = (ids: string[], on: boolean) => {
+    const next = on ? [...new Set([...ticks, ...ids])] : ticks.filter((v) => !ids.includes(v));
     setTicks(next);
     try {
       localStorage.setItem(storageKey, JSON.stringify(next));
@@ -186,7 +189,7 @@ export function PreflightChecklist({
         </div>
       </div>
 
-      <div className="mt-5" aria-live="polite">
+      <div className="checklist-progress mt-5" aria-live="polite">
         <div className="mb-2 flex justify-between text-sm">
           <span className="font-semibold">{t("preflight.progress")}</span>
           <span>{t("preflight.done", { done, total: rows.length })}</span>
@@ -203,11 +206,35 @@ export function PreflightChecklist({
         const Icon = ICONS[category];
         return (
           <section key={category} className="mt-8">
-            <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-              <Icon className="size-5 text-primary" />
-              {t(`preflight.category.${category}`)}
-            </h3>
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">
+                <Icon className="size-5 text-primary" />
+                {t(`preflight.category.${category}`)}
+                <span className="text-sm font-normal text-muted-foreground">
+                  {list.filter((r) => ticks.includes(r.id)).length}/{list.length}
+                </span>
+              </h3>
+              {(() => {
+                const all = list.every((r) => ticks.includes(r.id));
+                return (
+                  <Button
+                    type="button"
+                    variant={all ? "secondary" : "outline"}
+                    size="sm"
+                    className="min-h-11 rounded-full px-4"
+                    aria-pressed={all}
+                    onClick={() => toggleMany(list.map((r) => r.id), !all)}
+                  >
+                    {all ? <CheckCheck /> : <ListChecks />}
+                    {t(all ? "preflight.untickAll" : "preflight.tickAll")}
+                  </Button>
+                );
+              })()}
+            </div>
             {category === "baggage" && <AirlineBaggage airline={input.airline} />}
+            {category === "documents" && input.pet && (
+              <PetPolicyCard airline={input.airline} to={input.destination.countryCode} />
+            )}
             <ul className="grid gap-3">
               {list.map((row) => (
                 <ChecklistRow
@@ -222,7 +249,6 @@ export function PreflightChecklist({
         );
       })}
 
-      <SeatAdvice input={input} />
       {!hideJetLag && <JetLagCard input={input} />}
       <LandingWeather input={input} />
 
