@@ -15,15 +15,24 @@ const osrmBody = {
 describe("fetchOsrmRoute", () => {
   afterEach(() => vi.unstubAllGlobals());
 
-  it("asks OSRM for the requested profile with lat/lon ordered correctly", async () => {
+  it("walks with the foot router (the OSRM demo only knows cars), lat/lon ordered correctly", async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => osrmBody });
     vi.stubGlobal("fetch", fetchMock);
 
     await fetchOsrmRoute([38.77, -9.13], [38.72, -9.14], "walking");
 
     const url = fetchMock.mock.calls[0]![0] as string;
-    expect(url).toContain("/route/v1/walking/");
+    expect(url).toContain("routing.openstreetmap.de/routed-foot/route/v1/foot/");
     expect(url).toContain("-9.13,38.77;-9.14,38.72");
+  });
+
+  it("drives with the OSRM car router", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => osrmBody });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await fetchOsrmRoute([38.77, -9.13], [38.72, -9.14], "driving");
+
+    expect(fetchMock.mock.calls[0]![0] as string).toContain("router.project-osrm.org/route/v1/driving/");
   });
 
   it("converts geojson [lon, lat] pairs into [lat, lon] and keeps distance/time", async () => {
