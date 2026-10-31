@@ -129,6 +129,45 @@ async function wikipediaSights(
   });
 }
 
+type WikiPage = PageRow & { coordinates?: { lat: number; lon: number }[] };
+const KIND_PRIORITY: Place["kind"][] = ["museum", "park", "church", "castle", "viewpoint", "attraction", "monument"];
+/** Not things to visit, even when Wikipedia places them near the centre. */
+const NOT_A_SIGHT =
+  /\b(prison|penitenciar\w*|brigad\w*|euroregion\w*|district|cartier\w*|street|strada|station|gara|hospital|spital\w*|airport|aeroport\w*|company|companie|club|f\.?c\.?|election\w*|alegeri|school|scoala|university|universitat\w*|bombing|attack|atentat\w*|ministry|minister\w*)\b/i;
+
+/** Intros, photos and coordinates for article titles, 20 per request, keyed "lang:title". */
+async function wikiPages(lang: "ro" | "en", list: string[], into: Map<string, WikiPage>) {
+  const batches: string[][] = [];
+  for (let i = 0; i < list.length; i += 20) batches.push(list.slice(i, i + 20));
+  await Promise.all(
+    batches.map(async (batch) => {
+      try {
+        const data = (await wikiJson(
+          `https://${lang}.wikipedia.org/w/api.php?action=query&prop=extracts%7Cpageimages%7Ccoordinates&exintro=1&explaintext=1&exsentences=2&exlimit=20&pithumbsize=200&pilimit=20&colimit=20&redirects=1&format=json&origin=*&titles=${encodeURIComponent(batch.join("|"))}`,
+        )) as {
+          query?: {
+            pages?: Record<string, WikiPage>;
+            normalized?: { from: string; to: string }[];
+            redirects?: { from: string; to: string }[];
+          };
+        };
+        const alias = new Map<string, string>();
+        for (const n of [...(data.query?.normalized ?? []), ...(data.query?.redirects ?? [])])
+          alias.set(n.from, n.to);
+        const byTitle = new Map(Object.values(data.query?.pages ?? {}).map((p) => [p.title, p]));
+        for (const t of batch) {
+          let key = t;
+          for (let hop = 0; hop < 3 && alias.has(key); hop++) key = alias.get(key)!;
+          const page = byTitle.get(key);
+          if (page) into.set(`${lang}:${t}`, page);
+        }
+      } catch (error) {
+        console.warn(`[Arrival source] Wikipedia intros unavailable language=${lang}`, error);
+      }
+    }),
+  );
+}
+
 /**
  * Notable sights: one Wikidata search per kind (parks, museums, churches…) near the
  * centre, ranked by Wikidata's notability, then Wikipedia intros, photos and coordinates.
@@ -148,8 +187,17 @@ async function wikidataSights(
       return (data.query?.search ?? []).map((r) => ({ kind, qid: r.title }));
     }),
   );
+  // An item found by several kinds keeps the most telling one (a museum that is also a monument is a museum).
+  const best = new Map<string, Place["kind"]>();
+  for (const g of groups)
+    for (const i of g) {
+      const prev = best.get(i.qid);
+      if (!prev || KIND_PRIORITY.indexOf(i.kind) < KIND_PRIORITY.indexOf(prev)) best.set(i.qid, i.kind);
+    }
   const seenQ = new Set<string>();
-  const ranked = interleaveByKind(groups).filter((i) => !seenQ.has(i.qid) && seenQ.add(i.qid));
+  const ranked = interleaveByKind(
+    groups.map((g) => g.filter((i) => best.get(i.qid) === i.kind)),
+  ).filter((i) => !seenQ.has(i.qid) && seenQ.add(i.qid));
   if (!ranked.length) return [];
 
   // Article titles in Romanian / English.
@@ -167,46 +215,24 @@ async function wikidataSights(
     const l: "ro" | "en" | undefined =
       lang === "ro" && t?.ro ? "ro" : t?.en ? "en" : t?.ro ? "ro" : undefined;
     const title = l ? t?.[l] : undefined;
-    return l && title ? [{ ...r, lang: l, title }] : [];
+    return l && title ? [{ ...r, lang: l, title, enTitle: t?.en }] : [];
   });
 
-  const details = new Map<string, PageRow & { coordinates?: { lat: number; lon: number }[] }>();
-  await Promise.all(
-    (["ro", "en"] as const).flatMap((l) => {
-      const list = items.filter((i) => i.lang === l).map((i) => i.title);
-      const batches: string[][] = [];
-      for (let i = 0; i < list.length; i += 20) batches.push(list.slice(i, i + 20));
-      return batches.map(async (batch) => {
-        try {
-          const data = (await wikiJson(
-            `https://${l}.wikipedia.org/w/api.php?action=query&prop=extracts%7Cpageimages%7Ccoordinates&exintro=1&explaintext=1&exsentences=2&exlimit=20&pithumbsize=200&pilimit=20&colimit=20&redirects=1&format=json&origin=*&titles=${encodeURIComponent(batch.join("|"))}`,
-          )) as {
-            query?: {
-              pages?: Record<string, PageRow & { coordinates?: { lat: number; lon: number }[] }>;
-              normalized?: { from: string; to: string }[];
-              redirects?: { from: string; to: string }[];
-            };
-          };
-          const alias = new Map<string, string>();
-          for (const n of [...(data.query?.normalized ?? []), ...(data.query?.redirects ?? [])])
-            alias.set(n.from, n.to);
-          const byTitle = new Map(Object.values(data.query?.pages ?? {}).map((p) => [p.title, p]));
-          for (const t of batch) {
-            let key = t;
-            for (let hop = 0; hop < 3 && alias.has(key); hop++) key = alias.get(key)!;
-            const page = byTitle.get(key);
-            if (page) details.set(`${l}:${t}`, page);
-          }
-        } catch (error) {
-          console.warn(`[Arrival source] Wikipedia intros unavailable language=${l}`, error);
-        }
-      });
-    }),
+  const details = new Map<string, WikiPage>();
+  await Promise.all([
+    wikiPages("ro", items.filter((i) => i.lang === "ro").map((i) => i.title), details),
+    wikiPages("en", items.filter((i) => i.lang === "en").map((i) => i.title), details),
+  ]);
+  // Some Romanian articles have no coordinates: take them from the English article.
+  const noCoord = items.filter(
+    (i) => i.lang === "ro" && i.enTitle && !details.get(`ro:${i.title}`)?.coordinates?.length,
   );
+  if (noCoord.length) await wikiPages("en", noCoord.map((i) => i.enTitle!), details);
 
   return items.flatMap((i) => {
     const page = details.get(`${i.lang}:${i.title}`);
-    const coord = page?.coordinates?.[0];
+    const coord =
+      page?.coordinates?.[0] ?? (i.enTitle ? details.get(`en:${i.enTitle}`)?.coordinates?.[0] : undefined);
     if (!coord) return [];
     const description = page?.extract?.trim();
     return [
@@ -247,7 +273,16 @@ async function sights(lang: "ro" | "en", lat: number, lon: number, radiusM: numb
   }
   if (!notable.length && !nearby.length) return [];
   const seen = new Set(notable.map((p) => p.wikidata).filter(Boolean));
-  return [...notable, ...nearby.filter((p) => !p.wikidata || !seen.has(p.wikidata))];
+  const names = new Set(notable.map((p) => p.name.toLowerCase()));
+  return [
+    ...notable,
+    ...nearby.filter(
+      (p) =>
+        (!p.wikidata || !seen.has(p.wikidata)) &&
+        !names.has(p.name.toLowerCase()) &&
+        !NOT_A_SIGHT.test(`${p.name} ${p.description ?? ""}`.normalize("NFD").replace(/[\u0300-\u036f]/g, "")),
+    ),
+  ];
 }
 
 async function overpassFallback(
