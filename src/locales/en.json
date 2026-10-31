@@ -1087,12 +1087,6 @@
     "addError": "Could not add this flight. Please try again.",
     "during": {
       "subtitle": "Everything here works in airplane mode",
-      "help": "Help on board",
-      "cardReady": "Your medical card is on this phone, ready to show the crew.",
-      "cardMissing": "Add your medical card in your account before you fly, so it opens here even in airplane mode.",
-      "showCard": "Show my card",
-      "editCard": "Edit in my account",
-      "signInCard": "Sign in to add it",
       "tipsTitle": "On board",
       "tips": [
         "Keep your seat belt fastened whenever you are seated.",
@@ -1100,7 +1094,8 @@
         "Stand up, stretch and move your ankles every hour or two.",
         "On descent, swallow, yawn or chew to ease the pressure in your ears."
       ],
-      "helpHint": "Breathing, calling the crew, feeling unwell and your medical card."
+      "helpHint": "Breathing, calling the crew, feeling unwell and your medical card.",
+      "savedOffline": "Saved on this phone — works in airplane mode"
     }
   },
   "ticket": {

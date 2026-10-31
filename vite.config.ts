@@ -35,12 +35,29 @@ export default defineConfig({
             {
               urlPattern: ({ request, url }) => request.mode === "navigate" && !url.pathname.startsWith("/~oauth"),
               handler: "NetworkFirst",
-              options: { cacheName: "pages", networkTimeoutSeconds: 4, expiration: { maxEntries: 20 } },
+              // ignoreSearch: a trip saved as ?tab=before still opens offline as ?tab=during.
+              options: {
+                cacheName: "pages",
+                networkTimeoutSeconds: 4,
+                expiration: { maxEntries: 40 },
+                matchOptions: { ignoreSearch: true },
+              },
             },
             {
               urlPattern: ({ url }) => url.pathname === "/data/airports.json",
               handler: "StaleWhileRevalidate",
               options: { cacheName: "airports" },
+            },
+            {
+              // Fonts, so the flight tab looks the same in airplane mode.
+              urlPattern: ({ url }) =>
+                url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com",
+              handler: "CacheFirst",
+              options: {
+                cacheName: "fonts",
+                expiration: { maxEntries: 30, maxAgeSeconds: 365 * 24 * 3600 },
+                cacheableResponse: { statuses: [0, 200] },
+              },
             },
             {
               urlPattern: ({ url }) => url.hostname === "tile.openstreetmap.org",

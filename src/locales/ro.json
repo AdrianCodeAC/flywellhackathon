@@ -1087,12 +1087,6 @@
     "addError": "Nu am putut adăuga zborul. Încearcă din nou.",
     "during": {
       "subtitle": "Totul de aici merge și în modul avion",
-      "help": "Ajutor la bord",
-      "cardReady": "Fișa ta medicală este pe acest telefon, gata de arătat echipajului.",
-      "cardMissing": "Adaugă fișa medicală în cont înainte de zbor, ca să o ai aici și în modul avion.",
-      "showCard": "Arată fișa",
-      "editCard": "Editează în cont",
-      "signInCard": "Conectează-te ca să o adaugi",
       "tipsTitle": "La bord",
       "tips": [
         "Ține centura prinsă cât timp stai pe scaun.",
@@ -1100,7 +1094,8 @@
         "Ridică-te, întinde-te și mișcă gleznele la fiecare oră-două.",
         "La coborâre, înghite, cască sau mestecă, ca să scadă presiunea din urechi."
       ],
-      "helpHint": "Respirație, chemarea echipajului, când ți-e rău și fișa medicală."
+      "helpHint": "Respirație, chemarea echipajului, când ți-e rău și fișa medicală.",
+      "savedOffline": "Salvat pe telefon — merge în modul avion"
     }
   },
   "ticket": {
