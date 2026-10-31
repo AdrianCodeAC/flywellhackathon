@@ -130,7 +130,7 @@ async function wikipediaSights(
 }
 
 type WikiPage = PageRow & { coordinates?: { lat: number; lon: number }[] };
-const KIND_PRIORITY: Place["kind"][] = ["museum", "park", "church", "castle", "viewpoint", "attraction", "monument"];
+const KIND_PRIORITY: Place["kind"][] = ["park", "museum", "church", "castle", "viewpoint", "attraction", "monument"];
 /** Not things to visit, even when Wikipedia places them near the centre. */
 const NOT_A_SIGHT =
   /\b(prison|penitenciar\w*|brigad\w*|euroregion\w*|district|cartier\w*|street|strada|station|gara|hospital|spital\w*|airport|aeroport\w*|company|companie|club|f\.?c\.?|election\w*|alegeri|school|scoala|university|universitat\w*|bombing|attack|atentat\w*|ministry|minister\w*)\b/i;
