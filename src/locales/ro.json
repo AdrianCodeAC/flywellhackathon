@@ -863,6 +863,7 @@
     "saveChecklist": "Salvează lista",
     "saved": "Salvat în cont",
     "saveError": "Nu s-a putut salva. Încearcă din nou.",
-    "loadError": "Elementele salvate nu au putut fi încărcate."
+    "loadError": "Elementele salvate nu au putut fi încărcate.",
+    "invalidEmail": "Folosește o adresă de e-mail reală, pe care o poți deschide."
   }
 }

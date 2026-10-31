@@ -863,6 +863,7 @@
     "saveChecklist": "Save checklist",
     "saved": "Saved in your account",
     "saveError": "Could not save. Try again.",
-    "loadError": "Saved items could not be loaded."
+    "loadError": "Saved items could not be loaded.",
+    "invalidEmail": "Use a real email address you can open."
   }
 }

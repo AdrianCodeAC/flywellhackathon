@@ -17,6 +17,7 @@ type Mode = "signin" | "signup" | "forgot";
 function errorKey(message: string) {
   const m = message.toLowerCase();
   if (m.includes("invalid login")) return "account.wrongCredentials";
+  if (m.includes("email address") && (m.includes("not allowed") || m.includes("invalid"))) return "account.invalidEmail";
   if (m.includes("not confirmed")) return "account.notConfirmed";
   if (m.includes("already registered") || m.includes("already exists")) return "account.exists";
   if (m.includes("password") && (m.includes("weak") || m.includes("at least") || m.includes("pwned"))) return "account.weakPassword";
