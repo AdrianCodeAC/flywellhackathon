@@ -145,7 +145,7 @@ export function PreflightChecklist({
   return (
     <section aria-labelledby="preflight-summary">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5">
-        <div>
+        <div className={onArrival ? "sr-only" : undefined}>
           <p className="section-index">{t("preflight.yourFlight")}</p>
           <h2 id="preflight-summary" className="font-display text-3xl sm:text-4xl">
             {input.origin.city} → {input.destination.city}
