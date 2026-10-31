@@ -18,11 +18,11 @@ type Filter = "all" | "museums" | "churches" | "parks" | "monuments" | "other";
 const FILTERS: Filter[] = ["all", "museums", "churches", "parks", "monuments", "other"];
 
 const GROUPS: Record<Exclude<Filter, "all">, Place["kind"][]> = {
-  museums: ["museum"],
+  museums: ["museum", "gallery"],
   churches: ["church"],
   parks: ["park"],
-  monuments: ["monument"],
-  other: ["other"],
+  monuments: ["monument", "castle"],
+  other: ["other", "attraction", "viewpoint"],
 };
 
 interface VisitListProps {
