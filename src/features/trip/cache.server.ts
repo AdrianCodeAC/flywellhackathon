@@ -1,8 +1,8 @@
 import { SIX_HOURS } from "./types";
-export async function readTripCache<T>(key: string): Promise<T | undefined> {
+export async function readTripCache<T>(key: string, ttl=SIX_HOURS): Promise<T | undefined> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const {data,error} = await supabaseAdmin.from("trip_search_cache").select("value,created_at").eq("cache_key",key).maybeSingle();
-  if(error || !data || Date.now()-Date.parse(data.created_at)>=SIX_HOURS) return;
+  if(error || !data || Date.now()-Date.parse(data.created_at)>=ttl) return;
   return data.value as T;
 }
 export async function writeTripCache(key: string,value: unknown) {

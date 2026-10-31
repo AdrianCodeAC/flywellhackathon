@@ -11,11 +11,12 @@ export const tripInputSchema = z.object({
   adults: z.number().int().min(1).max(9),
   children: z.number().int().min(0).max(8),
   flexible: z.boolean(),
+  oneWay: z.boolean().optional(),
   budget: z.enum(["budget", "medium", "comfort"]),
   direct: z.boolean(),
   bag: z.boolean(),
   lang: z.enum(["en", "ro"]),
-}).refine((v) => validDate(v.departure) && validDate(v.returnDate) && nights(v.departure, v.returnDate) > 0 && nights(v.departure, v.returnDate) <= 90 && v.departure >= new Date().toISOString().slice(0,10), { message: "Invalid travel dates", path: ["returnDate"] })
+}).refine((v) => validDate(v.departure) && validDate(v.returnDate) && (v.oneWay ? v.departure===v.returnDate : nights(v.departure, v.returnDate) > 0) && nights(v.departure, v.returnDate) <= 90 && v.departure >= new Date().toISOString().slice(0,10), { message: "Invalid travel dates", path: ["returnDate"] })
   .refine((v) => v.adults + v.children <= 9, { message: "Maximum 9 travellers", path: ["children"] });
 export type TripInput = z.infer<typeof tripInputSchema>;
 export type Destination = { iata: string; city: string; country: string; lat: number; lon: number };
@@ -69,7 +70,7 @@ export function bookingLinks(input: TripInput, city: string) {
   };
 }
 export function stayCosts(input: TripInput, advice: TripAdvice, flight: Flight | undefined, rate: number) {
-  const days = nights(input.departure,input.returnDate), people = input.adults + input.children;
+  const days = input.oneWay?1:nights(input.departure,input.returnDate), people = input.adults + input.children;
   const areas = advice.areas;
   const accommodation = [Math.min(...areas.map(a=>a.nightlyMinEur)),Math.max(...areas.map(a=>a.nightlyMaxEur))].map(v=>v*days*rate);
   const scaled = (v: number[]) => v.map(x=>x*days*people*rate);
