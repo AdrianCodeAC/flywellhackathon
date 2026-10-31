@@ -56,3 +56,4 @@
 - [x] On arrival food/sights: card distances and "Show route" start from the same point (live location when nearby, else the airport); short trips use walking routes.
 - [x] Help → Call the crew: phone vibrates and plays a ring to get attention.
 - [ ] Plan a trip: live, non-cached flight prices — provider, parser, fallback and labels are built and tested; waiting on a provider key (SEARCHAPI_KEY or SERPAPI_KEY) added to the deployment.
+- [ ] Recolor to the new palette (navy, steel, mint, plum, gold) with much less pink, and switch the typeface to Inter everywhere.
