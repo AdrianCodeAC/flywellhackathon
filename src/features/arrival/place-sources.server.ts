@@ -135,6 +135,15 @@ const KIND_PRIORITY: Place["kind"][] = ["museum", "park", "church", "castle", "v
 const NOT_A_SIGHT =
   /\b(prison|penitenciar\w*|brigad\w*|euroregion\w*|district|cartier\w*|street|strada|station|gara|hospital|spital\w*|airport|aeroport\w*|company|companie|club|f\.?c\.?|election\w*|alegeri|school|scoala|university|universitat\w*|bombing|attack|atentat\w*|ministry|minister\w*)\b/i;
 
+const LOOKS_LIKE_SIGHT =
+  /\b(theat\w*|teatr\w*|palace|palat\w*|castle|castel\w*|square|piata|tower|turn\w*|bridge|pod\w*|fountain|fantan\w*|statue|statui\w*|opera|zoo|market|historic\w*|istoric\w*|memorial\w*|casa|house|hall|sala|landmark|ruins|ruin\w*|fortress|cetat\w*|lake|lac\w*|beach|plaja)\b/i;
+/** Nearby-article filler: keep recognised kinds and sight-like places, drop villages, prisons, regions… */
+function isWorthVisiting(p: Place): boolean {
+  const text = `${p.name} ${p.description ?? ""}`.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (NOT_A_SIGHT.test(text)) return false;
+  return p.kind !== "other" || LOOKS_LIKE_SIGHT.test(p.name.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+}
+
 /** Intros, photos and coordinates for article titles, 20 per request, keyed "lang:title". */
 async function wikiPages(lang: "ro" | "en", list: string[], into: Map<string, WikiPage>) {
   const batches: string[][] = [];
@@ -179,14 +188,17 @@ async function wikidataSights(
   radiusM: number,
 ): Promise<Place[]> {
   const kinds = SIGHT_TYPES.filter(([kind]) => SIGHT_LIMITS[kind]);
-  const groups = await Promise.all(
-    kinds.map(async ([kind, qids]) => {
-      const data = (await wikiJson(
-        wikidataSearchUrl(qids, lat, lon, radiusM, SIGHT_LIMITS[kind] ?? 8),
-      )) as { query?: { search?: { title: string }[] } };
-      return (data.query?.search ?? []).map((r) => ({ kind, qid: r.title }));
-    }),
-  );
+  const searchKind = async ([kind, qids]: (typeof kinds)[number]) => {
+    const url = wikidataSearchUrl(qids, lat, lon, radiusM, SIGHT_LIMITS[kind] ?? 8);
+    const data = (await wikiJson(url).catch(() => wikiJson(url))) as {
+      query?: { search?: { title: string }[] };
+    };
+    return (data.query?.search ?? []).map((r) => ({ kind, qid: r.title }));
+  };
+  // One failing kind must not hide the others.
+  const settled = await Promise.allSettled(kinds.map(searchKind));
+  if (settled.every((r) => r.status === "rejected")) throw new Error("Wikidata search failed");
+  const groups = settled.map((r) => (r.status === "fulfilled" ? r.value : []));
   // An item found by several kinds keeps the most telling one (a museum that is also a monument is a museum).
   const best = new Map<string, Place["kind"]>();
   for (const g of groups)
@@ -280,7 +292,7 @@ async function sights(lang: "ro" | "en", lat: number, lon: number, radiusM: numb
       (p) =>
         (!p.wikidata || !seen.has(p.wikidata)) &&
         !names.has(p.name.toLowerCase()) &&
-        !NOT_A_SIGHT.test(`${p.name} ${p.description ?? ""}`.normalize("NFD").replace(/[\u0300-\u036f]/g, "")),
+        isWorthVisiting(p),
     ),
   ];
 }
