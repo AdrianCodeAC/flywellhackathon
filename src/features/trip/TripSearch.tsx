@@ -47,7 +47,12 @@ export function TripSearch({initial,busy,onSearch}:{initial?:TripInput|undefined
         
         {!loading&&origin&&discovery&&!discovery.routes.length&&<div className="mt-2 text-sm text-muted-foreground"><p>{t(discovery.unavailable?'trip.providerUnavailable':'trip.noRoutes')}</p><Button asChild type="button" variant="link" className="min-h-11 px-0"><a href={`https://www.google.com/travel/flights?q=${encodeURIComponent(`Flights from ${origin}`)}`} target="_blank" rel="noreferrer">{t('trip.googleFlights')}</a></Button></div>}
       </div>
-      <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><CalendarDays className="size-4 text-primary"/>{t('trip.when')}</label><TripDates origin={origin} destination={iata} range={range} onChange={value=>{setRange(value);setSelectedFare(undefined);}} oneWay={oneWay} setOneWay={setOneWay} flexible={flexible} setFlexible={setFlexible}/></div>
+      <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><CalendarDays className="size-4 text-primary"/>{t('trip.when')}</label>
+        <div className="mb-2 flex min-h-11 items-center" role="group" aria-label={t('trip.tripType')}>
+          <Button type="button" variant={oneWay?'outline':'default'} aria-pressed={!oneWay} className="min-h-11 rounded-r-none px-3" onClick={()=>{setOneWay(false);if(range?.from&&!range.to)setRange({from:range.from,to:addDays(range.from,4)});}}>{t('trip.roundTrip')}</Button>
+          <Button type="button" variant={oneWay?'default':'outline'} aria-pressed={oneWay} className="min-h-11 rounded-l-none px-3" onClick={()=>{setOneWay(true);setRange(r=>r?{from:r.from,to:undefined}:r);setSelectedFare(undefined);}}>{t('trip.oneWay')}</Button>
+        </div>
+        <TripDates origin={origin} destination={iata} range={range} onChange={value=>{setRange(value);setSelectedFare(undefined);}} oneWay={oneWay} setOneWay={setOneWay} flexible={flexible} setFlexible={setFlexible}/></div>
       <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><Users className="size-4 text-primary"/>{t('trip.who')}</label><Stepper label={t('trip.adults')} value={adults} min={1} max={9-children} onChange={setAdults}/><Stepper label={t('trip.children')} value={children} min={0} max={9-adults} onChange={setChildren}/></div>
     </div>
     {selectedFare&&<p className="mt-4 border-t pt-4 text-sm text-primary">{t('trip.selectedFlight',{city:selectedFare.city})} · {new Intl.NumberFormat(lang,{style:'currency',currency:selectedFare.currency,maximumFractionDigits:0}).format(selectedFare.price)} · {t('trip.cachedFares')}</p>}
