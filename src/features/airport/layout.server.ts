@@ -17,7 +17,7 @@ interface NominatimHit {
   boundingbox?: [string, string, string, string];
 }
 
-async function terminalBoxes(lat: number, lon: number): Promise<{ name?: string; box: Box }[]> {
+async function terminalBoxes(lat: number, lon: number): Promise<{ name?: string | undefined; box: Box }[]> {
   const d = 0.04;
   const url =
     "https://nominatim.openstreetmap.org/search?" +

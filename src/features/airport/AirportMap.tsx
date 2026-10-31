@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TransformComponent, TransformWrapper, type ReactZoomPanPinchRef } from "react-zoom-pan-pinch";
+import { TransformComponent, TransformWrapper, type ReactZoomPanPinchContentRef } from "react-zoom-pan-pinch";
 import {
   Banknote,
   Bus,
@@ -104,7 +104,7 @@ export function AirportMap({
 }) {
   const { t } = useTranslation();
   const { width, height, project } = useProjection(layout, steps);
-  const wrapper = useRef<ReactZoomPanPinchRef>(null);
+  const wrapper = useRef<ReactZoomPanPinchContentRef>(null);
   const box = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const frame = useRef(0);
@@ -149,7 +149,7 @@ export function AirportMap({
         centerOnInit
         doubleClick={{ mode: "zoomIn", step: 0.8 }}
         wheel={{ step: 0.12 }}
-        onTransformed={(_, state) => {
+        onTransform={(_, state) => {
           cancelAnimationFrame(frame.current);
           frame.current = requestAnimationFrame(() => setScale(state.scale));
         }}
