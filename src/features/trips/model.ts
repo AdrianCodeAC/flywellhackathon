@@ -77,3 +77,11 @@ export function inputFromPlan(plan: {
     lang: plan.lang,
   };
 }
+
+/**
+ * The home-bound flight is a trip of its own: same answers, route flipped, on the return day.
+ * It gets its own checklist, its own "during the flight" help and its own arrival guide at home.
+ */
+export function returnLegOf(outbound: PreflightInput, returnDate: string): PreflightInput {
+  return { ...outbound, origin: outbound.destination, destination: outbound.origin, date: returnDate };
+}

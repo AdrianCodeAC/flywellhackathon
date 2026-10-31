@@ -275,6 +275,8 @@
     "noRoutes": "Nu avem tarife recente pentru rutele cunoscute din acest aeroport. Încearcă Google Flights.",
     "loadingRoutes": "Verificăm rutele și tarifele recente…",
     "oneWay": "Doar dus",
+    "roundTrip": "Dus-întors",
+    "tripType": "Tip de călătorie",
     "clear": "Șterge",
     "done": "Gata",
     "thisWeekend": "Weekendul acesta",

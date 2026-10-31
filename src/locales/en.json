@@ -275,6 +275,8 @@
     "noRoutes": "No recent fares for known routes from this airport. Try Google Flights.",
     "loadingRoutes": "Checking recent routes and prices…",
     "oneWay": "One way",
+    "roundTrip": "Round trip",
+    "tripType": "Trip type",
     "clear": "Clear",
     "done": "Done",
     "thisWeekend": "This weekend",
