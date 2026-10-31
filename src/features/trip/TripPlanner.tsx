@@ -20,6 +20,8 @@ export function TripPlanner({runTrip=false}:{runTrip?:boolean}){
     const parsed=tripInputSchema.safeParse(raw);if(!parsed.success){setError(t("trip.invalidInput"));return;}
     abort.current?.abort();const controller=new AbortController();abort.current=controller;
     setInput(raw);setError("");setBusy(true);setEditing(false);setSuggestions([]);
+    // Start of the results, not the chat at the bottom.
+    requestAnimationFrame(()=>resultRef.current?.scrollIntoView({behavior:"smooth",block:"start"}));
     try{
       const response=await fetch("/api/trip",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...raw,preference}),signal:controller.signal});
       if(!response.ok||!response.body)throw new Error(t("trip.searchError"));
