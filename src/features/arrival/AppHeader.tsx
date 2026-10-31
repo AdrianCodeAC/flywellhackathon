@@ -4,7 +4,6 @@ import { Plane, WifiOff } from "lucide-react";
 import { LANGUAGES, setLanguage, syncClientLanguage, type Language } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
-import { PanicButton } from "@/features/inflight/PanicButton";
 import { AccountButton } from "@/features/account/AccountButton";
 
 /** Sticky header: always-visible EN/RO switcher plus the offline banner. */
@@ -43,7 +42,6 @@ export function AppHeader() {
         </Link>
         <span className="hidden text-xs font-medium uppercase text-muted-foreground sm:block">{t("design.companion")}</span>
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <PanicButton />
           <AccountButton />
           <LanguageSwitcher />
         </div>

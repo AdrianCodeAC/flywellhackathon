@@ -914,7 +914,7 @@
       "fear": {
         "1": "Deasupra aripii zborul e cel mai lin, iar sunetul motoarelor rămâne constant.",
         "2": "Culoarul ajută dacă te simți închis; geamul ajută dacă te liniștește să vezi orizontul.",
-        "3": "Apasă Ajutor sus pe ecran pentru un exercițiu de respirație care merge și în modul avion."
+        "3": "Apasă Ajutor în fila În timpul zborului a călătoriei pentru un exercițiu de respirație care merge și în modul avion."
       },
       "motion": {
         "1": "Privește orizontul și ține capul nemișcat, sprijinit de tetieră.",
@@ -999,7 +999,8 @@
         "Bea apă des și limitează alcoolul și cafeaua.",
         "Ridică-te, întinde-te și mișcă gleznele la fiecare oră-două.",
         "La coborâre, înghite, cască sau mestecă, ca să scadă presiunea din urechi."
-      ]
+      ],
+      "helpHint": "Respirație, chemarea echipajului, când ți-e rău și fișa medicală."
     }
   },
   "ticket": {

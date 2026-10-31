@@ -914,7 +914,7 @@
       "fear": {
         "1": "Over the wing the ride is smoothest and the engine sound stays steady.",
         "2": "An aisle seat helps if you feel closed in; a window helps if seeing the horizon calms you.",
-        "3": "Tap Help at the top of the screen for a breathing exercise that works in airplane mode."
+        "3": "Tap Help in the During the flight tab of your trip for a breathing exercise that works in airplane mode."
       },
       "motion": {
         "1": "Look at the horizon and keep your head still against the headrest.",
@@ -999,7 +999,8 @@
         "Drink water regularly and go easy on alcohol and coffee.",
         "Stand up, stretch and move your ankles every hour or two.",
         "On descent, swallow, yawn or chew to ease the pressure in your ears."
-      ]
+      ],
+      "helpHint": "Breathing, calling the crew, feeling unwell and your medical card."
     }
   },
   "ticket": {

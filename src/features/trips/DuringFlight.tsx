@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
-import { BellRing, IdCard, Pencil, Stethoscope, WifiOff, Wind } from "lucide-react";
+import { IdCard, Pencil, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTripUser } from "@/features/trip/auth";
-import { openHelp } from "@/features/inflight/PanicButton";
+import { openHelp, PanicButton } from "@/features/inflight/PanicButton";
 import { CARD_EVENT, hasMedicalInfo, loadCard, type MedicalCard } from "@/features/inflight/medical-card";
 import { JetLagCard } from "@/features/preflight/JetLagCard";
 import type { MyTrip } from "./model";
-
-const HELP = [
-  { view: "breathe", icon: Wind, tone: "trip-help-calm" },
-  { view: "crew", icon: BellRing, tone: "trip-help-alert" },
-  { view: "unwell", icon: Stethoscope, tone: "trip-help-care" },
-] as const;
 
 /** The "During the flight" tab: nothing here needs the network. */
 export function DuringFlight({ trip }: { trip: MyTrip }) {
@@ -33,17 +27,9 @@ export function DuringFlight({ trip }: { trip: MyTrip }) {
     <div>
       <p className="trip-offline-chip"><WifiOff className="size-3.5" />{t("trips.during.subtitle")}</p>
 
-      <h3 className="mt-6 text-lg font-semibold">{t("trips.during.help")}</h3>
-      <div className="mt-3 grid gap-3 sm:grid-cols-3">
-        {HELP.map(({ view, icon: Icon, tone }) => (
-          <button key={view} type="button" onClick={() => openHelp(view)} className={`trip-help-tile ${tone}`}>
-            <span className="trip-help-icon"><Icon className="size-5" /></span>
-            <span className="min-w-0 text-left">
-              <span className="block font-semibold">{t(`help.tile.${view}.title`)}</span>
-              <span className="block text-sm leading-snug text-muted-foreground">{t(`help.tile.${view}.detail`)}</span>
-            </span>
-          </button>
-        ))}
+      <div className="mt-6 flex flex-col items-start gap-2">
+        <PanicButton />
+        <p className="text-sm text-muted-foreground">{t("trips.during.helpHint")}</p>
       </div>
 
       <section className="mt-6 rounded-2xl border bg-card p-5">
