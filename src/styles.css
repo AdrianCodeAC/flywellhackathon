@@ -74,22 +74,21 @@
  *    Base palette — change a value here and every element that uses it follows.
  * ========================================================================== */
 :root {
-  --palette-white: oklch(1 0 0);                    /* #FFFFFF  White */
-  --palette-pearl-aqua: oklch(0.833 0.091 176.1);   /* #84DCC6  Pearl Aqua (culoarea de bază) */
-  --palette-aquamarine: oklch(0.932 0.104 163.9);   /* #A5FFD6  Aquamarine */
-  --palette-powder-blush: oklch(0.811 0.107 25.3);  /* #FFA69E  Powder Blush */
-  --palette-grapefruit: oklch(0.708 0.185 21.9);    /* #FF686B  Grapefruit Pink */
+  --palette-navy: oklch(0.311 0.038 267.4);     /* #283044 Midnight Navy (text, butoane) */
+  --palette-steel: oklch(0.688 0.059 236.6);    /* #78A1BB Steel Blue (culoarea de bază) */
+  --palette-mint: oklch(0.961 0.014 155.6);     /* #EBF5EE Mint White (fundal de pagină) */
+  --palette-clay: oklch(0.749 0.030 44.9);      /* #BFA89E Dusty Clay (accent cald) */
+  --palette-cocoa: oklch(0.587 0.029 52.0);     /* #8B786D Cocoa Brown (accent cald închis) */
+  --palette-white: oklch(1 0 0);                /* #FFFFFF Alb (carduri, text pe fundal închis) */
 
   /* Nuanțe derivate (aceeași culoare, mai închisă/deschisă) pentru text lizibil și fundaluri. */
-  --palette-green-mist: oklch(0.985 0.014 170);     /* fundal de pagină */
-  --palette-green-soft: oklch(0.955 0.04 168);      /* fundaluri ușoare */
-  --palette-green-line: oklch(0.9 0.035 172);       /* contururi */
-  --palette-green-deep: oklch(0.48 0.085 176);      /* butoane, linkuri */
-  --palette-green-ink: oklch(0.27 0.04 178);        /* text */
-  --palette-green-muted: oklch(0.47 0.03 176);      /* text secundar */
-  --palette-blush-soft: oklch(0.965 0.028 25);      /* fundal cald */
-  --palette-blush-deep: oklch(0.58 0.12 30);        /* text cald */
-  --palette-grapefruit-deep: oklch(0.56 0.19 22);   /* avertizări, text roșu */
+  --palette-steel-soft: oklch(0.945 0.022 210); /* fundaluri ușoare */
+  --palette-line: oklch(0.875 0.028 215);       /* contururi */
+  --palette-deep: oklch(0.50 0.075 245);        /* linkuri, etichete, butoane secundare */
+  --palette-muted: oklch(0.55 0.03 248);        /* text secundar */
+  --palette-clay-soft: oklch(0.95 0.025 45);    /* fundal cald */
+  --palette-clay-deep: oklch(0.52 0.06 45);     /* text cald */
+  --palette-alert: oklch(0.50 0.11 45);         /* avertizări (rust cald, din cocoa/clay) */
 }
 
 /* ==========================================================================
@@ -98,41 +97,41 @@
  * ========================================================================== */
 :root {
   /* Pagină și text */
-  --ui-page: var(--palette-green-mist);
-  --ui-text: var(--palette-green-ink);
-  --ui-text-muted: var(--palette-green-muted);
+  --ui-page: var(--palette-mint);
+  --ui-text: var(--palette-navy);
+  --ui-text-muted: var(--palette-muted);
   --ui-card: var(--palette-white);
-  --ui-border: var(--palette-green-line);
-  --ui-focus: var(--palette-pearl-aqua);
-  --ui-input: color-mix(in oklab, var(--palette-pearl-aqua) 55%, var(--palette-white));
+  --ui-border: var(--palette-line);
+  --ui-focus: var(--palette-steel);
+  --ui-input: color-mix(in oklab, var(--palette-steel) 22%, var(--palette-white));
   /* Butoane principale, linkuri, elemente active */
-  --ui-button: var(--palette-green-deep);
+  --ui-button: var(--palette-navy);
   --ui-button-text: var(--palette-white);
   /* Butoane/etichete secundare */
-  --ui-button-soft: var(--palette-green-soft);
-  --ui-button-soft-text: var(--palette-green-deep);
+  --ui-button-soft: var(--palette-steel-soft);
+  --ui-button-soft-text: var(--palette-deep);
   /* Evidențieri (hover, selecție, chip-uri) */
-  --ui-highlight: var(--palette-aquamarine);
-  --ui-highlight-text: var(--palette-green-ink);
+  --ui-highlight: color-mix(in oklab, var(--palette-steel) 35%, var(--palette-white));
+  --ui-highlight-text: var(--palette-navy);
   /* Accent cald și pericol */
-  --ui-warm: var(--palette-powder-blush);
-  --ui-warm-soft: var(--palette-blush-soft);
-  --ui-danger: var(--palette-grapefruit-deep);
+  --ui-warm: var(--palette-clay);
+  --ui-warm-soft: var(--palette-clay-soft);
+  --ui-danger: var(--palette-alert);
   --ui-danger-text: var(--palette-white);
   /* Banner (imaginea de sus) */
-  --ui-hero-overlay: oklch(0.27 0.04 178 / 62%);
+  --ui-hero-overlay: oklch(0.311 0.038 267.4 / 62%);
   --ui-hero-text: var(--palette-white);
   /* Cele patru opțiuni de sosire: mâncare, transport, vizite, întreabă AI */
-  --ui-food: var(--palette-grapefruit-deep);
-  --ui-food-soft: var(--palette-blush-soft);
-  --ui-ride: var(--palette-green-deep);
-  --ui-ride-soft: var(--palette-green-soft);
-  --ui-visit: var(--palette-blush-deep);
-  --ui-visit-soft: color-mix(in oklab, var(--palette-powder-blush) 25%, var(--palette-white));
-  --ui-ask: var(--palette-green-ink);
-  --ui-ask-soft: color-mix(in oklab, var(--palette-aquamarine) 45%, var(--palette-white));
+  --ui-food: var(--palette-clay-deep);
+  --ui-food-soft: var(--palette-clay-soft);
+  --ui-ride: var(--palette-deep);
+  --ui-ride-soft: var(--palette-steel-soft);
+  --ui-visit: var(--palette-cocoa);
+  --ui-visit-soft: color-mix(in oklab, var(--palette-cocoa) 15%, var(--palette-white));
+  --ui-ask: var(--palette-navy);
+  --ui-ask-soft: color-mix(in oklab, var(--palette-mint) 75%, var(--palette-white));
   /* Umbră */
-  --ui-shadow: 0 12px 35px oklch(0.27 0.04 178 / 9%);
+  --ui-shadow: 0 12px 35px oklch(0.311 0.038 267.4 / 10%);
 
   /* Legături către componentele de bază (nu e nevoie să le schimbi). */
   --radius: 0.5rem;
@@ -146,7 +145,7 @@
   --primary-foreground: var(--ui-button-text);
   --secondary: var(--ui-button-soft);
   --secondary-foreground: var(--ui-button-soft-text);
-  --muted: var(--palette-green-soft);
+  --muted: var(--palette-steel-soft);
   --muted-foreground: var(--ui-text-muted);
   --accent: var(--ui-highlight);
   --accent-foreground: var(--ui-highlight-text);
@@ -155,11 +154,11 @@
   --border: var(--ui-border);
   --input: var(--ui-input);
   --ring: var(--ui-focus);
-  --chart-1: var(--palette-green-deep);
-  --chart-2: var(--palette-pearl-aqua);
-  --chart-3: var(--palette-grapefruit);
-  --chart-4: var(--palette-powder-blush);
-  --chart-5: var(--palette-aquamarine);
+  --chart-1: var(--palette-navy);
+  --chart-2: var(--palette-steel);
+  --chart-3: var(--palette-clay);
+  --chart-4: var(--palette-cocoa);
+  --chart-5: var(--palette-deep);
   --sidebar: var(--ui-card);
   --sidebar-foreground: var(--ui-text);
   --sidebar-primary: var(--ui-button);
