@@ -53,6 +53,45 @@ export type Database = {
         }
         Relationships: []
       }
+      trip_conversations: {
+        Row: {
+          messages: Json
+          trip_input: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          messages?: Json
+          trip_input?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          messages?: Json
+          trip_input?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      trip_search_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          value: Json
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          value: Json
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

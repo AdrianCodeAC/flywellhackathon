@@ -15,6 +15,13 @@
       "when": 1793387470814,
       "tag": "0001_create_content_cache",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793406831969,
+      "tag": "0002_trip_conversation_and_cache",
+      "breakpoints": true
     }
   ]
 }
