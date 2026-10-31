@@ -19,3 +19,52 @@ export function pickDay(range:{from?:Date|undefined;to?:Date|undefined}|undefine
   // Complete range: tapping before the return moves only the departure; tapping on/after it restarts the range.
   return date<range.to?{from:date,to:range.to}:{from:date,to:undefined};
 }
+
+/* ---- City photo lookup: pure rules, so they can be tested without the network. ---- */
+export type PhotoPage = { title?: string; thumbnail?: { source?: string } | null };
+export type CommonsPage = { title?: string; imageinfo?: { mime?: string; thumburl?: string; width?: number }[] | null };
+
+// Wikimedia serves article thumbnails from upload.wikimedia.org and thumb.wikimedia.org; both are real photos.
+const PHOTO_HOST = /(^|\.)(upload|thumb)\.wikimedia\.org$/i;
+// Logos, flags, maps and drawings sit next to photos in the same folders but say nothing about how a city looks.
+const NOT_A_PHOTO = /(^|[_\-.\/])(logo|logos|flag|flags|map|maps|locator|seal|seals|crest|crests|banner|banners|icon|icons|diagram|diagrams|chart|charts|illustration|illustrations|sketch|sketches|drapel|stem[aă]|hart[aă])([_\-.\/]|$)|coat[- ]of[- ]arms|position[- ]map|location[- ]map/i;
+
+export function cleanPhotoUrl(url: string): string { return url.split('?')[0] ?? url; }
+
+export function isWikimediaPhoto(url: string | undefined | null): url is string {
+  if (!url || !/^https:\/\//i.test(url)) return false;
+  try {
+    const parsed = new URL(url);
+    return PHOTO_HOST.test(parsed.hostname) && /\.(jpe?g|png|webp)$/i.test(parsed.pathname) && !NOT_A_PHOTO.test(parsed.pathname);
+  } catch { return false; }
+}
+
+/** Best photo among Wikipedia search hits: the article named like the city wins, and a photograph beats a picture file. */
+export function pickPhotoCandidate(pages: PhotoPage[], city: string): string | null {
+  const wanted = city.trim().toLowerCase();
+  const usable = pages.filter(page => isWikimediaPhoto(page.thumbnail?.source));
+  if (!usable.length) return null;
+  const score = (page: PhotoPage) => {
+    const title = (page.title ?? '').trim().toLowerCase();
+    const named = title === wanted ? 3 : title.startsWith(wanted) ? 2 : title.includes(wanted) ? 1 : 0;
+    const photograph = /\.jpe?g$/i.test(cleanPhotoUrl(page.thumbnail?.source ?? '')) ? 1 : 0;
+    return named * 2 + photograph;
+  };
+  const best = usable.reduce((a, b) => (score(b) > score(a) ? b : a));
+  const source = best.thumbnail?.source;
+  return source ? cleanPhotoUrl(source) : null;
+}
+
+/** Wikimedia Commons file search: only real photographs of the city itself, wide enough to look good on a card. */
+export function pickCommonsPhoto(pages: CommonsPage[], city: string): string | null {
+  const wanted = city.trim().toLowerCase();
+  const usable = pages.filter(page => {
+    const info = page.imageinfo?.[0];
+    return !!info && info.mime === 'image/jpeg' && (info.width ?? 0) >= 600 && isWikimediaPhoto(info.thumburl) && (page.title ?? '').toLowerCase().includes(wanted);
+  });
+  const first = usable[0];
+  const source = first?.imageinfo?.[0]?.thumburl;
+  return source ? cleanPhotoUrl(source) : null;
+
+}
+

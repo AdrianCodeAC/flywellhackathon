@@ -77,7 +77,7 @@
   --palette-navy: oklch(0.311 0.038 267.4);     /* #283044 Midnight Navy (text, butoane) */
   --palette-steel: oklch(0.688 0.059 236.6);    /* #78A1BB Steel Blue (culoarea de bază) */
   --palette-mint: oklch(0.961 0.014 155.6);     /* #EBF5EE Mint White (fundal de pagină) */
-  --palette-plum: oklch(0.591 0.094 344.3);     /* #A5668B Plum (accent rece-cald, folosit puțin) */
+  --palette-pine: oklch(0.536 0.082 175.3);     /* #2E7D6B Pine (accent rece, folosit puțin) */
   --palette-gold: oklch(0.810 0.158 78.9);      /* #F7B32B Gold (accent cald principal) */
   --palette-white: oklch(1 0 0);                /* #FFFFFF Alb (carduri, text pe fundal închis) */
 
@@ -88,9 +88,10 @@
   --palette-muted: oklch(0.48 0.032 248);        /* text secundar */
   --palette-gold-soft: oklch(0.965 0.045 85);   /* fundal auriu foarte deschis */
   --palette-gold-deep: oklch(0.55 0.12 72);     /* text auriu / amber */
-  --palette-plum-soft: oklch(0.955 0.018 344);  /* fundal vișiniu foarte deschis */
-  --palette-plum-deep: oklch(0.45 0.09 344);    /* text vișiniu */
-  --palette-alert: oklch(0.42 0.11 350);        /* avertizări (vișiniu închis) */
+  --palette-pine-soft: oklch(0.936 0.027 170.3); /* #D9F0E7 fundal pin very deschis */
+  --palette-pine-deep: oklch(0.424 0.068 175.2); /* #1B5A4C text pin */
+  --palette-alert: oklch(0.501 0.145 31.5);      /* #A63B2A avertizări (roșu cărămidă) */
+
 }
 
 /* ==========================================================================
@@ -128,8 +129,9 @@
   --ui-food-soft: var(--palette-gold-soft);
   --ui-ride: var(--palette-deep);
   --ui-ride-soft: var(--palette-steel-soft);
-  --ui-visit: var(--palette-plum-deep);
-  --ui-visit-soft: var(--palette-plum-soft);
+  --ui-visit: var(--palette-pine-deep);
+  --ui-visit-soft: var(--palette-pine-soft);
+
   --ui-ask: var(--palette-navy);
   --ui-ask-soft: color-mix(in oklab, var(--palette-mint) 75%, var(--palette-white));
   /* Umbră */
@@ -159,7 +161,7 @@
   --chart-1: var(--palette-navy);
   --chart-2: var(--palette-steel);
   --chart-3: var(--palette-gold);
-  --chart-4: var(--palette-plum);
+  --chart-4: var(--palette-pine);
   --chart-5: var(--palette-deep);
   --sidebar: var(--ui-card);
   --sidebar-foreground: var(--ui-text);
@@ -196,13 +198,14 @@
   --ui-button-soft-text: oklch(0.85 0.05 230);
   --ui-highlight: oklch(0.36 0.05 250);
   --ui-highlight-text: oklch(0.92 0.03 220);
-  --ui-danger: oklch(0.62 0.13 350);
+  --ui-danger: oklch(0.62 0.13 30);
   --ui-food: oklch(0.82 0.11 82);
   --ui-food-soft: oklch(0.32 0.05 82);
   --ui-ride: var(--palette-steel);
   --ui-ride-soft: oklch(0.32 0.04 250);
-  --ui-visit: oklch(0.78 0.07 344);
-  --ui-visit-soft: oklch(0.32 0.04 344);
+  --ui-visit: oklch(0.78 0.07 175);
+  --ui-visit-soft: oklch(0.32 0.04 175);
+
   --ui-ask: oklch(0.9 0.02 200);
   --ui-ask-soft: oklch(0.32 0.03 240);
   --muted: oklch(0.31 0.03 267);
@@ -244,6 +247,8 @@ h1, h2, h3 { letter-spacing: 0; }
 .option-arrow { color: var(--muted-foreground); }
 .option-number { position: absolute; bottom: 16px; right: 16px; font-size: 10px; color: color-mix(in oklab, var(--palette-steel) 75%, var(--palette-white)); }
 .option-copy { padding-right: 2.2rem; }
+.photo-fallback { background: linear-gradient(135deg, color-mix(in oklab, var(--ui-highlight) 80%, var(--palette-white)), var(--ui-ask-soft)); }
+
 .arrival-options-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .arrival-options-compact .arrival-option { height: 166px; padding: 16px; }
 .arrival-main > section > h2 { font-family: var(--font-display); font-size: 34px; font-weight: 400; }
@@ -317,7 +322,7 @@ h1, h2, h3 { letter-spacing: 0; }
   --map-step-text: var(--palette-white);
   --map-transport: var(--palette-deep);
   --map-food: var(--palette-gold-deep);
-  --map-money: var(--palette-plum-deep);
+  --map-money: var(--palette-pine-deep);
   --map-services: var(--palette-deep);
   --map-toilets: var(--palette-navy);
   --map-gates: var(--map-gate);
@@ -513,7 +518,7 @@ h1, h2, h3 { letter-spacing: 0; }
   --seat-good: color-mix(in oklab, var(--palette-steel) 45%, var(--palette-white));
   --seat-best: var(--palette-navy);
   --seat-avoid: var(--palette-gold);
-  --seat-exit: var(--palette-plum);
+  --seat-exit: var(--palette-pine);
 }
 .dark {
   --seat-body: oklch(0.32 0.02 267);
