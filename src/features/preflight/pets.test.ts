@@ -82,3 +82,13 @@ describe("pet entry rules per destination", () => {
     }
   });
 });
+
+import { isPetItem } from "./ai.functions";
+describe("AI pet duplicates", () => {
+  it("drops AI checklist items about pets", () => {
+    expect(isPetItem({ title: "Pașaport european și microcip pentru animal", source: "euPets" })).toBe(true);
+    expect(isPetItem({ title: "Verifică vaccinarea antirabică din timp", source: "euPets" })).toBe(true);
+    expect(isPetItem({ title: "Pet passport", source: null })).toBe(true);
+    expect(isPetItem({ title: "No e-cigarettes in Thailand", source: null })).toBe(false);
+  });
+});
