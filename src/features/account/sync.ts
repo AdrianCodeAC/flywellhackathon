@@ -20,9 +20,10 @@ export async function pullTrips() {
   const rows = await listSaved();
   for (const row of rows) {
     if (row.kind !== "preflight") continue;
-    const data = (row.data ?? {}) as { input?: unknown; returnDate?: unknown; airline?: unknown; ticks?: unknown };
+    const data = (row.data ?? {}) as { input?: unknown; returnDate?: unknown; airline?: unknown; ticks?: unknown; aiAdvice?: unknown };
     const parsed = preflightInputSchema.safeParse(data.input);
     if (!parsed.success) continue;
+    if (data.aiAdvice) storeAdvice(checklistStorageKey(parsed.data), parseStoredAdvice(data.aiAdvice));
     const id = tripIdFor(parsed.data);
     const local = getTrip(id);
     if (local) {
