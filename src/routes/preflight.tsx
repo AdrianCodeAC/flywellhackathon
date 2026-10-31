@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, useHydrated } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
@@ -8,7 +8,8 @@ import { AppHeader } from "@/features/arrival/AppHeader";
 import { PreflightForm } from "@/features/preflight/PreflightForm";
 import { PreflightChecklist } from "@/features/preflight/PreflightChecklist";
 import { PreflightChat } from "@/features/preflight/PreflightChat";
-import type { PreflightInput } from "@/features/preflight/rules";
+import { preflightInputSchema, type PreflightInput } from "@/features/preflight/rules";
+import { OPEN_PREFLIGHT_KEY } from "@/features/account/device";
 
 const searchSchema = z.object({
   from: fallback(z.string(), "").default(""),
@@ -44,6 +45,19 @@ function PreflightPage() {
   const hydrated = useHydrated();
   const [trip, setTrip] = useState<PreflightInput | null>(null);
   const [editing, setEditing] = useState<PreflightInput | null>(null);
+
+  // A checklist opened from the account (or saved before signing in) reopens directly.
+  useEffect(() => {
+    const raw = sessionStorage.getItem(OPEN_PREFLIGHT_KEY);
+    if (!raw) return;
+    sessionStorage.removeItem(OPEN_PREFLIGHT_KEY);
+    try {
+      const parsed = preflightInputSchema.safeParse(JSON.parse(raw));
+      if (parsed.success) setTrip(parsed.data);
+    } catch {
+      /* ignore malformed */
+    }
+  }, []);
 
   return (
     <>
