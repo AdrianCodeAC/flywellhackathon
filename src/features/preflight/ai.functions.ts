@@ -6,6 +6,10 @@ import { travelScope } from "@/lib/travel-scope";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { CATEGORIES, SOURCE_IDS, SOURCES, describeTrip, preflightInputSchema } from "./rules";
+import { repeatsChecklist } from "./ai-dedupe";
+import en from "@/locales/en.json";
+
+const RULE_TITLES = en.preflight.rule as Record<string, { title: string }>;
 
 export const adviceSchema = z.object({
   items: z
@@ -51,13 +55,7 @@ function rules(lang: "en" | "ro"): string {
   );
 }
 
-const PET_SOURCES = new Set(["euPets", "euPetsEntry", "gbPets", "usDogs", "usAnimals", "trPets", "aePets"]);
-/** Pet rules come only from rules.ts; AI duplicates are dropped. */
-export function isPetItem(i: { title: string; detail?: string; source?: string | null }): boolean {
-  if (i.source && PET_SOURCES.has(i.source)) return true;
-  const text = i.title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  return /\b(pet|pets|animal\w*|dog|dogs|cat|cats|caine|caini|pisic\w*|dihor\w*|ferret\w*)\b/.test(text);
-}
+export { isPetItem } from "./ai-dedupe";
 
 /** Up to 6 extra checklist items specific to this route, airline and passenger. */
 export const preflightAdvice = createServerFn({ method: "POST" })
@@ -71,8 +69,9 @@ export const preflightAdvice = createServerFn({ method: "POST" })
       rules(data.lang) +
         " Return up to 6 checklist items that are specific to this trip (destination entry rules, the airline's known cabin-bag policy, " +
         "local rules at the destination such as banned medicines or e-cigarettes, weather or seasonal conditions). Do not speculate about strikes or events you cannot confirm. " +
-        "Do NOT repeat generic topics already covered: " +
-        data.covered.join(", ") +
+        "The checklist ALREADY contains these items — do NOT add anything that repeats, rephrases or confirms them " +
+        "(for example no 'no visa needed' item when an ID-card or passport item exists): " +
+        data.covered.map((k) => RULE_TITLES[k]?.title.replace(/\{\{[^}]+\}\}/g, "…") ?? k).join("; ") +
         ". Write BOTH title and detail in the response language. Each detail at most 40 words. " +
         "Never add items about pets or animals: the checklist already has the hand-checked airline and destination pet rules. " +
         "Set source to null unless one of the listed sources directly covers the item. Return an empty list rather than guessing.",
@@ -80,7 +79,7 @@ export const preflightAdvice = createServerFn({ method: "POST" })
     );
     return {
       items: advice.items
-        .filter((i) => i.title.trim() && i.detail.trim() && !isPetItem(i))
+        .filter((i) => i.title.trim() && i.detail.trim() && !repeatsChecklist(i, data.covered))
         .slice(0, 6)
         .map((i) => ({ ...i, title: fixRo(i.title), detail: fixRo(i.detail) })),
     };

@@ -23,7 +23,8 @@ import { Shimmer } from "@/components/ai-elements/shimmer";
 import { AirportGuide } from "@/features/airport/AirportGuide";
 import { SaveButton } from "@/features/account/SaveButton";
 import { OPEN_PREFLIGHT_KEY } from "@/features/account/device";
-import { isPetItem, preflightAdvice, type PreflightAdvice } from "./ai.functions";
+import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
+import { repeatsChecklist } from "./ai-dedupe";
 import { AirlineBaggage } from "./AirlineBaggage";
 import { PetPolicyCard } from "./PetPolicyCard";
 import { JetLagCard } from "./JetLagCard";
@@ -120,7 +121,7 @@ export function PreflightChecklist({
       detail: t(`preflight.rule.${i.key}.detail`, i.params ?? {}),
       source: i.source,
     })),
-    ...(advice?.items ?? []).filter((i) => !isPetItem(i)).map((i, n) => ({
+    ...(advice?.items ?? []).filter((i) => !repeatsChecklist(i, fixed.map((f) => f.key))).map((i, n) => ({
       ...i,
       id: `ai-${n}-${i.title.slice(0, 24)}`,
       ai: true,
