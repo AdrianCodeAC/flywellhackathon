@@ -211,11 +211,13 @@ export function AirportMap({
     const size = Math.max(width, height) / 40;
     const centres = layout.terminals.map((term) => project(term.center));
     if (!centres.length) return [];
+    const main = centres[0]!;
     return layout.pois
       .filter((p) => p.kind === "gate")
-      .slice(0, 18)
-      .map((g) => {
-        const [x, y] = project(g.at);
+      .map((g) => project(g.at))
+      .sort((a, b) => Math.hypot(a[0] - main[0], a[1] - main[1]) - Math.hypot(b[0] - main[0], b[1] - main[1]))
+      .slice(0, 16)
+      .map(([x, y]) => {
         const c = centres.reduce((best, p) => (Math.hypot(p[0] - x, p[1] - y) < Math.hypot(best[0] - x, best[1] - y) ? p : best));
         const len = Math.hypot(x - c[0], y - c[1]) || 1;
         const ux = (x - c[0]) / len;
