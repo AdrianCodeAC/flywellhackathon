@@ -1,0 +1,48 @@
+import { useTranslation } from "react-i18next";
+import { Link } from "@tanstack/react-router";
+import { ArrowUpRight, Plane, BedDouble, Wallet, Sun, FileCheck, Heart, Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { bookingLinks, nights, rankFlights, stayCosts, type TripResult } from "./types";
+import { TripChat } from "./TripChat";
+import type { TripInput } from "./types";
+
+export function TripResults({result,busy,onEdit,onAdjust}:{result:TripResult;busy:boolean;onEdit:()=>void;onAdjust:(i:TripInput,preference?:string)=>void}){
+  const {t,i18n}=useTranslation();const {input,destination,flights,advice,extras}=result;
+  const currency=input.lang==="ro"?"RON":"EUR",rate=currency==="RON"?extras?.rate:null;
+  const money=(v:number,c=currency)=>new Intl.NumberFormat(i18n.language,{style:"currency",currency:c,maximumFractionDigits:0}).format(v);
+  const date=(v:string)=>new Intl.DateTimeFormat(i18n.language,{day:"numeric",month:"short"}).format(new Date(`${v.slice(0,10)}T12:00:00`));
+  const links=bookingLinks(input,destination.city);const ranked=rankFlights(flights?.flights??[]);const best=ranked[0]?.flight;
+  const costs=advice?stayCosts(input,advice,best,currency==="RON"?(rate??1):1):null;
+  const estimatesCurrency=currency==="RON"&&!rate?"EUR":currency;
+  return <div className="space-y-9" id="trip-results">
+    <header className="flex flex-wrap items-start justify-between gap-3 border-b pb-6"><div><p className="mb-2 text-xs font-semibold uppercase text-primary">{t("trip.yourTrip")}{result.cached?` · ${t("trip.cached")}`:""}</p><h1 className="font-display text-3xl sm:text-4xl">{input.origin} <span className="text-primary">→</span> {destination.city}</h1><p className="mt-2 text-sm text-muted-foreground">{date(input.departure)}–{date(input.returnDate)} · {t("trip.nights",{count:nights(input.departure,input.returnDate)})} · {t("trip.adultCount",{count:input.adults})}{input.children?` · ${t("trip.childCount",{count:input.children})}`:""}</p></div><Button variant="outline" onClick={onEdit} className="min-h-11"><Pencil className="size-4"/>{t("trip.edit")}</Button></header>
+    <section><Heading icon={<Plane className="size-5"/>} title={t("trip.flights")}/>
+      {!flights?<Loading/>:ranked.length?<><p className="mb-4 text-xs text-muted-foreground">{t("trip.cachedFares")} · {new Intl.DateTimeFormat(i18n.language,{dateStyle:"short",timeStyle:"short"}).format(new Date(flights.fetchedAt))}</p><div className="grid gap-4 md:grid-cols-3">{ranked.map(({role,flight:f})=><article key={role} className={`rounded-lg border bg-card p-5 ${role==="best"?"border-primary ring-1 ring-primary":""}`}>
+        <p className="mb-4 text-xs font-semibold uppercase text-primary">{t(`trip.${role}`)}</p><h3 className="text-lg font-semibold">{f.airline} · {input.origin} → {destination.iata}</h3>
+        <p className="mt-3 text-sm">{date(f.departure)} · {f.departure.slice(11,16)} → {f.arrival?f.arrival.slice(11,16):t("trip.unavailable")}</p><p className="mt-1 text-xs text-muted-foreground">{t("trip.return")}: {date(f.returnDate)} · {f.returnDate.slice(11,16)}</p>
+        <p className="mt-3 text-sm">{t("trip.stops",{count:f.stops})} · {f.duration?t("trip.minutes",{count:f.duration}):t("trip.durationUnknown")}</p><p className="mt-2 text-xs text-muted-foreground">{t("trip.score")}: {f.score}/100 · {t("trip.partialScore")}</p>
+        <p className="mt-5 text-2xl font-semibold">{money(f.price,f.currency)}</p><p className="text-xs text-muted-foreground">{t("trip.perPerson")} · {t("trip.total")}: {money(f.price*(input.adults+input.children),f.currency)}</p><p className="mt-2 text-xs text-muted-foreground">{t("trip.childFare")}</p>
+        <Button asChild className="mt-4 min-h-11 w-full"><a href={f.link} target="_blank" rel="noreferrer">{t("trip.book")}<ArrowUpRight className="size-4"/></a></Button>
+        <Button asChild variant="outline" className="mt-2 min-h-11 w-full whitespace-normal"><Link to="/arrival" search={{iata:destination.iata}} onClick={()=>localStorage.setItem("flywell:tab","arrival")}>{t("trip.setArrival")}</Link></Button>
+      </article>)}</div></>:<div className="border-l-2 border-primary pl-4"><p className="font-medium">{t(`trip.${flights.error??"noFlights"}`)}</p><div className="mt-4 flex flex-wrap gap-2"><Button asChild variant="outline" className="min-h-11"><a href={links.google} target="_blank" rel="noreferrer">{t("trip.googleFlights")}<ArrowUpRight className="size-4"/></a></Button><Button asChild variant="outline" className="min-h-11"><a href={links.skyscanner} target="_blank" rel="noreferrer">{t("trip.skyscanner")}<ArrowUpRight className="size-4"/></a></Button></div></div>}
+      {flights?.baggageUnknown&&<p className="mt-3 text-sm text-muted-foreground">{t("trip.bagUnknown")}</p>}
+    </section>
+    <section><Heading icon={<BedDouble className="size-5"/>} title={t("trip.stay")}/>{advice?<div className="grid gap-4 md:grid-cols-3">{advice.areas.map(a=><article key={a.name} className="rounded-lg border bg-card p-5"><p className="text-xs font-semibold text-primary">{t("trip.estimate")}</p><h3 className="mt-2 text-lg font-semibold">{a.name}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{a.reason}</p><p className="my-4 font-semibold">{money(a.nightlyMinEur*(rate??1),estimatesCurrency)}–{money(a.nightlyMaxEur*(rate??1),estimatesCurrency)} <span className="text-xs font-normal">{t("trip.perNight")}</span></p><div className="flex flex-wrap gap-2">{["booking","airbnb"].map(k=><Button asChild variant="outline" className="min-h-11 flex-1 px-2" key={k}><a href={bookingLinks(input,`${destination.city} ${a.name}`)[k as "booking"|"airbnb"]} target="_blank" rel="noreferrer">{t(`trip.${k}`)}<ArrowUpRight className="size-3"/></a></Button>)}</div></article>)}</div>:result.adviceError?<p role="alert" className="text-sm text-destructive">{result.adviceError}</p>:<Loading/>}</section>
+    <section><Heading icon={<Wallet className="size-5"/>} title={t("trip.cost")}/>{costs?<>
+      <p className="text-xs font-semibold text-primary">{t("trip.estimate")} · {costs.flightsIncluded?t("trip.realFlightsIncluded"):t("trip.excludesFlights")}</p>
+      <p className="mt-2 break-words font-display text-4xl">{money(costs.total[0]??0,estimatesCurrency)}–{money(costs.total[1]??0,estimatesCurrency)}</p><p className="mt-2 text-sm text-muted-foreground">{money(costs.perDay[0]??0,estimatesCurrency)}–{money(costs.perDay[1]??0,estimatesCurrency)} {t("trip.perDayAll")}</p>
+      <div className="mt-5 space-y-4">{costs.rows.map(r=><div key={r.key} className="grid grid-cols-[1fr_auto] gap-x-3 gap-y-2 text-sm"><span>{t(`trip.cost_${r.key}`)}{r.key!=="flights"?` · ${t("trip.estimate")}`:""}</span><span>{r.range?`${money(r.range[0]??0,estimatesCurrency)}–${money(r.range[1]??0,estimatesCurrency)}`:t("trip.unavailable")}</span><meter className={`trip-meter trip-meter-${r.key} col-span-2 h-2 w-full`} min={0} max={costs.total[1]||1} value={r.range?.[1]??0}/></div>)}</div>
+      {currency==="RON"&&!rate&&<p className="mt-3 text-xs text-muted-foreground">{t("trip.exchangeUnavailable")}</p>}
+    </>:busy?<Loading/>:<p className="text-sm text-muted-foreground">{t("trip.costUnavailable")}</p>}</section>
+    <section><Heading icon={<Sun className="size-5"/>} title={t("trip.goodToKnow")}/><div className="grid gap-6 sm:grid-cols-2">
+      <div><h3 className="font-semibold">{t("trip.weather")}</h3><p className="mt-2 text-sm text-muted-foreground">{extras?.weather?`${extras.weather.min}–${extras.weather.max}°C · ${t(extras.weather.climate?"trip.climate":"trip.forecast",{year:extras.weather.sourceYear})}`:t("trip.weatherUnavailable")}</p><a href="https://open-meteo.com/" target="_blank" rel="noreferrer" className="mt-2 inline-block text-xs underline">{t("trip.openMeteo")}</a></div>
+      <div><h3 className="flex items-center gap-2 font-semibold"><FileCheck className="size-4 text-primary"/>{t("trip.documents")}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{advice?.documents??t("trip.documentsUnavailable")}</p><a href="https://www.mae.ro/travel-conditions" target="_blank" rel="noreferrer" className="mt-2 inline-block text-sm underline">{t("trip.mae")}</a></div>
+      <div><h3 className="font-semibold">{t("trip.currency")}</h3><p className="mt-2 text-sm text-muted-foreground">{extras?.localCurrency??advice?.currency??t("trip.unavailable")}{extras?.localRate?` · 1 EUR = ${extras.localRate} ${extras.localCurrency}`:""}{extras?.rate?` · 1 EUR = ${extras.rate} RON`:""}</p>{extras?.rateDate&&<p className="mt-1 text-xs text-muted-foreground">{t("trip.referenceRate",{date:extras.rateDate})}</p>}</div>
+      <div><h3 className="flex items-center gap-2 font-semibold"><Heart className="size-4 text-food-tone"/>{t("trip.wellbeing")}</h3><ul className="mt-2 list-disc space-y-2 pl-4 text-sm leading-relaxed text-muted-foreground">{advice?.wellbeing.map(v=><li key={v}>{v}</li>)}</ul></div>
+    </div></section>
+    <TripChat input={input} onAdjust={onAdjust}/>
+  </div>;
+}
+function Heading({icon,title}:{icon:React.ReactNode;title:string}){return <h2 className="mb-5 flex items-center gap-3 font-display text-3xl"><span className="text-primary">{icon}</span>{title}</h2>;}
+function Loading(){return <div className="grid gap-4 sm:grid-cols-3">{[0,1,2].map(k=><Skeleton key={k} className="h-32 w-full rounded-md"/>)}</div>;}
