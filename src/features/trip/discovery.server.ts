@@ -27,7 +27,7 @@ export async function discover(origin:string,lang:string,includeStop:boolean,bas
   const fares:RouteFare[]=[];
   for(const row of rows){
    const code=String(row['destination_airport']??row['destination']),a=airports.find(a=>a[0]===code);const foundAt=observed(row,latest),price=Number(row['price']),stops=Number(row['transfers']),departure=String(row['departure_at']??'');
-   if(!a||row['origin_airport']!==origin||!recentFare(foundAt)||!(price>0)||stops>(includeStop?1:0)||departure.slice(0,10)<new Date().toISOString().slice(0,10))continue;
+   if(!a||row['origin_airport']!==origin||!recentFare(foundAt)||!Number.isFinite(price)||!(price>0)||!Number.isInteger(stops)||stops<0||stops>(includeStop?1:0)||!Number.isFinite(Date.parse(departure))||departure.slice(0,10)<new Date().toISOString().slice(0,10))continue;
    const returnDate=String(row['return_at']??'');const link=String(row['link']??'');
    const f:RouteFare={id:`${code}:${departure}:${returnDate}:${price}`,destinationIata:code,city:a[2]||a[1],country:a[3],foundAt,airline:String(row['airline']??''),departure,returnDate,price,currency,stops,duration:typeof row['duration']==='number'?row['duration']:null,layover:null,arrival:null,score:0,link:link.startsWith('/')&&!link.startsWith('//')?`https://www.aviasales.com${link}`:'https://www.google.com/travel/flights'};f.score=comfortScore(f);fares.push(f);
   }
