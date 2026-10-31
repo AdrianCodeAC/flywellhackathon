@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ClipboardCheck, Plane, PlaneLanding, Trash2 } from "lucide-react";
@@ -98,11 +98,11 @@ function TripView({ trip, trips, tab }: { trip: MyTrip; trips: MyTrip[]; tab: Tr
         })}
       </div>
 
-      {panel("before", <>
+      {panel("before", <div style={{ "--checklist-top": "calc(env(safe-area-inset-top) + 12.25rem)" } as CSSProperties}>
         <PreflightChecklist input={trip.input} returnTo={`/trips/${trip.id}`} hideJetLag onArrival={() => setTab("arrival")}
           onEdit={() => void navigate({ to: "/preflight", search: { from: "", to: "", date: "", edit: trip.id } })} />
         <PreflightChat input={trip.input} />
-      </>)}
+      </div>)}
       {panel("during", <DuringFlight trip={trip} />)}
       {panel("arrival", <ArrivalAssistant iata={trip.input.destination.iata} embedded />)}
     </div>

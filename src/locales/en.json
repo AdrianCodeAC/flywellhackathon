@@ -641,7 +641,9 @@
         "hiskyFee": "€50 per flight within Romania and Bucharest–Chișinău; not offered on London flights. Contact HiSky to confirm."
       },
       "assistTitle": "Assistance dogs — {{airline}}"
-    }
+    },
+    "tickAll": "Tick all",
+    "untickAll": "Untick all"
   },
   "weather": {
     "unavailable": "Weather is unavailable right now.",

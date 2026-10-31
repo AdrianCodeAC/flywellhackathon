@@ -560,3 +560,17 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-help-alert { --tile-tone: var(--ui-danger); --tile-text: var(--ui-danger-text); }
 .trip-help-care { --tile-tone: var(--palette-powder-blush); --tile-text: var(--palette-green-ink); }
 @media (prefers-reduced-motion: reduce) { .trip-start, .trip-help-tile { transition: none; } }
+
+/* Checklist progress stays in view while scrolling; pages with sticky tabs raise --checklist-top. */
+.checklist-progress {
+  position: sticky;
+  top: var(--checklist-top, calc(env(safe-area-inset-top) + 8rem));
+  z-index: 20;
+  margin-inline: -0.75rem;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--card) 94%, transparent);
+  box-shadow: var(--shadow-travel);
+  backdrop-filter: blur(8px);
+}

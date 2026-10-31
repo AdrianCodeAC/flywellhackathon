@@ -641,7 +641,9 @@
         "hiskyFee": "50 € pe zbor în România și pe ruta București–Chișinău; nu se oferă pe zborurile spre Londra. Contactează HiSky pentru confirmare."
       },
       "assistTitle": "Câini de asistență — {{airline}}"
-    }
+    },
+    "tickAll": "Bifează tot",
+    "untickAll": "Debifează tot"
   },
   "weather": {
     "unavailable": "Vremea nu este disponibilă acum.",
