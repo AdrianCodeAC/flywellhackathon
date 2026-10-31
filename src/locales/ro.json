@@ -677,7 +677,10 @@
         "detail": "Urmează indicatoarele de ieșire; trenurile, autobuzele și taxiurile sunt marcate pe hartă."
       }
     },
-    "gatePlaceholder": "ex. 12"
+    "gatePlaceholder": "ex. 12",
+    "stepOf": "Pasul {{n}} din {{total}}",
+    "prevStep": "Pasul anterior",
+    "nextStep": "Pasul următor"
   },
   "help": {
     "button": "Ajutor",
@@ -865,5 +868,93 @@
     "saveError": "Nu s-a putut salva. Încearcă din nou.",
     "loadError": "Elementele salvate nu au putut fi încărcate.",
     "invalidEmail": "Folosește o adresă de e-mail reală, pe care o poți deschide."
+  },
+  "seats": {
+    "eyebrow": "Unde să stai",
+    "title": "Locul potrivit pentru tine",
+    "situations": "Situația ta",
+    "subtitle": "Alege situația ta și avionul îți arată unde să țintești și ce să eviți. Rândurile diferă de la un avion la altul, așa că verifică harta locurilor companiei.",
+    "situation": {
+      "child": "Cu un copil",
+      "turbulence": "Mai puține turbulențe",
+      "fear": "Frică de zbor",
+      "motion": "Rău de mișcare",
+      "legroom": "Mai mult loc la picioare",
+      "quickExit": "Cobori repede",
+      "sleep": "Somn",
+      "mobility": "Mobilitate redusă"
+    },
+    "summary": {
+      "child": "Deasupra aripii sau puțin în fața ei, la geam și la mijloc, împreună, departe de rândurile de la ieșiri și de ultimele rânduri.",
+      "turbulence": "Pe rândurile de deasupra aripii se simt cel mai puțin turbulențele; pe ultimele rânduri, cel mai tare.",
+      "fear": "Stai deasupra aripii, pe culoar, și spune-le însoțitorilor că ai emoții — sunt obișnuiți.",
+      "motion": "La geam, deasupra aripii, unde zborul e cel mai lin.",
+      "legroom": "Rândurile de la ieșiri sau primul rând au cel mai mult spațiu.",
+      "quickExit": "Un loc pe culoar, în primele rânduri, te scoate primul din avion.",
+      "sleep": "La geam, departe de toalete și de bucătării.",
+      "mobility": "Pe culoar, în față, nu pe rândul de la ieșire, cu asistența cerută din timp."
+    },
+    "tip": {
+      "child": {
+        "1": "Pune scaunul copilului la geam: nu trebuie să blocheze ieșirea din rând. Întreabă compania ce scaune pentru copii acceptă.",
+        "2": "Copiii și bebelușii nu pot sta pe rândurile de la ieșirile de urgență — echipajul vă va muta.",
+        "3": "În spatele cabinei se simt cel mai tare turbulențele și se stă la coadă la toalete, așa că alege aripa sau mai în față."
+      },
+      "turbulence": {
+        "1": "Deasupra aripii ești cel mai aproape de centrul de greutate al avionului, așa că mișcările sunt cele mai mici; coada se mișcă cel mai mult.",
+        "2": "Ține centura prinsă lejer tot zborul — turbulențele pot apărea și pe cer senin."
+      },
+      "fear": {
+        "1": "Deasupra aripii zborul e cel mai lin, iar sunetul motoarelor rămâne constant.",
+        "2": "Culoarul ajută dacă te simți închis; geamul ajută dacă te liniștește să vezi orizontul.",
+        "3": "Apasă Ajutor sus pe ecran pentru un exercițiu de respirație care merge și în modul avion."
+      },
+      "motion": {
+        "1": "Privește orizontul și ține capul nemișcat, sprijinit de tetieră.",
+        "2": "Nu citi la decolare și când se zgâlțâie avionul, și îndreaptă ventilația spre față."
+      },
+      "legroom": {
+        "1": "Rândurile de la ieșiri sunt doar pentru adulți care pot și vor să ajute la deschiderea ușii; echipajul te poate muta dacă nu ești potrivit.",
+        "2": "Primul rând are spațiu în plus, dar la decolare și aterizare nu poți ține bagaje sub scaunul din față."
+      },
+      "quickExit": {
+        "1": "Primele rânduri, pe culoar, sunt cele mai bune pentru o legătură scurtă.",
+        "2": "În caz de urgență contează cel mai mult distanța până la o ieșire liberă: când te așezi, numără rândurile până la ieșirile din față și din spate."
+      },
+      "sleep": {
+        "1": "La geam ai de ce să te sprijini și nu trece nimeni peste tine.",
+        "2": "În fața și în spatele cabinei sunt toaletele și bucătăriile: lumină, zgomot și cozi."
+      },
+      "mobility": {
+        "1": "Cere companiei asistență gratuită cu cel puțin 48 de ore înainte de zbor — regulile UE îți dau acest drept.",
+        "2": "Unele locuri de pe culoar au cotiere rabatabile, care te ajută să te muți mai ușor; întreabă la rezervare."
+      }
+    },
+    "rows": "Rândurile {{list}}",
+    "avoidRows": "evită {{list}}",
+    "columns": "locuri: {{list}}",
+    "col": {
+      "window": "geam (A, F)",
+      "middle": "mijloc (B, E)",
+      "aisle": "culoar (C, D)"
+    },
+    "front": "Față",
+    "middle": "Mijloc",
+    "rear": "Spate",
+    "legendBest": "Cele mai bune locuri",
+    "legendGood": "Rând bun",
+    "legendAvoid": "De evitat",
+    "legendExit": "Ieșire",
+    "legendWing": "Aripă",
+    "comfortOnly": "Sfat de confort — nu are la bază date de siguranță.",
+    "aircraftNote": "Desenat pe un avion obișnuit cu 30 de rânduri (A320 / Boeing 737). Rândurile de la aripă și de la ieșiri diferă pe avionul tău; verifică harta locurilor când îți alegi locul.",
+    "statsTitle": "Ce spun datele despre siguranță",
+    "turbTitle": "Răniri grave din cauza turbulențelor la membrii echipajului fără centură, pe zone ale cabinei (companii din SUA, 2009–2018)",
+    "turbNote": "Din {{total}} de persoane rănite grav de turbulențe, doar {{belted}} pasager purta centura, iar {{rear}}% dintre pasagerii răniți erau în spatele cabinei.",
+    "crashTitle": "Rata deceselor pe treimi ale cabinei în 17 accidente cu supraviețuitori (SUA, 1985–2000)",
+    "crashNote": "Locurile din mijloc, în spate: {{rear}}%; locurile de pe culoar, la mijloc: {{aisle}}%. Eșantionul e mic, iar FAA spune că niciun loc nu e mereu cel mai sigur — fiecare accident e diferit.",
+    "exitTitle": "Contează cât de aproape ești de o ieșire",
+    "exitNote": "Într-un studiu pe 105 accidente, rândul de la ieșire și rândurile de lângă el au avut cele mai mari șanse de supraviețuire; până la {{rows}} rânduri de o ieșire, oamenii au avut încă șanse mai mari să scape dintr-un incendiu.",
+    "bottomLine": "Zborul este foarte sigur. Cel mai mult ajută două lucruri: centura prinsă cât stai pe scaun și să știi unde e cea mai apropiată ieșire."
   }
 }

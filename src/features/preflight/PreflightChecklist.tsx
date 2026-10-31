@@ -24,6 +24,7 @@ import { OPEN_PREFLIGHT_KEY } from "@/features/account/device";
 import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
 import { AirlineBaggage } from "./AirlineBaggage";
 import { JetLagCard } from "./JetLagCard";
+import { SeatAdvice } from "./SeatAdvice";
 import { WeatherCard } from "@/features/arrival/WeatherCard";
 import { getAirportByIata } from "@/features/arrival/services";
 import { FORECAST_DAYS } from "@/features/arrival/weather";
@@ -214,6 +215,7 @@ export function PreflightChecklist({
         );
       })}
 
+      <SeatAdvice input={input} />
       <JetLagCard input={input} />
       <LandingWeather input={input} />
 
