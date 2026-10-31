@@ -44,3 +44,7 @@
 - [x] Remove seat safety statistics
 - [x] Medical card saved in the account (plus phone copy), edited only in the account; Help shows it read-only
 - [x] New flow: menu = My trips · Plan a trip · I already have a ticket; each saved trip opens with tabs Before you fly · During the flight · On arrival
+
+- [ ] Pet rules per airline (Wizz, Ryanair, easyJet, BA, TAROM, Lufthansa, Austrian, Turkish, KLM, Air France, LOT, ITA, Aegean, Vueling, HiSky) and per destination (EU, into EU, GB, US, TR, AE, other), official links only.
+- [ ] What to visit: pick notable sights (parks, museums…) instead of the 50 nearest articles; food near small airports widens the search when too few places.
+- [ ] During the flight works fully offline (everything in that tab cached on the phone); remove the medical card block from the During tab (only in account and inside Help).
