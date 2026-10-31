@@ -127,8 +127,9 @@ it("searches notable sights by type near the centre (not just the nearest articl
 });
 
 it("interleaves kinds so parks are not crowded out by other sights", () => {
-  const parks = [{ kind: "park" as const, n: 1 }, { kind: "park" as const, n: 2 }];
-  const museums = [{ kind: "museum" as const, n: 3 }];
+  type Row = { kind: "park" | "museum"; n: number };
+  const parks: Row[] = [{ kind: "park", n: 1 }, { kind: "park", n: 2 }];
+  const museums: Row[] = [{ kind: "museum", n: 3 }];
   expect(interleaveByKind([museums, parks]).map((x) => x.n)).toEqual([3, 1, 2]);
 });
 

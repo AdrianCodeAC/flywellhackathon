@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { AlertTriangle, CalendarClock, Dog, ExternalLink, Luggage, PawPrint } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { findPetPolicy, PET_POLICIES, type PetPolicy } from "./pets";
@@ -140,7 +141,7 @@ export function PetPolicyCard({ airline: text, to }: { airline: string; to: stri
   );
 }
 
-function summary(p: PetPolicy, t: (k: string, o?: Record<string, unknown>) => string) {
+function summary(p: PetPolicy, t: TFunction) {
   if (p.cabin) return t("preflight.pets.shortCabin", { kg: p.cabin.kg });
   if (p.hold.kind === "cargo") return t("preflight.pets.shortCargo");
   return t("preflight.pets.shortNo");

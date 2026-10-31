@@ -218,7 +218,7 @@ async function wikidataSights(
   if (!ranked.length) return [];
 
   // Article titles in Romanian / English.
-  const titles = new Map<string, { ro?: string; en?: string }>();
+  const titles = new Map<string, { ro: string | undefined; en: string | undefined }>();
   for (let i = 0; i < ranked.length; i += 50) {
     const ids = ranked.slice(i, i + 50).map((r) => r.qid).join("|");
     const data = (await wikiJson(
