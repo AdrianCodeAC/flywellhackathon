@@ -270,3 +270,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-date-sheet > div { min-height:0; flex:1; }
 .trip-date-sheet > button { width:44px; height:44px; display:flex; align-items:center; justify-content:center; }
 .trip-date-sheet > button .sr-only { display:none; }
+.trip-price-calendar { width:100%; max-width:100%; }
+.trip-price-calendar [data-day] { aspect-ratio:auto; min-width:44px; width:100%; }
+.trip-price-calendar .rdp-month { min-width:0; }
+.trip-price-calendar .rdp-day { aspect-ratio:auto; }
