@@ -416,10 +416,6 @@
         "title": "Documents for children",
         "detail": "Each child needs their own travel document. If a child travels without both parents, carry written consent from the absent parent."
       },
-      "pet": {
-        "title": "Pet: passport, microchip, rabies vaccine",
-        "detail": "Within the EU a pet needs an EU pet passport, a microchip and a valid rabies vaccination. The airline must approve the pet in advance."
-      },
       "liquids": {
         "title": "Liquids: 100 ml rule",
         "detail": "In your cabin bag, liquids, gels and creams must be in containers of max 100 ml, all in one transparent resealable bag of about 1 litre. Some airports with new scanners allow more — only if the airport says so."
@@ -491,6 +487,58 @@
       "eu261Inbound": {
         "title": "EU rights: depends on the airline",
         "detail": "Flights into the EU are covered by Regulation 261/2004 only if the airline is an EU airline. Keep receipts and the boarding pass if something goes wrong."
+      },
+      "pet_eu": {
+        "title": "Pet in the EU: pet passport, microchip, rabies vaccine",
+        "detail": "Dogs, cats and ferrets need an EU pet passport, a microchip (put in before the vaccine) and a valid rabies vaccine given at least 21 days before travel. Finland, Ireland, Malta and Norway also require a tapeworm treatment for dogs. Other animals follow the destination's national rules."
+      },
+      "pet_intoEu": {
+        "title": "Pet entering the EU: health certificate",
+        "detail": "Coming from outside the EU, a dog, cat or ferret needs a microchip, a valid rabies vaccine and an EU animal health certificate signed by an official vet (valid 10 days until the border check). From many countries a rabies blood test (at least 0.5 IU/ml) is also needed, taken at least 90 days before the certificate. Returning with a valid EU pet passport is simpler."
+      },
+      "pet_gb": {
+        "title": "Pet to Great Britain: only as cargo",
+        "detail": "Pets flying into Great Britain must travel as cargo with an approved airline or company, not in the cabin or as checked baggage. Only recognised guide and assistance dogs may fly in the cabin. The pet needs a microchip, a rabies vaccine and a health certificate or pet passport; dogs also need a tapeworm treatment."
+      },
+      "pet_us": {
+        "title": "Dog to the USA: CDC Dog Import Form",
+        "detail": "Since 1 August 2024 every dog must be at least 6 months old, microchipped, healthy and have a CDC Dog Import Form receipt. Dogs that were in high-risk rabies countries in the last 6 months need extra documents. Airlines and US states may ask for more."
+      },
+      "pet_usCats": {
+        "title": "Cats to the USA",
+        "detail": "Cats have their own CDC rules (the dog form does not apply); the airline or the US state may ask for a health certificate or rabies vaccine."
+      },
+      "pet_tr": {
+        "title": "Pet to Türkiye",
+        "detail": "Türkiye asks for a microchip, a rabies vaccine, a rabies blood test (above 0.5 IU/ml, at least 30 days after the vaccine and 90 days before entry) and a vet health certificate. At most 2 animals per passenger."
+      },
+      "pet_ae": {
+        "title": "Pet to the UAE: import permit",
+        "detail": "You need an import permit from the UAE Ministry of Climate Change and Environment (valid 90 days), a microchip, a rabies vaccine and a certified vet health certificate; the pet is checked on arrival."
+      },
+      "pet_other": {
+        "title": "Pet: check {{city}}'s rules",
+        "detail": "Every non-EU country has its own rules for pets (microchip, vaccines, blood tests, permits, quarantine). Ask that country's embassy or veterinary authority before booking; the MAE page lists entry rules by country."
+      },
+      "petAirlineUnknown": {
+        "title": "Your airline decides if the pet can fly",
+        "detail": "Airlines differ a lot: Wizz Air, Ryanair and easyJet do not carry pets at all, while many others take a small pet in the cabin (usually up to 8 kg with the carrier). Fill in your airline to see its exact rules."
+      },
+      "petAirlineNo": {
+        "title": "{{airline}} does not carry pets",
+        "detail": "{{airline}} does not take pets in the cabin or in the hold; only recognised assistance dogs may fly. Choose another airline for your pet."
+      },
+      "petAirlineCabin": {
+        "title": "Book the pet with {{airline}} in advance",
+        "detail": "{{airline}} takes a small pet in the cabin (up to {{kg}} kg with the carrier). Places are limited, so add the pet to your booking as early as possible and wait for confirmation."
+      },
+      "petAirlineGb": {
+        "title": "Pet to Great Britain with {{airline}}",
+        "detail": "Even if {{airline}} normally takes pets in the cabin, pets flying into Great Britain must travel as cargo. Arrange it with an approved pet transport company."
+      },
+      "petAirlineCargo": {
+        "title": "{{airline}}: pets only as cargo",
+        "detail": "{{airline}} does not take pets in the cabin; they travel in the hold through its cargo partner. Ask for a quote well in advance."
       }
     },
     "offlineAnswer": "The AI agent is not available right now, so here is what the official rules say:",
@@ -545,6 +593,57 @@
         "prep_west_one": "{{count}} day before: go to bed and wake up about 1 hour later.",
         "prep_west_few": "{{count}} days before: go to bed and wake up about 1 hour later each day.",
         "prep_west_other": "{{count}} days before: go to bed and wake up about 1 hour later each day."
+      }
+    },
+    "pets": {
+      "title": "Pet rules — {{airline}}",
+      "verifyBadge": "Partly confirmed",
+      "compareTitle": "Which airlines take pets",
+      "compareHint": "Fill in your airline above for its exact rules. Tap a name for its official page.",
+      "cabin": "In the cabin",
+      "hold": "In the hold (checked)",
+      "assistance": "Assistance dogs",
+      "booking": "Booking",
+      "cabinYes": "Yes: up to {{kg}} kg with the carrier · {{species}}",
+      "cabinYesSize": "Yes: up to {{kg}} kg with the carrier, carrier max {{size}} cm · {{species}}",
+      "cabinNo": "No pets in the cabin",
+      "holdYes": "Yes, on suitable aircraft",
+      "holdKg": "Yes, up to {{kg}} kg with the crate",
+      "holdCargo": "Only as cargo, through the airline's cargo partner",
+      "holdNo": "No",
+      "assistanceText": "Recognised guide and assistance dogs fly free in the cabin with separate approval; emotional-support animals count as pets.",
+      "notice": "Book the pet at least {{hours}} hours before departure and wait for confirmation.",
+      "gbWarning": "Flying into Great Britain, pets must travel as cargo — not in the cabin — whatever the airline's usual rule.",
+      "shortCabin": "Cabin up to {{kg}} kg",
+      "shortCargo": "Cargo only",
+      "shortNo": "No pets",
+      "checked": "Checked October 2026 on the airlines' official pages. Rules change: confirm before you book.",
+      "verify": "Some numbers could not be fully confirmed on the airline's page: confirm before you book.",
+      "official": "{{airline}} pet rules",
+      "species": {
+        "dog": "dogs",
+        "cat": "cats",
+        "ferret": "ferrets",
+        "bird": "birds",
+        "turtle": "turtles"
+      },
+      "note": {
+        "assistWizz": "Only certified guide/assistance dogs, free, one per flight; declare it when booking and send the documents at least 48 hours before departure.",
+        "assistRyanair": "Only recognised assistance dogs, free in the cabin on eligible routes (not to Morocco or Israel); tell Ryanair when you book.",
+        "assistApproval": "Only approved assistance dogs; request it at least 48 hours before travel.",
+        "baCargo": "No pets in the cabin on any route. Pets travel in the hold through PetAir UK / IAG Cargo, priced by quote.",
+        "taromA320": "No animals in the hold on A320 aircraft.",
+        "snubHold": "Snub-nosed breeds (e.g. pugs, bulldogs, Persian cats) are not accepted in the hold.",
+        "payAtCheckin": "Register the pet online; the fee is paid at check-in.",
+        "austrianBooking": "Add a cabin pet in My Bookings (except US flights); larger animals through the Service Centre.",
+        "turkishHold": "Pets over 8 kg go in the hold; the fee depends on route and weight.",
+        "klmCabin": "Cabin pets travel in Economy and European Business, not in intercontinental Business or Premium Comfort.",
+        "lotEmbraer": "On Embraer aircraft the carrier must be smaller (45 × 30 × 20 cm). Dogs to the US need at least 48 hours.",
+        "itaDomestic": "On domestic Italian flights the cabin limit is 12 kg (with carrier and food).",
+        "itaFee": "Published fee within Europe: €95 in the cabin, €105 in the hold, per route.",
+        "aegeanProp": "On propeller aircraft (ATR, Dash 8) the carrier must be max 40 × 25 × 25 cm.",
+        "vuelingUk": "Not available on flights to or from the UK and Iceland.",
+        "hiskyFee": "€50 per flight within Romania and Bucharest–Chișinău; not offered on London flights. Contact HiSky to confirm."
       }
     }
   },

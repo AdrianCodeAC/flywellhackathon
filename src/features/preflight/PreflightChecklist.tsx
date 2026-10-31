@@ -23,6 +23,7 @@ import { SaveButton } from "@/features/account/SaveButton";
 import { OPEN_PREFLIGHT_KEY } from "@/features/account/device";
 import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
 import { AirlineBaggage } from "./AirlineBaggage";
+import { PetPolicyCard } from "./PetPolicyCard";
 import { JetLagCard } from "./JetLagCard";
 import { SeatAdvice } from "./SeatAdvice";
 import { WeatherCard } from "@/features/arrival/WeatherCard";
@@ -208,6 +209,9 @@ export function PreflightChecklist({
               {t(`preflight.category.${category}`)}
             </h3>
             {category === "baggage" && <AirlineBaggage airline={input.airline} />}
+            {category === "documents" && input.pet && (
+              <PetPolicyCard airline={input.airline} to={input.destination.countryCode} />
+            )}
             <ul className="grid gap-3">
               {list.map((row) => (
                 <ChecklistRow
