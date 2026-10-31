@@ -47,7 +47,32 @@ export async function priceCalendar(origin:string,destination:string,month:strin
   const value=[...days.values()];await writeTripCache(key,value);return value;
  }catch{return [];}
 }
-export async function cityPhoto(city:string,lang:string){
- const key=`city-photo:${lang}:${city}`;const cached=await readTripCache<string>(key,ROUTE_TTL);if(cached)return cached;
- try{const r=await fetch(`https://${lang==='ro'?'ro':'en'}.wikipedia.org/w/api.php?${new URLSearchParams({action:'query',generator:'search',gsrsearch:city,gsrlimit:'1',prop:'pageimages',piprop:'thumbnail',pithumbsize:'480',format:'json'})}`,{signal:AbortSignal.timeout(8000)});console.info(`[Trip HTTP] Wikipedia status=${r.status}`);const d=await r.json() as {query?:{pages:Record<string,{thumbnail?:{source:string}}>}};const url=Object.values(d.query?.pages??{})[0]?.thumbnail?.source;if(url?.startsWith('https://upload.wikimedia.org/')){await writeTripCache(key,url);return url;}}catch{}return null;
+const WIKI_HEADERS = { 'User-Agent': 'Flywell/1.0 (https://flywellhackathon.lovable.app) city-photo lookup/1.0', Accept: 'application/json' };
+async function wikiJson(url: string, label: string) {
+  try {
+    const response = await fetch(url, { headers: WIKI_HEADERS, signal: AbortSignal.timeout(8000) });
+    console.info(`[Trip HTTP] ${label} status=${response.status}`);
+    if (!response.ok) return null;
+    return await response.json() as { query?: { pages: Record<string, unknown> } };
+  } catch { console.info(`[Trip HTTP] ${label} status=timeout`); return null; }
+}
+const pagesOf = (body: { query?: { pages: Record<string, unknown> } } | null) => Object.values(body?.query?.pages ?? {});
+export async function cityPhoto(city: string, lang: string) {
+  const key = `city-photo-v2:${lang}:${city}`;
+  const cached = await readTripCache<string | null>(key);
+  if (cached !== undefined) return cached;
+  const wiki = lang === 'ro' ? 'ro' : 'en';
+  const article = (host: string) => wikiJson(`https://${host}.wikipedia.org/w/api.php?${new URLSearchParams({ action: 'query', titles: city, prop: 'pageimages', piprop: 'thumbnail', pithumbsize: '640', redirects: '1', format: 'json' })}`, `wikipedia article ${host}`);
+  const search = (host: string) => wikiJson(`https://${host}.wikipedia.org/w/api.php?${new URLSearchParams({ action: 'query', generator: 'search', gsrsearch: city, gsrlimit: '8', prop: 'pageimages', piprop: 'thumbnail', pithumbsize: '640', format: 'json' })}`, `wikipedia search ${host}`);
+  let photo = pickPhotoCandidate(pagesOf(await article(wiki)) as PhotoPage[], city);
+  if (!photo) photo = pickPhotoCandidate(pagesOf(await search(wiki)) as PhotoPage[], city);
+  // The other language wiki often illustrates a city the selected one does not.
+  if (!photo && wiki === 'ro') photo = pickPhotoCandidate(pagesOf(await article('en')) as PhotoPage[], city) ?? pickPhotoCandidate(pagesOf(await search('en')) as PhotoPage[], city);
+  // Last resort: a photo of the city from Wikimedia Commons.
+  if (!photo) {
+    const commons = await wikiJson(`https://commons.wikimedia.org/w/api.php?${new URLSearchParams({ action: 'query', generator: 'search', gsrsearch: `${city} filetype:bitmap`, gsrnamespace: '6', gsrlimit: '8', prop: 'imageinfo', iiprop: 'url|mime|size', iiurlwidth: '800', format: 'json' })}`, 'commons search');
+    photo = pickCommonsPhoto(pagesOf(commons) as CommonsPage[], city);
+  }
+  await writeTripCache(key, photo);
+  return photo;
 }
