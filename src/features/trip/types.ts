@@ -38,7 +38,7 @@ export type Extras = { weather: { min: number; max: number; climate: boolean; so
 export type TripResult = { input: TripInput; destination: Destination; flights?: FlightResult; advice?: TripAdvice; extras?: Extras; adviceError?: string; cached?: boolean };
 export type TripEvent = { type: "destination"; destination: Destination } | { type: "suggestions"; destinations: Destination[] } | { type: "flights"; value: FlightResult } | { type: "advice"; value: TripAdvice } | { type: "extras"; value: Extras } | { type: "error"; section: string; message: string } | { type: "done"; cached?: boolean };
 export function nights(from: string, to: string) { return Math.round((Date.parse(to) - Date.parse(from)) / 86400000); }
-export function tripCacheKey(input: TripInput) { return `trip-v1:${JSON.stringify(input)}`; }
+export function tripCacheKey(input: TripInput) { return `trip-v2:${JSON.stringify(input)}`; }
 export function rememberedTab(value: string | null) { return value === "arrival" ? "arrival" : "plan"; }
 
 export function comfortScore(f: Pick<Flight, "stops" | "duration" | "layover" | "departure" | "arrival">) {

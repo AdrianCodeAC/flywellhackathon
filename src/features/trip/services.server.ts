@@ -21,7 +21,7 @@ export async function flights(input: TripInput,signal:AbortSignal): Promise<Flig
   try {
     // Data API contains cached fares, never live inventory. Filter BOTH leg dates ourselves.
     const params = new URLSearchParams({origin:input.origin,destination:input.destinationIata ?? "",departure_at:input.departure.slice(0,7),return_at:input.returnDate.slice(0,7),currency:input.lang==="ro"?"ron":"eur",one_way:"false",sorting:"price",limit:"100",unique:"false"});
-    const r = await http(`https://api.travelpayouts.com/v3/prices_for_dates?${params}`,{headers:{"X-Access-Token":token,Accept:"application/json"},signal});
+    const r = await http(`https://api.travelpayouts.com/aviasales/v3/prices_for_dates?${params}`,{headers:{"X-Access-Token":token,Accept:"application/json"},signal});
     const data = await r.json() as {success:boolean;currency?:string;data?:Record<string,unknown>[];error?:string};
     if(!data.success) return {flights:[],error:"providerError",fetchedAt,baggageUnknown:input.bag};
     const currency = (data.currency ?? (input.lang==="ro"?"ron":"eur")).toUpperCase();
