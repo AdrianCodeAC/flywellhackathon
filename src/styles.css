@@ -82,8 +82,8 @@
   --palette-white: oklch(1 0 0);                /* #FFFFFF Alb (carduri, text pe fundal închis) */
 
   /* Nuanțe derivate (aceeași culoare, mai închisă/deschisă) pentru text lizibil și fundaluri. */
-  --palette-steel-soft: oklch(0.945 0.022 210); /* fundaluri ușoare */
-  --palette-line: oklch(0.875 0.028 215);       /* contururi */
+  --palette-steel-soft: oklch(0.955 0.012 250); /* fundaluri ușoare */
+  --palette-line: oklch(0.885 0.014 250);       /* contururi */
   --palette-deep: oklch(0.50 0.075 245);        /* linkuri, etichete, butoane secundare */
   --palette-muted: oklch(0.55 0.03 248);        /* text secundar */
   --palette-clay-soft: oklch(0.95 0.025 45);    /* fundal cald */
@@ -103,7 +103,7 @@
   --ui-card: var(--palette-white);
   --ui-border: var(--palette-line);
   --ui-focus: var(--palette-steel);
-  --ui-input: color-mix(in oklab, var(--palette-steel) 22%, var(--palette-white));
+  --ui-input: color-mix(in oklab, var(--palette-steel) 14%, var(--palette-white));
   /* Butoane principale, linkuri, elemente active */
   --ui-button: var(--palette-navy);
   --ui-button-text: var(--palette-white);
@@ -240,7 +240,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .option-icon { height: 44px; width: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--option-soft); color: var(--option-tone); }
 .option-icon svg { width: 21px; height: 21px; }
 .option-arrow { color: var(--muted-foreground); }
-.option-number { position: absolute; bottom: 16px; right: 16px; font-size: 10px; color: var(--border); }
+.option-number { position: absolute; bottom: 16px; right: 16px; font-size: 10px; color: color-mix(in oklab, var(--palette-steel) 75%, var(--palette-white)); }
 .arrival-options-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .arrival-options-compact .arrival-option { height: 166px; padding: 16px; }
 .arrival-main > section > h2 { font-family: var(--font-display); font-size: 34px; font-weight: 400; }
