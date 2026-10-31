@@ -309,24 +309,24 @@ h1, h2, h3 { letter-spacing: 0; }
   --map-terminal: var(--palette-white);
   --map-terminal-edge: var(--palette-deep);
   --map-departures: color-mix(in oklab, var(--palette-steel) 40%, var(--palette-white));
-  --map-arrivals: color-mix(in oklab, var(--palette-clay) 45%, var(--palette-white));
+  --map-arrivals: color-mix(in oklab, var(--palette-gold) 45%, var(--palette-white));
   --map-gate: var(--palette-navy);
   --map-gate-text: var(--palette-white);
   --map-mine: var(--palette-alert);
   --map-step: var(--palette-deep);
   --map-step-text: var(--palette-white);
   --map-transport: var(--palette-deep);
-  --map-food: var(--palette-clay-deep);
-  --map-money: var(--palette-cocoa);
-  --map-services: var(--palette-clay-deep);
+  --map-food: var(--palette-gold-deep);
+  --map-money: var(--palette-plum-deep);
+  --map-services: var(--palette-deep);
   --map-toilets: var(--palette-navy);
   --map-gates: var(--map-gate);
   --map-grass-dot: color-mix(in oklab, var(--palette-steel) 45%, var(--palette-white));
   --map-apron-edge: var(--palette-line);
-  --map-taxi-line: var(--palette-clay);
+  --map-taxi-line: var(--palette-gold);
   --map-terminal-shade: var(--palette-steel-soft);
   --map-departures-shade: var(--palette-steel);
-  --map-arrivals-shade: var(--palette-clay);
+  --map-arrivals-shade: var(--palette-gold);
   --map-wall: color-mix(in oklab, var(--palette-deep) 70%, var(--palette-steel));
   --map-skylight: oklch(1 0 0 / 0.25);
   --map-building-shadow: oklch(0.311 0.038 267.4 / 0.25);
@@ -445,10 +445,10 @@ h1, h2, h3 { letter-spacing: 0; }
   --help-panel: oklch(1 0 0 / 8%);
   --help-panel-edge: oklch(1 0 0 / 16%);
   --help-calm: var(--palette-steel);
-  --help-glow: var(--palette-clay);
+  --help-glow: var(--palette-gold);
   --help-alert: var(--palette-alert);
-  --help-alert-soft: oklch(0.50 0.11 45 / 24%);
-  --help-care: var(--palette-clay);
+  --help-alert-soft: oklch(0.42 0.11 350 / 24%);
+  --help-care: var(--palette-gold);
   --help-card: var(--palette-mint);
   --help-crew-bg: var(--palette-white);
   --help-crew-fg: var(--palette-navy);
@@ -512,8 +512,8 @@ h1, h2, h3 { letter-spacing: 0; }
   --seat-plain: oklch(0.9 0.012 220);
   --seat-good: color-mix(in oklab, var(--palette-steel) 45%, var(--palette-white));
   --seat-best: var(--palette-navy);
-  --seat-avoid: var(--palette-clay);
-  --seat-exit: var(--palette-alert);
+  --seat-avoid: var(--palette-gold);
+  --seat-exit: var(--palette-plum);
 }
 .dark {
   --seat-body: oklch(0.32 0.02 267);
@@ -546,7 +546,7 @@ h1, h2, h3 { letter-spacing: 0; }
 /* My trips: trip list, stage tabs and the in-flight tab. Colors come from the element roles above. */
 .trip-start { display: flex; align-items: center; gap: 14px; min-height: 84px; padding: 16px; border-radius: 16px; border: 1px solid var(--border); background: var(--ui-ride-soft); transition: transform 160ms, box-shadow 160ms; }
 .trip-start:hover { transform: translateY(-2px); box-shadow: var(--shadow-travel); }
-.trip-start-warm { background: var(--ui-visit-soft); }
+.trip-start-warm { background: var(--ui-warm-soft); }
 .trip-start-icon { display: flex; flex-shrink: 0; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; background: var(--ui-button); color: var(--ui-button-text); }
 .trip-start-warm .trip-start-icon { background: var(--ui-food); color: var(--ui-danger-text); }
 .trip-card { display: flex; align-items: center; border-radius: 16px; border: 1px solid var(--border); background: var(--card); transition: box-shadow 160ms, border-color 160ms; }
@@ -566,7 +566,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-help-icon { display: flex; flex-shrink: 0; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; background: var(--tile-tone); color: var(--tile-text); }
 .trip-help-calm { --tile-tone: var(--palette-steel); --tile-text: var(--palette-navy); }
 .trip-help-alert { --tile-tone: var(--ui-danger); --tile-text: var(--ui-danger-text); }
-.trip-help-care { --tile-tone: var(--palette-clay); --tile-text: var(--palette-navy); }
+.trip-help-care { --tile-tone: var(--palette-gold); --tile-text: var(--palette-navy); }
 @media (prefers-reduced-motion: reduce) { .trip-start, .trip-help-tile { transition: none; } }
 
 /* Checklist progress stays in view while scrolling; pages with sticky tabs raise --checklist-top. */
