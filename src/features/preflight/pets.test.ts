@@ -25,7 +25,10 @@ describe("pet rules per airline", () => {
       const p = findPetPolicy(name);
       expect(p?.cabin).toBeNull();
       expect(p?.hold.kind).toBe("no");
-      expect(keys(trip({ airline: name }))).toContain("petAirlineNo");
+      const list = keys(trip({ airline: name }));
+      expect(list).toContain("petAirlineNo");
+      // No redundant destination pet rules when the pet cannot fly anyway.
+      expect(list.filter((k) => k.startsWith("pet"))).toEqual(["petAirlineNo"]);
     }
   });
 

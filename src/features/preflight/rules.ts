@@ -182,29 +182,33 @@ export function buildChecklist(input: PreflightInput, today = new Date()): Check
       input.citizenship === "ro" ? "border" : "euEntry",
     );
   if (input.pet) {
-    const entry = petEntryRule(from, to);
-    const entrySource = {
-      gb: "gbPets",
-      us: "usDogs",
-      tr: "trPets",
-      ae: "aePets",
-      eu: "euPets",
-      intoEu: "euPetsEntry",
-      other: "mae",
-    } as const satisfies Record<typeof entry, SourceId>;
-    add("documents", "must", `pet_${entry}`, entrySource[entry], { city });
-    if (entry === "us") add("documents", "info", "pet_usCats", "usAnimals");
     const airline = findPetPolicy(input.airline);
-    if (!airline) add("documents", "must", "petAirlineUnknown");
-    else if (!airline.cabin && airline.hold.kind === "no")
+    if (airline && !airline.cabin && airline.hold.kind === "no") {
+      // Nothing else matters when the airline won't carry the pet.
       add("documents", "must", "petAirlineNo", undefined, { airline: airline.name });
-    else if (to === "GB") add("documents", "must", "petAirlineGb", undefined, { airline: airline.name });
-    else if (airline.cabin)
-      add("documents", "must", "petAirlineCabin", undefined, {
-        airline: airline.name,
-        kg: airline.cabin.kg,
-      });
-    else add("documents", "must", "petAirlineCargo", undefined, { airline: airline.name });
+    } else {
+      const entry = petEntryRule(from, to);
+      const entrySource = {
+        gb: "gbPets",
+        us: "usDogs",
+        tr: "trPets",
+        ae: "aePets",
+        eu: "euPets",
+        intoEu: "euPetsEntry",
+        other: "mae",
+      } as const satisfies Record<typeof entry, SourceId>;
+      add("documents", "must", `pet_${entry}`, entrySource[entry], { city });
+      if (entry === "us") add("documents", "info", "pet_usCats", "usAnimals");
+      if (!airline) add("documents", "must", "petAirlineUnknown");
+      else if (to === "GB")
+        add("documents", "must", "petAirlineGb", undefined, { airline: airline.name });
+      else if (airline.cabin)
+        add("documents", "must", "petAirlineCabin", undefined, {
+          airline: airline.name,
+          kg: airline.cabin.kg,
+        });
+      else add("documents", "must", "petAirlineCargo", undefined, { airline: airline.name });
+    }
   }
 
   // Security checkpoint (EU rules apply at every EU airport)
