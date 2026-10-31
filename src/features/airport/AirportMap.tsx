@@ -216,9 +216,9 @@ export function AirportMap({
       .filter((p) => p.kind === "gate")
       .map((g) => project(g.at))
       .sort((a, b) => Math.hypot(a[0] - main[0], a[1] - main[1]) - Math.hypot(b[0] - main[0], b[1] - main[1]))
-      .slice(0, 16)
+      .slice(0, 40)
       .map(([x, y]) => {
-        const c = centres.reduce((best, p) => (Math.hypot(p[0] - x, p[1] - y) < Math.hypot(best[0] - x, best[1] - y) ? p : best));
+        const c = centres.reduce((best, p) => (Math.hypot(p[0] - x, p[1] - y) < Math.hypot(best[0] - x, best[1] - y) ? p : best), main);
         const len = Math.hypot(x - c[0], y - c[1]) || 1;
         const ux = (x - c[0]) / len;
         const uy = (y - c[1]) / len;
