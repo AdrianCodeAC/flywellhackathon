@@ -177,6 +177,21 @@ export function PreflightForm({
           />
         </div>
         <div>
+          <label htmlFor="preflight-flight" className={label}>
+            <Plane className="size-4 text-primary" />
+            {t("trip.flightNumber")}
+          </label>
+          <Input
+            id="preflight-flight"
+            value={flight}
+            maxLength={7}
+            onChange={(e) => setFlight(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ""))}
+            autoComplete="off"
+            spellCheck={false}
+            className="min-h-14 text-base uppercase"
+          />
+        </div>
+        <div>
           <label htmlFor="preflight-seat" className={label}>
             <Armchair className="size-4 text-primary" />
             {t("preflight.seat")} *
