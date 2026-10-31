@@ -252,6 +252,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-hero { height: 310px; }
 .trip-hero .arrival-hero-content { padding-top: 46px; }
 .trip-search { box-shadow: var(--shadow-travel); }
+[data-slot="popover-content"]:has([data-slot="calendar"]) { background: var(--popover); opacity: 1; animation: none; }
 .trip-meter { appearance: none; border: 0; border-radius: 4px; background: var(--muted); --meter-tone: var(--primary); }
 .trip-meter::-webkit-meter-bar { background: var(--muted); border: 0; border-radius: 4px; }
 .trip-meter::-webkit-meter-optimum-value { background: var(--meter-tone); border-radius: 4px; }

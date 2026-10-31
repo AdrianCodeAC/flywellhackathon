@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { adviceSchema, bookingLinks, comfortScore, dateMatches, tripCacheKey, tripInputSchema, type Destination, type Extras, type Flight, type FlightResult, type TripEvent, type TripInput, type TripResult } from "./types";
+import { adviceSchema, bookingLinks, comfortScore, dateMatches, searchMonths, tripCacheKey, tripInputSchema, type Destination, type Extras, type Flight, type FlightResult, type TripEvent, type TripInput, type TripResult } from "./types";
 import { tripGateway } from "./gateway.server";
 import { readTripCache, writeTripCache } from "./cache.server";
 
@@ -20,21 +20,29 @@ export async function flights(input: TripInput,signal:AbortSignal): Promise<Flig
   if(!token) return {flights:[],error:"missingToken",fetchedAt,baggageUnknown:input.bag};
   try {
     // Data API contains cached fares, never live inventory. Filter BOTH leg dates ourselves.
-    const params = new URLSearchParams({origin:input.origin,destination:input.destinationIata ?? "",departure_at:input.departure.slice(0,7),return_at:input.returnDate.slice(0,7),currency:input.lang==="ro"?"ron":"eur",one_way:"false",sorting:"price",limit:"100",unique:"false"});
-    const r = await http(`https://api.travelpayouts.com/v3/prices_for_dates?${params}`,{headers:{"X-Access-Token":token,Accept:"application/json"},signal});
-    const data = await r.json() as {success:boolean;currency?:string;data?:Record<string,unknown>[];error?:string};
-    if(!data.success) return {flights:[],error:"providerError",fetchedAt,baggageUnknown:input.bag};
-    const currency = (data.currency ?? (input.lang==="ro"?"ron":"eur")).toUpperCase();
+    const rows:Record<string,unknown>[]=[];
+    const currency=(input.lang==="ro"?"RON":"EUR");
+    // At month boundaries ±3 days spans multiple month pairs; keep calls sequential.
+    for(const departMonth of searchMonths(input.departure,input.flexible))for(const returnMonth of searchMonths(input.returnDate,input.flexible)){
+      const params = new URLSearchParams({origin:input.origin,destination:input.destinationIata ?? "",departure_at:departMonth,return_at:returnMonth,currency:currency.toLowerCase(),one_way:"false",sorting:"price",limit:"100",unique:"false"});
+      const r = await http(`https://api.travelpayouts.com/aviasales/v3/prices_for_dates?${params}`,{headers:{"X-Access-Token":token,Accept:"application/json"},signal});
+      const data = await r.json() as {success:boolean;currency?:string;data?:Record<string,unknown>[];error?:string};
+      if(!data.success||(data.currency&&data.currency.toUpperCase()!==currency)) return {flights:[],error:"providerError",fetchedAt,baggageUnknown:input.bag};
+      rows.push(...data.data??[]);
+    }
     const found:Flight[] = [];
-    for(const row of data.data ?? []) {
+    for(const row of rows) {
       const departure=String(row["departure_at"] ?? ""), returnDate=String(row["return_at"] ?? "");
-      const price=Number(row["price"]),stops=Number(row["transfers"] ?? 0);
-      if(!dateMatches(departure,input.departure,input.flexible)||!dateMatches(returnDate,input.returnDate,input.flexible)||!(price>0)||!Number.isFinite(stops)||(input.direct&&stops>0)||row["destination"]!==input.destinationIata) continue;
-      const duration=typeof row["duration_to"]==="number"?row["duration_to"]:null;
+      const price=Number(row["price"]),stops=Number(row["transfers"]);
+      const actualDestination=row["destination_airport"]??row["destination"];
+      const actualOrigin=row["origin_airport"]??row["origin"];
+      const returnStops=Number(row["return_transfers"]??stops);
+      if(!dateMatches(departure,input.departure,input.flexible)||!dateMatches(returnDate,input.returnDate,input.flexible)||!(price>0)||!Number.isFinite(stops)||(input.direct&&(stops>0||returnStops>0))||actualDestination!==input.destinationIata||actualOrigin!==input.origin) continue;
+      const duration=typeof row["duration"]==="number"?row["duration"]:null;
       const f:Flight={id:String(row["flight_number"]??found.length)+departure+returnDate,airline:String(row["airline"]??""),departure,returnDate,price,stops,duration,layover:null,arrival:null,score:0,link:bookingLinks(input,input.destination).google,currency};
       const link=row["link"];
       if(typeof link==="string" && link.startsWith("/") && !link.startsWith("//")) f.link=`https://www.aviasales.com${link}`;
-      f.score=comfortScore(f); found.push(f);
+      f.score=comfortScore(f); if(!found.some(existing=>existing.id===f.id))found.push(f);
     }
     return {flights:found,error:found.length?null:"noFlights",fetchedAt,baggageUnknown:input.bag};
   } catch { return {flights:[],error:"providerUnavailable",fetchedAt,baggageUnknown:input.bag}; }
@@ -94,7 +102,7 @@ export async function handleTrip(request: Request): Promise<Response> {
       input={...input,destination:destination.city,destinationIata:destination.iata};
       emit({type:"destination",destination});
       const key=tripCacheKey(input)+preference;
-      const cached=await readTripCache<TripResult>(key).catch(()=>undefined);
+      const cached=preference?undefined:await readTripCache<TripResult>(key).catch(()=>undefined);
       if(cached){
         if(cached.flights)emit({type:"flights",value:cached.flights});
         if(cached.advice)emit({type:"advice",value:cached.advice});
@@ -111,7 +119,7 @@ export async function handleTrip(request: Request): Promise<Response> {
       const extraTask=extras(input,destination,request.signal).then(value=>{result.extras=value;emit({type:"extras",value});});
       const flightTask=flights(input,request.signal).then(value=>{result.flights=value;emit({type:"flights",value});});
       await Promise.all([adviceTask,extraTask,flightTask]);
-      if(result.advice)await writeTripCache(key,result).catch(()=>{});
+      if(result.advice&&!preference)await writeTripCache(key,result).catch(()=>{});
       emit({type:"done"});
     }catch(e){emit({type:"error",section:"search",message:safeAiError(e,input.lang)});}
     finally{controller.close();}

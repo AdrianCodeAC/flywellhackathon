@@ -10,11 +10,12 @@ const AuthContext=createContext<User|null>(null);
 export function TripAuthProvider({children}:{children:ReactNode}) {
   const [user,setUser]=useState<User|null>(null);
   useEffect(()=>{
+    let changed=false,active=true;
     const {data}=supabase.auth.onAuthStateChange((event,session)=>{
-      if(["INITIAL_SESSION","SIGNED_IN","SIGNED_OUT","USER_UPDATED"].includes(event))setUser(session?.user??null);
+      if(["INITIAL_SESSION","SIGNED_IN","SIGNED_OUT","USER_UPDATED"].includes(event)){changed=true;setUser(session?.user??null);}
     });
-    void supabase.auth.getUser().then(({data})=>setUser(data.user));
-    return ()=>data.subscription.unsubscribe();
+    void supabase.auth.getUser().then(({data})=>{if(active&&!changed)setUser(data.user);});
+    return ()=>{active=false;data.subscription.unsubscribe();};
   },[]);
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 }

@@ -31,7 +31,8 @@ function SignedTripChat({input,onAdjust}:{input:TripInput;onAdjust:(input:TripIn
   },body:()=>({input:inputRef.current})}),[]);
   const {messages,setMessages,sendMessage,status,stop,error}=useChat({transport});
   const load=useServerFn(loadTripConversation);
-  useEffect(()=>{let active=true;void load().then(row=>{if(active&&row){const stored=row.messages as unknown as UIMessage[];for(const m of stored)for(const p of m.parts)if(p.type==="tool-adjustTrip"&&"toolCallId"in p)seen.current.add(p.toolCallId);setMessages(stored);}}).catch(()=>setLoadError(t("trip.loadChatError")));return()=>{active=false;};},[load,setMessages,t]);
+  const loaded=useRef(false);
+  useEffect(()=>{if(loaded.current)return;let active=true;void load().then(row=>{if(active){loaded.current=true;if(row){const stored=row.messages as unknown as UIMessage[];for(const m of stored)for(const p of m.parts)if(p.type==="tool-adjustTrip"&&"toolCallId"in p)seen.current.add(p.toolCallId);setMessages(stored);}}}).catch(()=>setLoadError(t("trip.loadChatError")));return()=>{active=false;};},[load,setMessages,t]);
   useEffect(()=>{for(const m of messages)for(const part of m.parts){if(part.type==="tool-adjustTrip" && "state"in part && part.state==="output-available" && "toolCallId"in part && !seen.current.has(part.toolCallId) && "output"in part){
     seen.current.add(part.toolCallId);const output=part.output as {input:unknown;preference?:string|null};const parsed=tripInputSchema.safeParse(output.input);if(parsed.success)onAdjust(parsed.data,output.preference??undefined);
   }}},[messages,onAdjust]);
@@ -40,7 +41,7 @@ function SignedTripChat({input,onAdjust}:{input:TripInput;onAdjust:(input:TripIn
   return <>
     <Conversation className="relative h-72"><ConversationContent className="px-0">
       {messages.map(m=><Message key={m.id} from={m.role}><MessageContent className={m.role==="user"?"bg-primary text-primary-foreground":"bg-transparent"}>
-        {m.parts.map((p,i)=>p.type==="text"?<MessageResponse key={i}>{p.text}</MessageResponse>:p.type==="reasoning"?<details key={i} className="text-sm text-muted-foreground"><summary>{t("trip.reasoning")}</summary><MessageResponse>{p.text}</MessageResponse></details>:p.type==="tool-adjustTrip"?<Tool key={i} defaultOpen={false}><CollapsibleTrigger className="flex min-h-11 w-full items-center justify-between px-3 text-sm"><span>{t("trip.adjusting")}</span><ChevronDown className="size-4"/></CollapsibleTrigger><ToolContent><p>{t("trip.updated")}</p></ToolContent></Tool>:null)}
+        {m.parts.map((p,i)=>p.type==="text"?<MessageResponse key={i}>{p.text}</MessageResponse>:p.type==="reasoning"?<details key={i} className="text-sm text-muted-foreground"><summary>{t("trip.reasoning")}</summary><MessageResponse>{p.text}</MessageResponse></details>:p.type==="tool-adjustTrip"?<Tool key={i} defaultOpen={false}><CollapsibleTrigger className="flex min-h-11 w-full items-center justify-between px-3 text-sm"><span>{t("trip.adjusting")} · {t(p.state==="output-error"?"common.error":p.state==="output-available"?"trip.updated":"ask.thinking")}</span><ChevronDown className="size-4"/></CollapsibleTrigger><ToolContent><p>{p.state==="output-error"?p.errorText:t("trip.updated")}</p></ToolContent></Tool>:null)}
       </MessageContent></Message>)}
       {busy&&<Shimmer>{t("ask.thinking")}</Shimmer>}
       {(error||loadError)&&<p role="alert" className="break-words text-sm text-destructive">{error?.message||loadError}</p>}

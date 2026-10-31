@@ -23,4 +23,5 @@
 
 - [x] Creative visual redesign: shared theme, arrival page, search and options, phone/desktop EN/RO verification.
 
-- [ ] Trip planner: save spec, navigation, search, flight API, AI advice, costs, extras, adjustment chat, 6h cache, EN/RO 375px tests.
+- [x] Trip planner: spec, navigation, search, real flight API, AI advice, costs, extras, adjustment chat, 6h cache, EN/RO 375px tests.
+- [ ] Verify account-saved adjustment chat end-to-end — waiting for a signed-in user; no auth users exist to mint a test session.

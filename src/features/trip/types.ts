@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const SIX_HOURS = 6 * 60 * 60 * 1000;
+export function validDate(value:string){const time=Date.parse(value);return Number.isFinite(time)&&new Date(time).toISOString().slice(0,10)===value;}
 export const tripInputSchema = z.object({
   destination: z.string().trim().min(2).max(200),
   destinationIata: z.string().regex(/^[A-Z]{3}$/).nullable(),
@@ -14,7 +15,7 @@ export const tripInputSchema = z.object({
   direct: z.boolean(),
   bag: z.boolean(),
   lang: z.enum(["en", "ro"]),
-}).refine((v) => Number.isFinite(Date.parse(v.departure)) && Number.isFinite(Date.parse(v.returnDate)) && nights(v.departure, v.returnDate) > 0 && nights(v.departure, v.returnDate) <= 90 && v.departure >= new Date().toISOString().slice(0,10), { message: "Invalid travel dates", path: ["returnDate"] })
+}).refine((v) => validDate(v.departure) && validDate(v.returnDate) && nights(v.departure, v.returnDate) > 0 && nights(v.departure, v.returnDate) <= 90 && v.departure >= new Date().toISOString().slice(0,10), { message: "Invalid travel dates", path: ["returnDate"] })
   .refine((v) => v.adults + v.children <= 9, { message: "Maximum 9 travellers", path: ["children"] });
 export type TripInput = z.infer<typeof tripInputSchema>;
 export type Destination = { iata: string; city: string; country: string; lat: number; lon: number };
@@ -38,7 +39,7 @@ export type Extras = { weather: { min: number; max: number; climate: boolean; so
 export type TripResult = { input: TripInput; destination: Destination; flights?: FlightResult; advice?: TripAdvice; extras?: Extras; adviceError?: string; cached?: boolean };
 export type TripEvent = { type: "destination"; destination: Destination } | { type: "suggestions"; destinations: Destination[] } | { type: "flights"; value: FlightResult } | { type: "advice"; value: TripAdvice } | { type: "extras"; value: Extras } | { type: "error"; section: string; message: string } | { type: "done"; cached?: boolean };
 export function nights(from: string, to: string) { return Math.round((Date.parse(to) - Date.parse(from)) / 86400000); }
-export function tripCacheKey(input: TripInput) { return `trip-v1:${JSON.stringify(input)}`; }
+export function tripCacheKey(input: TripInput) { return `trip-v2:${JSON.stringify(input)}`; }
 export function rememberedTab(value: string | null) { return value === "arrival" ? "arrival" : "plan"; }
 
 export function comfortScore(f: Pick<Flight, "stops" | "duration" | "layover" | "departure" | "arrival">) {
@@ -54,6 +55,10 @@ export function rankFlights(flights: Flight[]) {
   return [{ role: "best", flight: best }, { role: "cheapest", flight: cheapest }, { role: "comfortable", flight: comfortable }].filter((r): r is { role: string; flight: Flight } => Boolean(r.flight));
 }
 export function dateMatches(actual: string, requested: string, flexible: boolean) { return Math.abs(nights(actual.slice(0,10),requested)) <= (flexible ? 3 : 0); }
+export function searchMonths(date:string,flexible:boolean){
+  const offsets=flexible?[-3,0,3]:[0];
+  return [...new Set(offsets.map(offset=>new Date(Date.parse(date)+offset*86400000).toISOString().slice(0,7)))];
+}
 export function bookingLinks(input: TripInput, city: string) {
   const guests = input.adults + input.children;
   return {
