@@ -17,7 +17,7 @@ const REFERER = "https://id-preview--81aa245e-d328-43c6-a930-732c5b1275d4.lovabl
 let nominatimTail: Promise<unknown> = Promise.resolve();
 let lastNominatim = 0;
 
-function nominatimQueued(url: string): Promise<Response> {
+export function nominatimQueued(url: string): Promise<Response> {
   const next = nominatimTail
     .catch(() => undefined)
     .then(async () => {
