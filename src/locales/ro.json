@@ -823,7 +823,11 @@
       "seat": "Locul",
       "callButton": "Apasă butonul de apel de deasupra locului tău (simbolul cu omuleț), apoi arată acest ecran însoțitorului de zbor.",
       "medicalTitle": "Informațiile mele medicale",
-      "addCard": "Adaugă alergiile și medicamentele pe acest card"
+      "addCard": "Adaugă alergiile și medicamentele pe acest card",
+      "ringStop": "Oprește sunetul și vibrația",
+      "ringStart": "Sună și vibrează",
+      "ringOn": "Telefonul sună și vibrează ca să te observe echipajul. Se oprește singur după un minut.",
+      "noVibrate": "Acest telefon nu poate vibra din aplicație, așa că se aude doar sunetul. Scoate telefonul de pe silențios ca să se audă."
     },
     "unwell": {
       "title": "Mi-e rău",

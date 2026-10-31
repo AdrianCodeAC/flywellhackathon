@@ -823,7 +823,11 @@
       "seat": "Seat",
       "callButton": "Press the call button above your seat (the person symbol), then show this screen to the flight attendant.",
       "medicalTitle": "My medical information",
-      "addCard": "Add allergies and medication to this card"
+      "addCard": "Add allergies and medication to this card",
+      "ringStop": "Stop sound and vibration",
+      "ringStart": "Ring and vibrate",
+      "ringOn": "Your phone is ringing and vibrating so the crew notices you. It stops by itself after a minute.",
+      "noVibrate": "This phone can't vibrate from the app, so only the sound plays. Turn off silent mode so it can be heard."
     },
     "unwell": {
       "title": "I feel unwell",
