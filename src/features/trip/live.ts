@@ -44,6 +44,7 @@ export function parseLiveFares(payload: LivePayload, input: TripInput, currency:
     if (!legs.length) continue;
     const first = legs[0];
     const last = legs[legs.length - 1];
+    if (!first || !last) continue;
     const departure = isoTime(first.departure_airport?.time);
     const price = Number(offer.price);
     if (!departure || !(price > 0)) continue;
