@@ -13,7 +13,7 @@ import { loadAirports, distanceMeters } from "@/features/arrival/services";
 import type { Airport } from "@/features/arrival/types";
 import { nights, type TripInput } from "./types";
 
-export function TripSearch({initial,busy,onSearch}:{initial?:TripInput;busy:boolean;onSearch:(input:TripInput)=>void}) {
+export function TripSearch({initial,busy,onSearch}:{initial?:TripInput|undefined;busy:boolean;onSearch:(input:TripInput)=>void}) {
   const {t,i18n}=useTranslation();
   const [destination,setDestination]=useState(initial?.destination??"");const [iata,setIata]=useState<string|null>(initial?.destinationIata??null);
   const [range,setRange]=useState<DateRange|undefined>();const [adults,setAdults]=useState(initial?.adults??1),[children,setChildren]=useState(initial?.children??0);
@@ -27,7 +27,7 @@ export function TripSearch({initial,busy,onSearch}:{initial?:TripInput;busy:bool
   function gps(){
     if(!navigator.geolocation){setError(t("search.locationUnsupported"));return;}
     navigator.geolocation.getCurrentPosition(({coords})=>{
-      const closest=[...airports].sort((a,b)=>distanceMeters(coords.latitude,coords.longitude,a.lat,a.lon)-distanceMeters(coords.latitude,coords.longitude,b.lat,b.lon))[0];if(closest)setOrigin(closest.iata);
+      const closest=[...airports].sort((a,b)=>distanceMeters([coords.latitude,coords.longitude],[a.lat,a.lon])-distanceMeters([coords.latitude,coords.longitude],[b.lat,b.lon]))[0];if(closest)setOrigin(closest.iata);
     },()=>setError(t("search.locationDenied")),{timeout:10000});
   }
   function submit(e:React.FormEvent){e.preventDefault();setError("");if(!from||!to||nights(from,to)<1||!airports.some(a=>a.iata===origin)){setError(t("trip.invalidInput"));return;}
@@ -41,7 +41,7 @@ export function TripSearch({initial,busy,onSearch}:{initial?:TripInput;busy:bool
       </div>
       <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><CalendarDays className="size-4 text-primary"/>{t("trip.when")}</label>
         <Popover><PopoverTrigger asChild><Button type="button" variant="outline" className="min-h-12 w-full justify-start text-left font-normal" aria-label={t("trip.dates")}>{range?.from&&range.to?`${format(range.from,"d MMM",{locale:i18n.language==="ro"?ro:enGB})} — ${format(range.to,"d MMM yyyy",{locale:i18n.language==="ro"?ro:enGB})}`:t("trip.dates")}</Button></PopoverTrigger>
-          <PopoverContent className="w-auto max-w-[calc(100vw-24px)] p-0" align="start"><Calendar mode="range" selected={range} onSelect={setRange} min={1} max={90} defaultMonth={range?.from} disabled={{before:startOfDay(new Date())}} locale={i18n.language==="ro"?ro:enGB} className="pointer-events-auto [--cell-size:44px]"/></PopoverContent>
+          <PopoverContent className="w-auto max-w-[calc(100vw-24px)] p-0" align="start"><Calendar mode="range" selected={range} onSelect={setRange} min={1} max={90} {...(range?.from?{defaultMonth:range.from}:{})} disabled={{before:startOfDay(new Date())}} locale={i18n.language==="ro"?ro:enGB} className="pointer-events-auto [--cell-size:44px]"/></PopoverContent>
         </Popover>
         <div className="mt-2 flex items-center justify-between gap-2 text-xs text-muted-foreground"><span>{from&&to?t("trip.nights",{count:nights(from,to)}):""}</span><label className="flex min-h-11 items-center gap-2"><Switch checked={flexible} onCheckedChange={setFlexible} aria-label={t("trip.flexible")}/>{t("trip.flexible")}</label></div>
       </div>

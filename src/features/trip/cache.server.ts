@@ -7,6 +7,6 @@ export async function readTripCache<T>(key: string): Promise<T | undefined> {
 }
 export async function writeTripCache(key: string,value: unknown) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const {error} = await supabaseAdmin.from("trip_search_cache").upsert({cache_key:key,value:JSON.parse(JSON.stringify(value))});
+  const {error} = await supabaseAdmin.from("trip_search_cache").upsert({cache_key:key,value:JSON.parse(JSON.stringify(value)),created_at:new Date().toISOString()});
   if(error) console.warn("Trip cache write failed",error.code);
 }
