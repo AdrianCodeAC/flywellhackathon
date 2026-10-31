@@ -416,10 +416,6 @@
         "title": "Documents for children",
         "detail": "Each child needs their own travel document. If a child travels without both parents, carry written consent from the absent parent."
       },
-      "pet": {
-        "title": "Pet: passport, microchip, rabies vaccine",
-        "detail": "Within the EU a pet needs an EU pet passport, a microchip and a valid rabies vaccination. The airline must approve the pet in advance."
-      },
       "liquids": {
         "title": "Liquids: 100 ml rule",
         "detail": "In your cabin bag, liquids, gels and creams must be in containers of max 100 ml, all in one transparent resealable bag of about 1 litre. Some airports with new scanners allow more — only if the airport says so."
@@ -491,6 +487,54 @@
       "eu261Inbound": {
         "title": "EU rights: depends on the airline",
         "detail": "Flights into the EU are covered by Regulation 261/2004 only if the airline is an EU airline. Keep receipts and the boarding pass if something goes wrong."
+      },
+      "pet_eu": {
+        "title": "Pet in the EU: pet passport, microchip, rabies vaccine",
+        "detail": "Dogs, cats and ferrets need an EU pet passport, a microchip (put in before the vaccine) and a valid rabies vaccine given at least 21 days before travel. Finland, Ireland, Malta and Norway also require a tapeworm treatment for dogs. Other animals follow the destination's national rules."
+      },
+      "pet_intoEu": {
+        "title": "Pet entering the EU: health certificate",
+        "detail": "Coming from outside the EU, a dog, cat or ferret needs a microchip, a valid rabies vaccine and an EU animal health certificate signed by an official vet (valid 10 days until the border check). From many countries a rabies blood test (at least 0.5 IU/ml) is also needed, taken at least 90 days before the certificate. Returning with a valid EU pet passport is simpler."
+      },
+      "pet_gb": {
+        "title": "Pet to Great Britain: only as cargo",
+        "detail": "Pets flying into Great Britain must travel as cargo with an approved airline or company, not in the cabin or as checked baggage. Only recognised guide and assistance dogs may fly in the cabin. The pet needs a microchip, a rabies vaccine and a health certificate or pet passport; dogs also need a tapeworm treatment."
+      },
+      "pet_us": {
+        "title": "Dog to the USA: CDC Dog Import Form",
+        "detail": "Since 1 August 2024 every dog must be at least 6 months old, microchipped, healthy and have a CDC Dog Import Form receipt. Dogs that were in high-risk rabies countries in the last 6 months need extra documents. Airlines and US states may ask for more."
+      },
+      "pet_usCats": {
+        "title": "Cats to the USA",
+        "detail": "Cats have their own CDC rules (the dog form does not apply); the airline or the US state may ask for a health certificate or rabies vaccine."
+      },
+      "pet_tr": {
+        "title": "Pet to Türkiye",
+        "detail": "Türkiye asks for a microchip, a rabies vaccine, a rabies blood test (above 0.5 IU/ml, at least 30 days after the vaccine and 90 days before entry) and a vet health certificate. At most 2 animals per passenger."
+      },
+      "pet_ae": {
+        "title": "Pet to the UAE: import permit",
+        "detail": "You need an import permit from the UAE Ministry of Climate Change and Environment (valid 90 days), a microchip, a rabies vaccine and a certified vet health certificate; the pet is checked on arrival."
+      },
+      "pet_other": {
+        "title": "Pet: check {{city}}'s rules",
+        "detail": "Every non-EU country has its own rules for pets (microchip, vaccines, blood tests, permits, quarantine). Ask that country's embassy or veterinary authority before booking; the MAE page lists entry rules by country."
+      },
+      "petAirlineUnknown": {
+        "title": "Your airline decides if the pet can fly",
+        "detail": "Airlines differ a lot. See the list above, or fill in your airline to see its exact rules."
+      },
+      "petAirlineNo": {
+        "title": "{{airline}} does not carry pets",
+        "detail": "{{airline}} does not take pets in the cabin or in the hold; only recognised assistance dogs may fly. Choose another airline for your pet."
+      },
+      "petAirlineCabin": {
+        "title": "Book the pet with {{airline}} in advance",
+        "detail": "{{airline}} takes a small pet in the cabin (up to {{kg}} kg with the carrier). Places are limited, so add the pet to your booking as early as possible and wait for confirmation."
+      },
+      "petAirlineCargo": {
+        "title": "{{airline}}: pets only as cargo",
+        "detail": "{{airline}} does not take pets in the cabin; they travel in the hold through its cargo partner. Ask for a quote well in advance."
       }
     },
     "offlineAnswer": "The AI agent is not available right now, so here is what the official rules say:",
@@ -546,7 +590,60 @@
         "prep_west_few": "{{count}} days before: go to bed and wake up about 1 hour later each day.",
         "prep_west_other": "{{count}} days before: go to bed and wake up about 1 hour later each day."
       }
-    }
+    },
+    "pets": {
+      "title": "Pet rules — {{airline}}",
+      "verifyBadge": "Partly confirmed",
+      "compareTitle": "Which airlines take pets",
+      "compareHint": "Fill in your airline above for its exact rules. Tap a name for its official page.",
+      "cabin": "In the cabin",
+      "hold": "In the hold (checked)",
+      "assistance": "Assistance dogs",
+      "booking": "Booking",
+      "cabinYes": "Yes: up to {{kg}} kg with the carrier · {{species}}",
+      "cabinYesSize": "Yes: up to {{kg}} kg with the carrier, carrier max {{size}} cm · {{species}}",
+      "cabinNo": "No pets in the cabin",
+      "holdYes": "Yes, on suitable aircraft",
+      "holdKg": "Yes, up to {{kg}} kg with the crate",
+      "holdCargo": "Only as cargo, through the airline's cargo partner",
+      "holdNo": "No",
+      "assistanceText": "Recognised guide and assistance dogs fly free in the cabin with separate approval; emotional-support animals count as pets.",
+      "notice": "Book the pet at least {{hours}} hours before departure and wait for confirmation.",
+      "shortCabin": "Cabin up to {{kg}} kg",
+      "shortCargo": "Cargo only",
+      "shortNo": "No pets",
+      "checked": "Checked October 2026 on the airlines' official pages. Rules change: confirm before you book.",
+      "verify": "Some numbers could not be fully confirmed on the airline's page: confirm before you book.",
+      "official": "{{airline}} pet rules",
+      "species": {
+        "dog": "dogs",
+        "cat": "cats",
+        "ferret": "ferrets",
+        "bird": "birds",
+        "turtle": "turtles"
+      },
+      "note": {
+        "assistWizz": "Only certified guide/assistance dogs, free, one per flight; declare it when booking and send the documents at least 48 hours before departure.",
+        "assistRyanair": "Only recognised assistance dogs, free in the cabin on eligible routes (not to Morocco or Israel); tell Ryanair when you book.",
+        "assistApproval": "Only approved assistance dogs; request it at least 48 hours before travel.",
+        "baCargo": "No pets in the cabin on any route. Pets travel in the hold through PetAir UK / IAG Cargo, priced by quote.",
+        "taromA320": "No animals in the hold on A320 aircraft.",
+        "snubHold": "Snub-nosed breeds (e.g. pugs, bulldogs, Persian cats) are not accepted in the hold.",
+        "payAtCheckin": "Register the pet online; the fee is paid at check-in.",
+        "austrianBooking": "Add a cabin pet in My Bookings (except US flights); larger animals through the Service Centre.",
+        "turkishHold": "Pets over 8 kg go in the hold; the fee depends on route and weight.",
+        "klmCabin": "Cabin pets travel in Economy and European Business, not in intercontinental Business or Premium Comfort.",
+        "lotEmbraer": "On Embraer aircraft the carrier must be smaller (45 × 30 × 20 cm). Dogs to the US need at least 48 hours.",
+        "itaDomestic": "On domestic Italian flights the cabin limit is 12 kg (with carrier and food).",
+        "itaFee": "Published fee within Europe: €95 in the cabin, €105 in the hold, per route.",
+        "aegeanProp": "On propeller aircraft (ATR, Dash 8) the carrier must be max 40 × 25 × 25 cm.",
+        "vuelingUk": "Not available on flights to or from the UK and Iceland.",
+        "hiskyFee": "€50 per flight within Romania and Bucharest–Chișinău; not offered on London flights. Contact HiSky to confirm."
+      },
+      "assistTitle": "Assistance dogs — {{airline}}"
+    },
+    "tickAll": "Tick all",
+    "untickAll": "Untick all"
   },
   "weather": {
     "unavailable": "Weather is unavailable right now.",
@@ -677,7 +774,10 @@
         "detail": "Follow the exit signs; trains, buses and taxis are marked on the map."
       }
     },
-    "gatePlaceholder": "e.g. 12"
+    "gatePlaceholder": "e.g. 12",
+    "stepOf": "Step {{n}} of {{total}}",
+    "prevStep": "Previous step",
+    "nextStep": "Next step"
   },
   "help": {
     "button": "Help",
@@ -723,7 +823,11 @@
       "seat": "Seat",
       "callButton": "Press the call button above your seat (the person symbol), then show this screen to the flight attendant.",
       "medicalTitle": "My medical information",
-      "addCard": "Add allergies and medication to this card"
+      "addCard": "Add allergies and medication to this card",
+      "ringStop": "Stop sound and vibration",
+      "ringStart": "Ring and vibrate",
+      "ringOn": "Your phone is ringing and vibrating so the crew notices you. It stops by itself after a minute.",
+      "noVibrate": "This phone can't vibrate from the app, so only the sound plays. Turn off silent mode so it can be heard."
     },
     "unwell": {
       "title": "I feel unwell",
@@ -783,7 +887,7 @@
     },
     "card": {
       "title": "My medical card",
-      "privacy": "Saved only on this phone. Nothing is sent anywhere, so it works in airplane mode.",
+      "privacy": "Edited only in your account. This copy stays on the phone, so it works in airplane mode.",
       "autosave": "Saved automatically.",
       "name": "Name",
       "seat": "Seat",
@@ -803,7 +907,210 @@
         "bloodType": "e.g. A+",
         "contactName": "e.g. Ana Popescu (sister)",
         "contactPhone": "+40 7…"
-      }
+      },
+      "editInAccount": "Edit in my account",
+      "signInToEdit": "Sign in to add your card",
+      "notFilled": "—"
     }
+  },
+  "account": {
+    "signIn": "Sign in",
+    "account": "Account",
+    "authTitle": "Your Flywell account",
+    "authSubtitle": "Save trips, checklists and your trip chat, on any device.",
+    "apple": "Continue with Apple",
+    "google": "Continue with Google",
+    "lovable": "Continue with Lovable",
+    "appleHint": "Recommended on iPhone",
+    "or": "or",
+    "moreOptions": "More sign-in options (Apple, email)",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "signInTab": "Sign in",
+    "signUpTab": "Create account",
+    "signInAction": "Sign in",
+    "signUpAction": "Create account",
+    "forgot": "Forgot password?",
+    "sendReset": "Send reset link",
+    "resetSent": "Check your email for a link to set a new password.",
+    "backToSignIn": "Back to sign in",
+    "confirmSent": "Check your email ({{email}}) and tap the link to confirm your account.",
+    "passwordHint": "At least 8 characters",
+    "wrongCredentials": "Wrong email or password.",
+    "notConfirmed": "Confirm your email first — check your inbox.",
+    "exists": "An account with this email already exists. Sign in instead.",
+    "weakPassword": "Choose a stronger password (at least 8 characters).",
+    "genericError": "Something went wrong. Try again.",
+    "newPasswordTitle": "Set a new password",
+    "newPassword": "New password",
+    "savePassword": "Save password",
+    "resetInvalid": "This reset link is invalid or has expired. Ask for a new one.",
+    "profile": "Profile",
+    "changePhoto": "Change photo",
+    "photoError": "The photo could not be uploaded.",
+    "saveName": "Save",
+    "nameSaved": "Saved",
+    "savedTrips": "Saved trips",
+    "plannedTrips": "Planned trips",
+    "checklists": "My trips",
+    "tripChat": "Trip chat",
+    "chatSummary": "Messages: {{count}} · {{destination}}",
+    "continueChat": "Continue the chat",
+    "noChat": "No trip chat yet. Plan a trip and ask the agent anything.",
+    "emptyTrips": "No saved trips yet. Tap “Save trip” on a planned trip.",
+    "emptyChecklists": "No trips yet. Add a flight with “I already have a ticket”.",
+    "open": "Open",
+    "delete": "Delete",
+    "deleteConfirm": "Delete “{{title}}”?",
+    "past": "Past",
+    "progress": "{{done}} of {{total}} done",
+    "fromPrice": "from {{price}}",
+    "saveTrip": "Save trip",
+    "saveChecklist": "Save checklist",
+    "saved": "Saved in your account",
+    "saveError": "Could not save. Try again.",
+    "loadError": "Saved items could not be loaded.",
+    "invalidEmail": "Use a real email address you can open.",
+    "medicalPrivacy": "Saved in your account and kept on this phone, so the Help button shows it even in airplane mode. Only you can see it.",
+    "medicalSaving": "Saving…",
+    "medicalSaved": "Saved in your account",
+    "medicalError": "Couldn't save to your account — it's still on this phone."
+  },
+  "seats": {
+    "eyebrow": "Where to sit",
+    "title": "The right seat for you",
+    "situations": "Your situation",
+    "subtitle": "Choosing a seat when you book? Pick your situation and the plane shows where to aim and what to avoid. Rows differ between aircraft, so match them to the airline's seat map.",
+    "situation": {
+      "child": "With a child",
+      "turbulence": "Fewer bumps",
+      "fear": "Fear of flying",
+      "motion": "Motion sickness",
+      "legroom": "More legroom",
+      "quickExit": "Get off fast",
+      "sleep": "Sleep",
+      "mobility": "Reduced mobility"
+    },
+    "summary": {
+      "child": "Over the wing or just in front of it, window and middle seats together, away from exit rows and the last rows.",
+      "turbulence": "Rows over the wing feel the least turbulence; the last rows feel the most.",
+      "fear": "Sit over the wing, on the aisle, and tell the crew you are nervous — they are used to it.",
+      "motion": "A window seat over the wing, where the ride is smoothest.",
+      "legroom": "Exit rows or the first row have the most space.",
+      "quickExit": "An aisle seat in the first rows gets you off first.",
+      "sleep": "A window seat away from the toilets and galleys.",
+      "mobility": "An aisle seat near the front, not in an exit row, with assistance booked ahead."
+    },
+    "tip": {
+      "child": {
+        "1": "Put a child seat by the window: it must not block the way out of the row. Ask the airline which child seats it accepts.",
+        "2": "Children and infants cannot sit in exit rows — the crew will move you.",
+        "3": "The back of the cabin bumps the most, and people queue there for the toilets, so stay over the wing or further forward."
+      },
+      "turbulence": {
+        "1": "Over the wing is closest to the plane's centre of gravity, so movement is smallest; the tail moves the most.",
+        "2": "Keep your seat belt loosely fastened all flight — turbulence can happen in clear sky."
+      },
+      "fear": {
+        "1": "Over the wing the ride is smoothest and the engine sound stays steady.",
+        "2": "An aisle seat helps if you feel closed in; a window helps if seeing the horizon calms you.",
+        "3": "Tap Help in the During the flight tab of your trip for a breathing exercise that works in airplane mode."
+      },
+      "motion": {
+        "1": "Look at the horizon and keep your head still against the headrest.",
+        "2": "Avoid reading during take-off and bumpy parts, and point the air vent at your face."
+      },
+      "legroom": {
+        "1": "Exit rows are only for adults able and willing to help open the exit; the crew may move you if you are not suitable.",
+        "2": "The first row has extra room but no space under the seat in front for bags during take-off and landing."
+      },
+      "quickExit": {
+        "1": "Front rows on the aisle are best for tight connections.",
+        "2": "In an emergency the distance to a usable exit matters most: when you sit down, count the rows to the exits in front of and behind you."
+      },
+      "sleep": {
+        "1": "A window gives you something to lean on and nobody climbs over you.",
+        "2": "The front and back of the cabin have toilets and galleys: light, noise and queues."
+      },
+      "mobility": {
+        "1": "Ask your airline for free assistance at least 48 hours before the flight — EU rules give you this right.",
+        "2": "Some aisle seats have armrests that lift, which makes moving across easier; ask when you book."
+      }
+    },
+    "rows": "Rows {{list}}",
+    "avoidRows": "avoid {{list}}",
+    "columns": "seats: {{list}}",
+    "col": {
+      "window": "window (A, F)",
+      "middle": "middle (B, E)",
+      "aisle": "aisle (C, D)"
+    },
+    "legendBest": "Best seats",
+    "legendGood": "Good row",
+    "legendAvoid": "Avoid",
+    "legendExit": "Exit",
+    "legendWing": "Wing",
+    "comfortOnly": "Comfort tip — there is no safety data behind it.",
+    "aircraftNote": "Drawn on a typical 30-row plane (A320 / Boeing 737). Wing and exit rows differ on your aircraft; check the seat map when you choose your seat."
+  },
+  "trips": {
+    "eyebrow": "Your flights",
+    "title": "My trips",
+    "subtitle": "Each flight you add gets its own Before you fly, During the flight and On arrival.",
+    "planHint": "Find flights, a place to stay and the cost.",
+    "ticketHint": "Scan your boarding pass or type your flight.",
+    "empty": "No trips yet. Plan one, or add a flight you have already booked.",
+    "signInSync": "Sign in to keep your trips and medical card on every phone.",
+    "signIn": "Sign in",
+    "synced": "Saved in your account",
+    "deviceOnly": "Only on this phone",
+    "status": {
+      "upcoming": "Upcoming",
+      "today": "Flying today",
+      "away": "On the trip",
+      "past": "Past"
+    },
+    "delete": "Remove trip",
+    "deleteConfirm": "Remove {{title}} from your trips?",
+    "stages": "Trip stages",
+    "tab": {
+      "before": "Before you fly",
+      "during": "During the flight",
+      "arrival": "On arrival"
+    },
+    "switch": "Switch trip",
+    "notFound": "This trip isn't on this phone.",
+    "backToTrips": "My trips",
+    "arrivalIn": "On arrival in {{city}}",
+    "addToTrips": "Add to my trips",
+    "adding": "Adding…",
+    "addError": "Could not add this flight. Please try again.",
+    "during": {
+      "subtitle": "Everything here works in airplane mode",
+      "tipsTitle": "On board",
+      "tips": [
+        "Keep your seat belt fastened whenever you are seated.",
+        "Drink water regularly and go easy on alcohol and coffee.",
+        "Stand up, stretch and move your ankles every hour or two.",
+        "On descent, swallow, yawn or chew to ease the pressure in your ears."
+      ],
+      "helpHint": "Breathing, calling the crew, feeling unwell and your medical card.",
+      "savedOffline": "Saved on this phone — works in airplane mode"
+    }
+  },
+  "ticket": {
+    "eyebrow": "I already have a ticket",
+    "title": "Add your flight",
+    "subtitle": "Scan your boarding pass or type the flight details. You get everything for before, during and after the flight, saved in My trips."
+  },
+  "start": {
+    "fromYou": "Distances from where you are now, updated as you move (straight line).",
+    "fromAirport": "Distances from the airport (straight line). Turn on location to measure from where you are.",
+    "far": "You're far from this airport, so distances are from the airport (straight line).",
+    "denied": "Location is off, so distances are from the airport (straight line).",
+    "useMine": "Use my location",
+    "locating": "Finding you…",
+    "you": "Your location"
   }
 }

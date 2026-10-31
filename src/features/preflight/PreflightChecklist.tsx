@@ -2,10 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
 import {
+  CheckCheck,
   CloudSun,
   ExternalLink,
   FileText,
   Gavel,
+  ListChecks,
   Luggage,
   PlaneLanding,
   ShieldCheck,
@@ -19,8 +21,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Shimmer } from "@/components/ai-elements/shimmer";
 import { AirportGuide } from "@/features/airport/AirportGuide";
+import { SaveButton } from "@/features/account/SaveButton";
+import { OPEN_PREFLIGHT_KEY } from "@/features/account/device";
 import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
+import { repeatsChecklist } from "./ai-dedupe";
 import { AirlineBaggage } from "./AirlineBaggage";
+import { PetPolicyCard } from "./PetPolicyCard";
 import { JetLagCard } from "./JetLagCard";
 import { WeatherCard } from "@/features/arrival/WeatherCard";
 import { getAirportByIata } from "@/features/arrival/services";
@@ -68,9 +74,16 @@ function loadTicks(key: string): string[] {
 export function PreflightChecklist({
   input,
   onEdit,
+  onArrival,
+  returnTo,
+  hideJetLag = false,
 }: {
   input: PreflightInput;
   onEdit: () => void;
+  /** Inside a trip, the arrival button switches to its "On arrival" tab instead of leaving. */
+  onArrival?: () => void;
+  returnTo?: string;
+  hideJetLag?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const storageKey = checklistStorageKey(input);
@@ -108,7 +121,7 @@ export function PreflightChecklist({
       detail: t(`preflight.rule.${i.key}.detail`, i.params ?? {}),
       source: i.source,
     })),
-    ...(advice?.items ?? []).map((i, n) => ({
+    ...(advice?.items ?? []).filter((i) => !repeatsChecklist(i, fixed.map((f) => f.key))).map((i, n) => ({
       ...i,
       id: `ai-${n}-${i.title.slice(0, 24)}`,
       ai: true,
@@ -116,8 +129,9 @@ export function PreflightChecklist({
   ];
   const done = rows.filter((r) => ticks.includes(r.id)).length;
 
-  const toggle = (id: string, on: boolean) => {
-    const next = on ? [...new Set([...ticks, id])] : ticks.filter((v) => v !== id);
+  const toggle = (id: string, on: boolean) => toggleMany([id], on);
+  const toggleMany = (ids: string[], on: boolean) => {
+    const next = on ? [...new Set([...ticks, ...ids])] : ticks.filter((v) => !ids.includes(v));
     setTicks(next);
     try {
       localStorage.setItem(storageKey, JSON.stringify(next));
@@ -135,7 +149,7 @@ export function PreflightChecklist({
   return (
     <section aria-labelledby="preflight-summary">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5">
-        <div>
+        <div className={onArrival ? "sr-only" : undefined}>
           <p className="section-index">{t("preflight.yourFlight")}</p>
           <h2 id="preflight-summary" className="font-display text-3xl sm:text-4xl">
             {input.origin.city} → {input.destination.city}
@@ -145,12 +159,38 @@ export function PreflightChecklist({
             {input.airline && ` · ${input.airline}`}
           </p>
         </div>
-        <Button variant="outline" className="min-h-11" onClick={onEdit}>
-          {t("trip.edit")}
-        </Button>
+        <div className="flex flex-wrap items-start gap-2">
+          <SaveButton
+            kind="preflight"
+            itemKey={storageKey}
+            title={`${input.origin.city} → ${input.destination.city}`}
+            travelDate={input.date}
+            label={t("account.saveChecklist")}
+            returnTo={returnTo ?? `/preflight?from=${input.origin.iata}&to=${input.destination.iata}&date=${input.date}`}
+            onSignedOut={() => sessionStorage.setItem(OPEN_PREFLIGHT_KEY, JSON.stringify(input))}
+            onLoaded={(stored) => {
+              const saved = (stored as { ticks?: unknown } | null)?.ticks;
+              if (!Array.isArray(saved)) return;
+              const extra = saved.filter((v): v is string => typeof v === "string");
+              setTicks((current) => {
+                const next = [...new Set([...current, ...extra])];
+                try {
+                  localStorage.setItem(storageKey, JSON.stringify(next));
+                } catch {
+                  /* storage unavailable */
+                }
+                return next;
+              });
+            }}
+            data={{ input, ticks: ticks.filter((id) => rows.some((r) => r.id === id)), total: rows.length }}
+          />
+          <Button variant="outline" className="min-h-11" onClick={onEdit}>
+            {t("trip.edit")}
+          </Button>
+        </div>
       </div>
 
-      <div className="mt-5" aria-live="polite">
+      <div className="checklist-progress mt-5" aria-live="polite">
         <div className="mb-2 flex justify-between text-sm">
           <span className="font-semibold">{t("preflight.progress")}</span>
           <span>{t("preflight.done", { done, total: rows.length })}</span>
@@ -167,11 +207,35 @@ export function PreflightChecklist({
         const Icon = ICONS[category];
         return (
           <section key={category} className="mt-8">
-            <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-              <Icon className="size-5 text-primary" />
-              {t(`preflight.category.${category}`)}
-            </h3>
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">
+                <Icon className="size-5 text-primary" />
+                {t(`preflight.category.${category}`)}
+                <span className="text-sm font-normal text-muted-foreground">
+                  {list.filter((r) => ticks.includes(r.id)).length}/{list.length}
+                </span>
+              </h3>
+              {(() => {
+                const all = list.every((r) => ticks.includes(r.id));
+                return (
+                  <Button
+                    type="button"
+                    variant={all ? "secondary" : "outline"}
+                    size="sm"
+                    className="min-h-11 rounded-full px-4"
+                    aria-pressed={all}
+                    onClick={() => toggleMany(list.map((r) => r.id), !all)}
+                  >
+                    {all ? <CheckCheck /> : <ListChecks />}
+                    {t(all ? "preflight.untickAll" : "preflight.tickAll")}
+                  </Button>
+                );
+              })()}
+            </div>
             {category === "baggage" && <AirlineBaggage airline={input.airline} />}
+            {category === "documents" && input.pet && (
+              <PetPolicyCard airline={input.airline} to={input.destination.countryCode} />
+            )}
             <ul className="grid gap-3">
               {list.map((row) => (
                 <ChecklistRow
@@ -186,7 +250,7 @@ export function PreflightChecklist({
         );
       })}
 
-      <JetLagCard input={input} />
+      {!hideJetLag && <JetLagCard input={input} />}
       <LandingWeather input={input} />
 
       <div className="mt-8 rounded-lg border border-dashed p-4 text-sm" role="status">
@@ -214,20 +278,27 @@ export function PreflightChecklist({
       <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
         {t("preflight.disclaimer")}
       </p>
-      <Button
-        asChild
-        variant="outline"
-        className="mt-4 min-h-11 w-full whitespace-normal sm:w-auto"
-      >
-        <Link
-          to="/arrival"
-          search={{ iata: input.destination.iata }}
-          onClick={() => localStorage.setItem("flywell:tab", "arrival")}
-        >
+      {onArrival ? (
+        <Button variant="outline" className="mt-4 min-h-11 w-full whitespace-normal sm:w-auto" onClick={onArrival}>
           <PlaneLanding />
           {t("preflight.toArrival", { city: input.destination.city })}
-        </Link>
-      </Button>
+        </Button>
+      ) : (
+      <Button
+          asChild
+          variant="outline"
+          className="mt-4 min-h-11 w-full whitespace-normal sm:w-auto"
+        >
+          <Link
+            to="/arrival"
+            search={{ iata: input.destination.iata }}
+            onClick={() => localStorage.setItem("flywell:tab", "arrival")}
+          >
+            <PlaneLanding />
+            {t("preflight.toArrival", { city: input.destination.city })}
+          </Link>
+        </Button>
+      )}
     </section>
   );
 }

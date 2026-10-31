@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "motion/react";
@@ -13,16 +14,21 @@ import {
   WifiOff,
   X,
   TriangleAlert,
+  Pencil,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
+import { useTripUser } from "@/features/trip/auth";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { BREATH, CREW_PHRASES, hasMedicalInfo, loadCard, saveCard, type MedicalCard } from "./medical-card";
+import { BREATH, CARD_EVENT, CREW_PHRASES, hasMedicalInfo, loadCard, saveCard, type MedicalCard } from "./medical-card";
+import { canVibrate, startAttention } from "./attention";
 
-type View = "home" | "breathe" | "crew" | "unwell" | "card";
+export type View = "home" | "breathe" | "crew" | "unwell" | "card";
 const SYMPTOMS = ["panic", "nausea", "ears", "faint", "headache", "turbulence"] as const;
 
 /** Keep the screen on while the help screen is open, where the browser allows it. */
@@ -35,11 +41,18 @@ function useWakeLock(active: boolean) {
   }, [active]);
 }
 
-export default function HelpScreen({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+export default function HelpScreen({ open, onOpenChange, initialView = "home" }: { open: boolean; onOpenChange: (v: boolean) => void; initialView?: View }) {
   const { t } = useTranslation();
-  const [view, setView] = useState<View>("home");
+  const [view, setView] = useState<View>(initialView);
   const [card, setCard] = useState<MedicalCard>(() => loadCard());
   useWakeLock(open);
+  useEffect(() => setView(initialView), [initialView]);
+  // The account copy can arrive while the screen is open.
+  useEffect(() => {
+    const refresh = () => setCard(loadCard());
+    window.addEventListener(CARD_EVENT, refresh);
+    return () => window.removeEventListener(CARD_EVENT, refresh);
+  }, []);
   const update = (next: MedicalCard) => {
     setCard(next);
     saveCard(next);
@@ -85,7 +98,7 @@ export default function HelpScreen({ open, onOpenChange }: { open: boolean; onOp
                 {view === "breathe" && <Breathe />}
                 {view === "crew" && <Crew card={card} onSeat={(seat) => update({ ...card, seat })} onEdit={() => setView("card")} />}
                 {view === "unwell" && <Unwell onCrew={() => setView("crew")} onBreathe={() => setView("breathe")} />}
-                {view === "card" && <CardForm card={card} onChange={update} />}
+                {view === "card" && <CardView card={card} onClose={() => onOpenChange(false)} />}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -199,11 +212,34 @@ function Crew({ card, onSeat, onEdit }: { card: MedicalCard; onSeat: (s: string)
   const first = i18n.language === "ro" ? "ro" : "en";
   const phrases = [...CREW_PHRASES].sort((a, b) => (a.lang === first ? -1 : b.lang === first ? 1 : 0));
   const [main, ...others] = phrases;
+  const [ringing, setRinging] = useState(false);
+  const [vibrates, setVibrates] = useState(true);
+  const stopRef = useRef<(() => void) | null>(null);
+  const ring = () => {
+    stopRef.current?.();
+    stopRef.current = startAttention(() => {
+      stopRef.current = null;
+      setRinging(false);
+    });
+    setRinging(true);
+  };
+  const silence = () => {
+    stopRef.current?.();
+    stopRef.current = null;
+    setRinging(false);
+  };
+  // Opening this screen is the tap that asks for attention, so start ringing right away.
+  useEffect(() => {
+    setVibrates(canVibrate());
+    ring();
+    return () => stopRef.current?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div>
       <Dialog.Title className="sr-only">{t("help.crew.title")}</Dialog.Title>
       <motion.div
-        className="crew-card"
+        className={`crew-card ${ringing ? "crew-card-ringing" : ""}`}
         initial={{ scale: 0.94 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 18 }}
@@ -225,6 +261,19 @@ function Crew({ card, onSeat, onEdit }: { card: MedicalCard; onSeat: (s: string)
           />
         </label>
       </motion.div>
+
+      <Button
+        className={`mt-4 min-h-14 w-full whitespace-normal text-base ${ringing ? "help-outline" : "help-urgent-button"}`}
+        variant={ringing ? "outline" : "default"}
+        aria-pressed={ringing}
+        onClick={ringing ? silence : ring}
+      >
+        {ringing ? <VolumeX /> : <Volume2 />}
+        {ringing ? t("help.crew.ringStop") : t("help.crew.ringStart")}
+      </Button>
+      <p className="help-muted mt-2 text-sm leading-relaxed" role="status">
+        {ringing && t("help.crew.ringOn")} {!vibrates && t("help.crew.noVibrate")}
+      </p>
 
       <p className="help-panel mt-4 flex items-start gap-2 text-sm leading-relaxed">
         <HeartHandshake className="mt-0.5 size-5 shrink-0" />
@@ -325,30 +374,19 @@ function Unwell({ onCrew, onBreathe }: { onCrew: () => void; onBreathe: () => vo
   );
 }
 
-function CardForm({ card, onChange }: { card: MedicalCard; onChange: (c: MedicalCard) => void }) {
+/** Read-only: the card is edited only in the account, and this copy opens in airplane mode. */
+function CardView({ card, onClose }: { card: MedicalCard; onClose: () => void }) {
   const { t } = useTranslation();
-  const field = (key: keyof MedicalCard, multiline = false, type = "text") => (
+  const user = useTripUser();
+  const field = (key: keyof MedicalCard, multiline = false) => (
     <div className="grid gap-1.5">
       <Label htmlFor={`card-${key}`} className="text-sm">
-        {t(`help.card.${key === "contactName" || key === "contactPhone" ? key : key}`)}
+        {t(`help.card.${key}`)}
       </Label>
       {multiline ? (
-        <Textarea
-          id={`card-${key}`}
-          value={card[key]}
-          onChange={(e) => onChange({ ...card, [key]: e.target.value.slice(0, 300) })}
-          className="help-input min-h-20 text-base"
-          placeholder={t(`help.card.placeholder.${key}`)}
-        />
+        <Textarea id={`card-${key}`} value={card[key]} readOnly className="help-input min-h-20 text-base" placeholder={t("help.card.notFilled")} />
       ) : (
-        <Input
-          id={`card-${key}`}
-          type={type}
-          value={card[key]}
-          onChange={(e) => onChange({ ...card, [key]: e.target.value.slice(0, 120) })}
-          className="help-input h-12 text-base"
-          placeholder={t(`help.card.placeholder.${key}`)}
-        />
+        <Input id={`card-${key}`} value={card[key]} readOnly className="help-input h-12 text-base" placeholder={t("help.card.notFilled")} />
       )}
     </div>
   );
@@ -356,6 +394,13 @@ function CardForm({ card, onChange }: { card: MedicalCard; onChange: (c: Medical
     <div>
       <Dialog.Title className="font-display text-4xl">{t("help.card.title")}</Dialog.Title>
       <p className="help-muted mt-2 text-sm leading-relaxed">{t("help.card.privacy")}</p>
+      <Button asChild variant="outline" className="help-outline mt-4 min-h-11 w-full whitespace-normal">
+        {user ? (
+          <Link to="/account" hash="medical-card" onClick={onClose}><Pencil />{t("help.card.editInAccount")}</Link>
+        ) : (
+          <Link to="/auth" search={{ redirect: "/account#medical-card" }} onClick={onClose}><Pencil />{t("help.card.signInToEdit")}</Link>
+        )}
+      </Button>
       <div className="mt-5 grid gap-4">
         {field("name")}
         {field("conditions", true)}
@@ -363,9 +408,8 @@ function CardForm({ card, onChange }: { card: MedicalCard; onChange: (c: Medical
         {field("medication", true)}
         {field("bloodType")}
         {field("contactName")}
-        {field("contactPhone", false, "tel")}
+        {field("contactPhone")}
       </div>
-      <p className="help-muted mt-4 text-xs">{t("help.card.autosave")}</p>
     </div>
   );
 }

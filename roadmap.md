@@ -24,7 +24,7 @@
 - [x] Creative visual redesign: shared theme, arrival page, search and options, phone/desktop EN/RO verification.
 
 - [x] Trip planner: spec, navigation, search, real flight API, AI advice, costs, extras, adjustment chat, 6h cache, EN/RO 375px tests.
-- [ ] Verify account-saved adjustment chat end-to-end — waiting for a signed-in user; no auth users exist to mint a test session.
+- [ ] Verify account-saved adjustment chat end-to-end — needs the AI key on the live site.
 - [x] Update trip search: From/price-backed To, real price calendar and one-way, flight recommendations; verified CRA/OTP/BGY EN/RO at 375px and real CRA–BGY/CRA–MAD flows.
 - Provider limits: absent cached price does not prove no flight; legacy route inventory misses CRA routes, so recent airport-exact direct fares supplement it. Price-drop groups remain hidden without a real historical baseline.
 - [x] Make To free autocomplete with route hints; all-flights period page, sorting/filters/grouping, trip handoff; checked CRA/OTP 12–16 Nov EN/RO 375px (2 CRA fares, 18 OTP fares), real CRA–MAD handoff.
@@ -36,3 +36,22 @@
 - [x] Weather + what to wear: now on the arrival page, flight-day forecast in pre-flight results (Open-Meteo).
 - [x] Airport guide after the pre-flight checklist: only the steps this passenger needs (check-in/bag drop, security, passport control, gate; on arrival passport, baggage claim, customs, exit/transport), drawn on a virtual airport map from OpenStreetMap, saved on the phone for offline use.
 - [x] In-flight help (panic) button: animated calm screen with breathing, show-to-crew card, symptom guide and on-device medical card; works in airplane mode.
+
+- [x] Accounts: header sign-in button, /auth (Google, Apple first on iPhone, Lovable, email/password + reset), profile (name, photo), /account with saved planned trips, saved pre-flight checklists and the trip chat.
+- [x] Airport guide map redesign: illustrated buildings, runways, parked/taking-off planes, dropping pins, drawn route, walking marker, step card with prev/next.
+- [x] Seat advice in Before you fly: recommended seats per situation (child, less turbulence, fear of flying, tall, quick exit, sleep, motion sickness, accessibility) with sourced safety statistics; never invent numbers.
+- [x] Recolor the whole app from the user's palette (base green), defined globally per element
+- [x] Remove seat safety statistics
+- [x] Medical card saved in the account (plus phone copy), edited only in the account; Help shows it read-only
+- [x] New flow: menu = My trips · Plan a trip · I already have a ticket; each saved trip opens with tabs Before you fly · During the flight · On arrival
+
+- [x] Pet rules per airline (Wizz, Ryanair, easyJet, BA, TAROM, Lufthansa, Austrian, Turkish, KLM, Air France, LOT, ITA, Aegean, Vueling, HiSky) and per destination (EU, into EU, GB, US, TR, AE, other), official links only.
+- [x] When the airline carries no pets, show only that message (no destination pet rules, no comparison clutter).
+- [x] What to visit: pick notable sights (parks, museums…) instead of the 50 nearest articles; food near small airports widens the search when too few places.
+- [x] During the flight works fully offline (everything in that tab cached on the phone); remove the medical card block from the During tab (only in account and inside Help).
+- [x] Move seat advice ("Pick the right seat") out of Before you fly into Plan a trip, shown after a destination is chosen.
+- [x] Trip page checklist: progress stays visible while scrolling; a button to tick a whole category at once.
+- [x] AI chats answer only travel/flight topics; long chats scroll to the end.
+- [x] No AI checklist items that repeat fixed ones (e.g. "No visa needed" next to "Your ID card or passport is enough").
+- [x] On arrival food/sights: card distances and "Show route" start from the same point (live location when nearby, else the airport); short trips use walking routes.
+- [x] Help → Call the crew: phone vibrates and plays a ring to get attention.

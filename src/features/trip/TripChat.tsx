@@ -37,7 +37,8 @@ function SignedTripChat({input,onAdjust}:{input:TripInput;onAdjust:(input:TripIn
     seen.current.add(part.toolCallId);const output=part.output as {input:unknown;preference?:string|null};const parsed=tripInputSchema.safeParse(output.input);if(parsed.success)onAdjust(parsed.data,output.preference??undefined);
   }}},[messages,onAdjust]);
   const busy=status==="submitted"||status==="streaming";
-  useEffect(()=>{if(!busy)ref.current?.focus();},[busy]);
+  // Refocus only after the user's own message, never on load (that jumped the page to the bottom).
+  const sent=useRef(false);useEffect(()=>{if(!busy&&sent.current)ref.current?.focus({preventScroll:true});},[busy]);
   return <>
     <Conversation className="relative h-72"><ConversationContent className="px-0">
       {messages.map(m=><Message key={m.id} from={m.role}><MessageContent className={m.role==="user"?"bg-primary text-primary-foreground":"bg-transparent"}>
@@ -46,7 +47,7 @@ function SignedTripChat({input,onAdjust}:{input:TripInput;onAdjust:(input:TripIn
       {busy&&<Shimmer>{t("ask.thinking")}</Shimmer>}
       {(error||loadError)&&<p role="alert" className="break-words text-sm text-destructive">{error?.message||loadError}</p>}
     </ConversationContent><ConversationScrollButton aria-label={t("ask.scrollDown")}/></Conversation>
-    <PromptInput onSubmit={async({text})=>{if(!text.trim()||busy)return;setText("");await sendMessage({text});}}>
+    <PromptInput onSubmit={async({text})=>{if(!text.trim()||busy)return;setText("");sent.current=true;await sendMessage({text});}}>
       <PromptInputTextarea ref={ref} value={text} onChange={e=>setText(e.target.value)} placeholder={t("trip.chatPlaceholder")} aria-label={t("trip.askAgent")} maxLength={500} className="min-h-20 text-base"/>
       <PromptInputFooter className="justify-end"><PromptInputSubmit className="size-11" status={status} onStop={stop} disabled={!busy&&!text.trim()} aria-label={busy?t("trip.stop"):t("ask.send")}/></PromptInputFooter>
     </PromptInput>

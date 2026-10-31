@@ -1,3 +1,4 @@
+import { travelScope } from "@/lib/travel-scope";
 /**
  * The "Ask anything" backend. The question, the conversation so far and the data
  * already on screen go to the AI function; the browser never sees a credential.
@@ -28,7 +29,8 @@ function instructions(lang: "en" | "ro"): string {
     `Always respond in ${language}.` +
     (lang === "ro" ? " Use correct Romanian diacritics (ă, â, î, ș, ț with comma below)." : "") +
     " Return an object with: text — your answer; places — up to 5 recommended places, each with name, lat and lon " +
-    "taken from the provided data, or an empty list when you are not recommending a specific location."
+    "taken from the provided data, or an empty list when you are not recommending a specific location." +
+    travelScope(lang)
   );
 }
 

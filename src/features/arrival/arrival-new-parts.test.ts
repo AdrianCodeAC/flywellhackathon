@@ -115,3 +115,27 @@ it("defaults food searches to city center", () => {
 it("uses an eight-second Overpass fallback query", () => {
   expect(buildOverpassQuery("food", 44.3, 23.8, 1200, 8000)).toContain("[timeout:8]");
 });
+
+import { interleaveByKind, widerFoodRadius, wikidataSearchUrl } from "./place-sources";
+
+it("searches notable sights by type near the centre (not just the nearest articles)", () => {
+  const url = new URL(wikidataSearchUrl(["Q22698", "Q22746"], 40.417, -3.704, 10_000, 12));
+  expect(url.searchParams.get("srsearch")).toBe(
+    "haswbstatement:P31=Q22698|P31=Q22746 nearcoord:10km,40.4170,-3.7040",
+  );
+  expect(url.searchParams.get("srlimit")).toBe("12");
+});
+
+it("interleaves kinds so parks are not crowded out by other sights", () => {
+  type Row = { kind: "park" | "museum"; n: number };
+  const parks: Row[] = [{ kind: "park", n: 1 }, { kind: "park", n: 2 }];
+  const museums: Row[] = [{ kind: "museum", n: 3 }];
+  expect(interleaveByKind([museums, parks]).map((x) => x.n)).toEqual([3, 1, 2]);
+});
+
+it("widens the food search once when fewer than 15 places are found, up to 4 km", () => {
+  expect(widerFoodRadius(1500, 2)).toBe(3750);
+  expect(widerFoodRadius(1500, 15)).toBeNull();
+  expect(widerFoodRadius(2000, 0)).toBe(4000);
+  expect(widerFoodRadius(4000, 0)).toBeNull();
+});

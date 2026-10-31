@@ -4,18 +4,18 @@ import { Plane, WifiOff } from "lucide-react";
 import { LANGUAGES, setLanguage, syncClientLanguage, type Language } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
-import { PanicButton } from "@/features/inflight/PanicButton";
+import { AccountButton } from "@/features/account/AccountButton";
 
 /** Sticky header: always-visible EN/RO switcher plus the offline banner. */
 export function AppHeader() {
   const { t } = useTranslation();
   const [offline, setOffline] = useState(false);
   const location = useLocation();
-  const arrival = location.pathname === "/arrival";
-  const preflight = location.pathname === "/preflight";
-  const plan = !arrival && !preflight;
+  const trips = location.pathname.startsWith("/trips");
+  const ticket = location.pathname === "/preflight";
+  const plan = location.pathname === "/" || location.pathname === "/flights";
 
-  useEffect(() => { if (arrival || preflight) localStorage.setItem("flywell:tab", arrival ? "arrival" : "preflight"); }, [arrival, preflight]);
+  useEffect(() => { if (trips || ticket) localStorage.setItem("flywell:tab", trips ? "trips" : "preflight"); }, [trips, ticket]);
 
   // Apply the saved / phone language only after hydration so server and client HTML match.
   useEffect(() => {
@@ -38,18 +38,18 @@ export function AppHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
         <Link to="/" onClick={() => localStorage.setItem("flywell:tab", "plan")} className="flex min-h-11 items-center gap-2.5" aria-label={t("design.brand")}>
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"><Plane className="h-5 w-5 -rotate-12" /></span>
-          <span className="text-xl font-bold">{t("design.brand")}<span className="text-primary">.</span></span>
+          <span className="hidden text-xl font-bold min-[400px]:inline">{t("design.brand")}<span className="text-primary">.</span></span>
         </Link>
         <span className="hidden text-xs font-medium uppercase text-muted-foreground sm:block">{t("design.companion")}</span>
-        <div className="flex items-center gap-2">
-          <PanicButton />
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <AccountButton />
           <LanguageSwitcher />
         </div>
       </div>
       <nav aria-label={t("trip.navigation")} className="mx-auto flex max-w-6xl gap-1 px-3 pb-2 sm:px-8">
         <Button asChild variant={plan ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-2 text-sm sm:flex-none sm:px-3"><Link to="/" aria-current={plan ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "plan")}>{t("trip.planTab")}</Link></Button>
-        <Button asChild variant={preflight ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-2 text-sm sm:flex-none sm:px-3"><Link to="/preflight" search={{from:"",to:"",date:""}} aria-current={preflight ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "preflight")}>{t("preflight.tab")}</Link></Button>
-        <Button asChild variant={arrival ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-2 text-sm sm:flex-none sm:px-3"><Link to="/arrival" search={{iata:""}} aria-current={arrival ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "arrival")}>{t("trip.arrivalTab")}</Link></Button>
+        <Button asChild variant={trips ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-2 text-sm sm:flex-none sm:px-3"><Link to="/trips" aria-current={trips ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "trips")}>{t("trips.title")}</Link></Button>
+        <Button asChild variant={ticket ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-2 text-sm sm:flex-none sm:px-3"><Link to="/preflight" search={{from:"",to:"",date:"",edit:""}} aria-current={ticket ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "preflight")}>{t("trip.arrivalTab")}</Link></Button>
       </nav>
       {offline && (
         <div

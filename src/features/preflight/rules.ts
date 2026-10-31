@@ -4,6 +4,7 @@
  * gateway is down. Text lives in the locale files under preflight.rule.*.
  */
 import { z } from "zod";
+import { describePetPolicy, findPetPolicy, petEntryRule } from "./pets";
 
 /** Official pages the checklist and the agent may cite. URLs were checked by hand. */
 export const SOURCES = {
@@ -36,6 +37,34 @@ export const SOURCES = {
     url: "https://www.gov.uk/guidance/apply-for-an-electronic-travel-authorisation-eta",
   },
   usEsta: { name: "ESTA — U.S. CBP", url: "https://esta.cbp.dhs.gov/" },
+  euPets: {
+    name: "Your Europe — Travelling with pets",
+    url: "https://europa.eu/youreurope/citizens/travel/carry/pets-and-other-animals/index_en.htm",
+  },
+  euPetsEntry: {
+    name: "European Commission — Pets from non-EU countries",
+    url: "https://food.ec.europa.eu/animals/live-animal-movements/dogs-cats-and-ferrets/bringing-pet-eu-non-eu-country_en",
+  },
+  gbPets: {
+    name: "GOV.UK — Bringing a pet to Great Britain",
+    url: "https://www.gov.uk/bring-pet-to-great-britain/travel-routes-pets",
+  },
+  usDogs: {
+    name: "CDC — Bringing a dog into the U.S.",
+    url: "https://www.cdc.gov/importation/dogs/rabies-free-low-risk-countries.html",
+  },
+  usAnimals: {
+    name: "CDC — Bringing an animal into the U.S.",
+    url: "https://www.cdc.gov/importation/bringing-an-animal-into-the-us/",
+  },
+  trPets: {
+    name: "Türkiye Ministry of Agriculture — Pet travel",
+    url: "https://vskn.tarimorman.gov.tr/ataturk/Link/16/Kedi-Kopek-Gelincik-Seyahati",
+  },
+  aePets: {
+    name: "UAE MOCCAE — Pet import permit",
+    url: "https://moccae.gov.ae/en/services/import-permit-pets",
+  },
 } as const;
 export type SourceId = keyof typeof SOURCES;
 export const SOURCE_IDS = Object.keys(SOURCES) as [SourceId, ...SourceId[]];
@@ -152,7 +181,35 @@ export function buildChecklist(input: PreflightInput, today = new Date()): Check
       input.citizenship === "ro" ? "childrenRo" : "children",
       input.citizenship === "ro" ? "border" : "euEntry",
     );
-  if (input.pet) add("documents", "must", "pet", "euCarry");
+  if (input.pet) {
+    const airline = findPetPolicy(input.airline);
+    if (airline && !airline.cabin && airline.hold.kind === "no") {
+      // Nothing else matters when the airline won't carry the pet.
+      add("documents", "must", "petAirlineNo", undefined, { airline: airline.name });
+    } else {
+      const entry = petEntryRule(from, to);
+      const entrySource = {
+        gb: "gbPets",
+        us: "usDogs",
+        tr: "trPets",
+        ae: "aePets",
+        eu: "euPets",
+        intoEu: "euPetsEntry",
+        other: "mae",
+      } as const satisfies Record<typeof entry, SourceId>;
+      add("documents", "must", `pet_${entry}`, entrySource[entry], { city });
+      if (entry === "us") add("documents", "info", "pet_usCats", "usAnimals");
+      if (!airline) add("documents", "must", "petAirlineUnknown");
+      else if (to === "GB") {
+        // pet_gb already says "cargo only"; the airline's cabin rule does not apply.
+      } else if (airline.cabin)
+        add("documents", "must", "petAirlineCabin", undefined, {
+          airline: airline.name,
+          kg: airline.cabin.kg,
+        });
+      else add("documents", "must", "petAirlineCargo", undefined, { airline: airline.name });
+    }
+  }
 
   // Security checkpoint (EU rules apply at every EU airport)
   add("security", "must", "liquids", "euLiquids");
@@ -208,6 +265,7 @@ export function describeTrip(input: PreflightInput): string {
     `Baggage: ${input.bag === "cabin" ? "cabin bag only" : "checked bag"}`,
     input.airline ? `Airline: ${input.airline}` : "Airline: unknown",
     `Travelling with children: ${input.children ? "yes" : "no"}; carrying medication: ${input.medication ? "yes" : "no"}; travelling with a pet: ${input.pet ? "yes" : "no"}`,
+    ...(input.pet ? [describePetPolicy(input.airline, input.destination.countryCode)] : []),
   ].join("\n");
 }
 

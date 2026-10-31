@@ -416,10 +416,6 @@
         "title": "Acte pentru copii",
         "detail": "Fiecare copil are nevoie de propriul act de călătorie. Dacă un copil nu călătorește cu ambii părinți, ia acordul scris al părintelui absent."
       },
-      "pet": {
-        "title": "Animal de companie: pașaport, microcip, vaccin antirabic",
-        "detail": "În UE animalul are nevoie de pașaport european pentru animale, microcip și vaccin antirabic valabil. Compania aeriană trebuie să aprobe animalul în avans."
-      },
       "liquids": {
         "title": "Lichide: regula de 100 ml",
         "detail": "În bagajul de mână, lichidele, gelurile și cremele trebuie să fie în recipiente de maximum 100 ml, toate într-o pungă transparentă, resigilabilă, de aproximativ 1 litru. Unele aeroporturi cu scanere noi permit mai mult — doar dacă aeroportul spune asta."
@@ -491,6 +487,54 @@
       "eu261Inbound": {
         "title": "Drepturi UE: depinde de companie",
         "detail": "Zborurile spre UE sunt acoperite de Regulamentul 261/2004 doar dacă operatorul este o companie din UE. Păstrează bonurile și cartea de îmbarcare dacă apare o problemă."
+      },
+      "pet_eu": {
+        "title": "Animal în UE: pașaport, microcip, vaccin antirabic",
+        "detail": "Câinii, pisicile și dihorii au nevoie de pașaport european pentru animale, microcip (pus înainte de vaccin) și vaccin antirabic valabil, făcut cu cel puțin 21 de zile înainte de călătorie. Finlanda, Irlanda, Malta și Norvegia cer și tratament antiparazitar (tenie) pentru câini. Celelalte animale urmează regulile țării de destinație."
+      },
+      "pet_intoEu": {
+        "title": "Animal care intră în UE: certificat de sănătate",
+        "detail": "Venind din afara UE, câinele, pisica sau dihorul are nevoie de microcip, vaccin antirabic valabil și certificat de sănătate UE semnat de un medic veterinar oficial (valabil 10 zile până la controlul de frontieră). Din multe țări este nevoie și de un test de sânge antirabic (minimum 0,5 UI/ml), făcut cu cel puțin 90 de zile înainte de certificat. Întoarcerea cu pașaport european valabil este mai simplă."
+      },
+      "pet_gb": {
+        "title": "Animal spre Marea Britanie: doar ca marfă (cargo)",
+        "detail": "Animalele care zboară spre Marea Britanie trebuie să călătorească drept cargo, cu o companie aprobată, nu în cabină și nici ca bagaj de cală. Doar câinii-ghid și de asistență recunoscuți pot sta în cabină. Animalul are nevoie de microcip, vaccin antirabic și certificat de sănătate sau pașaport; câinii au nevoie și de tratament pentru tenie."
+      },
+      "pet_us": {
+        "title": "Câine spre SUA: formularul CDC Dog Import Form",
+        "detail": "Din 1 august 2024 fiecare câine trebuie să aibă cel puțin 6 luni, microcip, să fie sănătos și să aibă confirmarea formularului CDC Dog Import Form. Câinii care au fost în ultimele 6 luni în țări cu risc mare de rabie au nevoie de acte suplimentare. Companiile aeriene și statele americane pot cere mai mult."
+      },
+      "pet_usCats": {
+        "title": "Pisici spre SUA",
+        "detail": "Pisicile au regulile lor CDC (formularul pentru câini nu se aplică); compania aeriană sau statul american pot cere certificat de sănătate sau vaccin antirabic."
+      },
+      "pet_tr": {
+        "title": "Animal spre Turcia",
+        "detail": "Turcia cere microcip, vaccin antirabic, test de sânge antirabic (peste 0,5 UI/ml, la cel puțin 30 de zile după vaccin și cu 90 de zile înainte de intrare) și certificat veterinar de sănătate. Maximum 2 animale de pasager."
+      },
+      "pet_ae": {
+        "title": "Animal spre Emiratele Arabe Unite: permis de import",
+        "detail": "Ai nevoie de permis de import de la Ministerul Schimbărilor Climatice și Mediului din EAU (valabil 90 de zile), microcip, vaccin antirabic și certificat veterinar de sănătate autentificat; animalul este verificat la sosire."
+      },
+      "pet_other": {
+        "title": "Animal: verifică regulile pentru {{city}}",
+        "detail": "Fiecare țară din afara UE are propriile reguli pentru animale (microcip, vaccinuri, teste de sânge, permise, carantină). Întreabă ambasada sau autoritatea veterinară a țării înainte de rezervare; pagina MAE are regulile de intrare pe țări."
+      },
+      "petAirlineUnknown": {
+        "title": "Compania aeriană decide dacă animalul poate zbura",
+        "detail": "Companiile diferă mult. Vezi lista de mai sus sau completează compania aeriană ca să vezi regulile exacte."
+      },
+      "petAirlineNo": {
+        "title": "{{airline}} nu transportă animale",
+        "detail": "{{airline}} nu acceptă animale nici în cabină, nici în cală; pot zbura doar câinii de asistență recunoscuți. Alege altă companie pentru animalul tău."
+      },
+      "petAirlineCabin": {
+        "title": "Rezervă din timp locul animalului la {{airline}}",
+        "detail": "{{airline}} acceptă un animal mic în cabină (până la {{kg}} kg cu tot cu geanta de transport). Locurile sunt limitate, așa că adaugă animalul la rezervare cât mai devreme și așteaptă confirmarea."
+      },
+      "petAirlineCargo": {
+        "title": "{{airline}}: animale doar prin cargo",
+        "detail": "{{airline}} nu acceptă animale în cabină; ele călătoresc în cală prin partenerul de cargo. Cere o ofertă din timp."
       }
     },
     "offlineAnswer": "Agentul AI nu este disponibil acum, așa că iată ce spun regulile oficiale:",
@@ -546,7 +590,60 @@
         "prep_west_few": "Cu {{count}} zile înainte: culcă-te și trezește-te cu aproximativ o oră mai târziu în fiecare zi.",
         "prep_west_other": "Cu {{count}} de zile înainte: culcă-te și trezește-te cu aproximativ o oră mai târziu în fiecare zi."
       }
-    }
+    },
+    "pets": {
+      "title": "Reguli pentru animale — {{airline}}",
+      "verifyBadge": "Confirmat parțial",
+      "compareTitle": "Ce companii acceptă animale",
+      "compareHint": "Completează compania aeriană mai sus pentru regulile exacte. Atinge un nume pentru pagina oficială.",
+      "cabin": "În cabină",
+      "hold": "În cală (bagaj de cală)",
+      "assistance": "Câini de asistență",
+      "booking": "Rezervare",
+      "cabinYes": "Da: până la {{kg}} kg cu tot cu geanta · {{species}}",
+      "cabinYesSize": "Da: până la {{kg}} kg cu tot cu geanta, geanta max. {{size}} cm · {{species}}",
+      "cabinNo": "Nu acceptă animale în cabină",
+      "holdYes": "Da, pe avioanele potrivite",
+      "holdKg": "Da, până la {{kg}} kg cu tot cu cușca",
+      "holdCargo": "Doar drept cargo, prin partenerul de cargo",
+      "holdNo": "Nu",
+      "assistanceText": "Câinii-ghid și de asistență recunoscuți zboară gratuit în cabină, cu aprobare separată; animalele de suport emoțional sunt tratate ca animale de companie.",
+      "notice": "Rezervă animalul cu cel puțin {{hours}} h înainte de plecare și așteaptă confirmarea.",
+      "shortCabin": "Cabină până la {{kg}} kg",
+      "shortCargo": "Doar cargo",
+      "shortNo": "Fără animale",
+      "checked": "Verificat în octombrie 2026 pe paginile oficiale ale companiilor. Regulile se schimbă: confirmă înainte de rezervare.",
+      "verify": "Unele cifre nu au putut fi confirmate complet pe pagina companiei: confirmă înainte de rezervare.",
+      "official": "Regulile {{airline}} pentru animale",
+      "species": {
+        "dog": "câini",
+        "cat": "pisici",
+        "ferret": "dihori",
+        "bird": "păsări",
+        "turtle": "broaște țestoase"
+      },
+      "note": {
+        "assistWizz": "Doar câini-ghid/de asistență certificați, gratuit, unul pe zbor; declară-l la rezervare și trimite actele cu cel puțin 48 de ore înainte de plecare.",
+        "assistRyanair": "Doar câini de asistență recunoscuți, gratuit în cabină pe rutele eligibile (nu spre Maroc sau Israel); anunță Ryanair la rezervare.",
+        "assistApproval": "Doar câini de asistență aprobați; cere aprobarea cu cel puțin 48 de ore înainte.",
+        "baCargo": "Nu acceptă animale în cabină pe nicio rută. Animalele zboară în cală prin PetAir UK / IAG Cargo, pe bază de ofertă.",
+        "taromA320": "Nu acceptă animale în cală pe avioanele A320.",
+        "snubHold": "Rasele cu bot scurt (de ex. pug, buldog, pisici persane) nu sunt acceptate în cală.",
+        "payAtCheckin": "Înregistrează animalul online; taxa se plătește la check-in.",
+        "austrianBooking": "Animalul pentru cabină se adaugă din My Bookings (excepție zborurile spre SUA); animalele mari prin Service Centre.",
+        "turkishHold": "Animalele de peste 8 kg merg în cală; taxa depinde de rută și greutate.",
+        "klmCabin": "Animalele stau în cabină la Economy și European Business, nu la Business intercontinental sau Premium Comfort.",
+        "lotEmbraer": "Pe avioanele Embraer geanta trebuie să fie mai mică (45 × 30 × 20 cm). Câinii spre SUA: cel puțin 48 de ore înainte.",
+        "itaDomestic": "Pe zborurile interne din Italia limita în cabină este 12 kg (cu geanta și mâncarea).",
+        "itaFee": "Taxa publicată în Europa: 95 € în cabină, 105 € în cală, pe rută.",
+        "aegeanProp": "Pe avioanele cu elice (ATR, Dash 8) geanta trebuie să fie max. 40 × 25 × 25 cm.",
+        "vuelingUk": "Nu este disponibil pe zborurile spre sau din Marea Britanie și Islanda.",
+        "hiskyFee": "50 € pe zbor în România și pe ruta București–Chișinău; nu se oferă pe zborurile spre Londra. Contactează HiSky pentru confirmare."
+      },
+      "assistTitle": "Câini de asistență — {{airline}}"
+    },
+    "tickAll": "Bifează tot",
+    "untickAll": "Debifează tot"
   },
   "weather": {
     "unavailable": "Vremea nu este disponibilă acum.",
@@ -677,7 +774,10 @@
         "detail": "Urmează indicatoarele de ieșire; trenurile, autobuzele și taxiurile sunt marcate pe hartă."
       }
     },
-    "gatePlaceholder": "ex. 12"
+    "gatePlaceholder": "ex. 12",
+    "stepOf": "Pasul {{n}} din {{total}}",
+    "prevStep": "Pasul anterior",
+    "nextStep": "Pasul următor"
   },
   "help": {
     "button": "Ajutor",
@@ -723,7 +823,11 @@
       "seat": "Locul",
       "callButton": "Apasă butonul de apel de deasupra locului tău (simbolul cu omuleț), apoi arată acest ecran însoțitorului de zbor.",
       "medicalTitle": "Informațiile mele medicale",
-      "addCard": "Adaugă alergiile și medicamentele pe acest card"
+      "addCard": "Adaugă alergiile și medicamentele pe acest card",
+      "ringStop": "Oprește sunetul și vibrația",
+      "ringStart": "Sună și vibrează",
+      "ringOn": "Telefonul sună și vibrează ca să te observe echipajul. Se oprește singur după un minut.",
+      "noVibrate": "Acest telefon nu poate vibra din aplicație, așa că se aude doar sunetul. Scoate telefonul de pe silențios ca să se audă."
     },
     "unwell": {
       "title": "Mi-e rău",
@@ -783,7 +887,7 @@
     },
     "card": {
       "title": "Fișa mea medicală",
-      "privacy": "Salvată doar pe acest telefon. Nu se trimite nicăieri, deci merge și în modul avion.",
+      "privacy": "Se editează doar din cont. Copia de pe telefon merge și în modul avion.",
       "autosave": "Se salvează automat.",
       "name": "Nume",
       "seat": "Locul",
@@ -803,7 +907,210 @@
         "bloodType": "ex. A+",
         "contactName": "ex. Ana Popescu (sora)",
         "contactPhone": "+40 7…"
-      }
+      },
+      "editInAccount": "Editează în cont",
+      "signInToEdit": "Conectează-te ca să-ți adaugi fișa",
+      "notFilled": "—"
     }
+  },
+  "account": {
+    "signIn": "Conectează-te",
+    "account": "Cont",
+    "authTitle": "Contul tău Flywell",
+    "authSubtitle": "Salvează călătoriile, listele de verificare și discuția de călătorie, pe orice dispozitiv.",
+    "apple": "Continuă cu Apple",
+    "google": "Continuă cu Google",
+    "lovable": "Continuă cu Lovable",
+    "appleHint": "Recomandat pe iPhone",
+    "or": "sau",
+    "moreOptions": "Alte opțiuni de conectare (Apple, e-mail)",
+    "email": "E-mail",
+    "password": "Parolă",
+    "name": "Nume",
+    "signInTab": "Autentificare",
+    "signUpTab": "Cont nou",
+    "signInAction": "Intră în cont",
+    "signUpAction": "Creează contul",
+    "forgot": "Ai uitat parola?",
+    "sendReset": "Trimite linkul de resetare",
+    "resetSent": "Verifică e-mailul: ți-am trimis un link pentru o parolă nouă.",
+    "backToSignIn": "Înapoi la autentificare",
+    "confirmSent": "Verifică e-mailul ({{email}}) și apasă linkul ca să confirmi contul.",
+    "passwordHint": "Cel puțin 8 caractere",
+    "wrongCredentials": "E-mail sau parolă greșită.",
+    "notConfirmed": "Confirmă mai întâi e-mailul — verifică inboxul.",
+    "exists": "Există deja un cont cu acest e-mail. Autentifică-te.",
+    "weakPassword": "Alege o parolă mai puternică (cel puțin 8 caractere).",
+    "genericError": "Ceva n-a mers. Încearcă din nou.",
+    "newPasswordTitle": "Setează o parolă nouă",
+    "newPassword": "Parola nouă",
+    "savePassword": "Salvează parola",
+    "resetInvalid": "Linkul de resetare nu este valid sau a expirat. Cere unul nou.",
+    "profile": "Profil",
+    "changePhoto": "Schimbă poza",
+    "photoError": "Poza nu a putut fi încărcată.",
+    "saveName": "Salvează",
+    "nameSaved": "Salvat",
+    "savedTrips": "Călătorii salvate",
+    "plannedTrips": "Călătorii planificate",
+    "checklists": "Călătoriile mele",
+    "tripChat": "Discuția de călătorie",
+    "chatSummary": "Mesaje: {{count}} · {{destination}}",
+    "continueChat": "Continuă discuția",
+    "noChat": "Nicio discuție încă. Planifică o călătorie și întreabă agentul orice.",
+    "emptyTrips": "Nicio călătorie salvată. Apasă „Salvează călătoria” pe o călătorie planificată.",
+    "emptyChecklists": "Nicio călătorie încă. Adaugă un zbor din „Am deja bilet”.",
+    "open": "Deschide",
+    "delete": "Șterge",
+    "deleteConfirm": "Ștergi „{{title}}”?",
+    "past": "Trecută",
+    "progress": "{{done}} din {{total}} bifate",
+    "fromPrice": "de la {{price}}",
+    "saveTrip": "Salvează călătoria",
+    "saveChecklist": "Salvează lista",
+    "saved": "Salvat în cont",
+    "saveError": "Nu s-a putut salva. Încearcă din nou.",
+    "loadError": "Elementele salvate nu au putut fi încărcate.",
+    "invalidEmail": "Folosește o adresă de e-mail reală, pe care o poți deschide.",
+    "medicalPrivacy": "Salvată în cont și păstrată pe acest telefon, ca butonul Ajutor să o arate și în modul avion. Doar tu o poți vedea.",
+    "medicalSaving": "Se salvează…",
+    "medicalSaved": "Salvată în cont",
+    "medicalError": "Nu s-a putut salva în cont — rămâne pe acest telefon."
+  },
+  "seats": {
+    "eyebrow": "Unde să stai",
+    "title": "Locul potrivit pentru tine",
+    "situations": "Situația ta",
+    "subtitle": "Îți alegi locul la rezervare? Alege situația ta, iar avionul îți arată unde să țintești și ce să eviți. Rândurile diferă de la un avion la altul, așa că verifică harta locurilor companiei aeriene.",
+    "situation": {
+      "child": "Cu un copil",
+      "turbulence": "Mai puține turbulențe",
+      "fear": "Frică de zbor",
+      "motion": "Rău de mișcare",
+      "legroom": "Mai mult loc la picioare",
+      "quickExit": "Cobori repede",
+      "sleep": "Somn",
+      "mobility": "Mobilitate redusă"
+    },
+    "summary": {
+      "child": "Deasupra aripii sau puțin în fața ei, la geam și la mijloc, împreună, departe de rândurile de la ieșiri și de ultimele rânduri.",
+      "turbulence": "Pe rândurile de deasupra aripii se simt cel mai puțin turbulențele; pe ultimele rânduri, cel mai tare.",
+      "fear": "Stai deasupra aripii, pe culoar, și spune-le însoțitorilor că ai emoții — sunt obișnuiți.",
+      "motion": "La geam, deasupra aripii, unde zborul e cel mai lin.",
+      "legroom": "Rândurile de la ieșiri sau primul rând au cel mai mult spațiu.",
+      "quickExit": "Un loc pe culoar, în primele rânduri, te scoate primul din avion.",
+      "sleep": "La geam, departe de toalete și de bucătării.",
+      "mobility": "Pe culoar, în față, nu pe rândul de la ieșire, cu asistența cerută din timp."
+    },
+    "tip": {
+      "child": {
+        "1": "Pune scaunul copilului la geam: nu trebuie să blocheze ieșirea din rând. Întreabă compania ce scaune pentru copii acceptă.",
+        "2": "Copiii și bebelușii nu pot sta pe rândurile de la ieșirile de urgență — echipajul vă va muta.",
+        "3": "În spatele cabinei se simt cel mai tare turbulențele și se stă la coadă la toalete, așa că alege aripa sau mai în față."
+      },
+      "turbulence": {
+        "1": "Deasupra aripii ești cel mai aproape de centrul de greutate al avionului, așa că mișcările sunt cele mai mici; coada se mișcă cel mai mult.",
+        "2": "Ține centura prinsă lejer tot zborul — turbulențele pot apărea și pe cer senin."
+      },
+      "fear": {
+        "1": "Deasupra aripii zborul e cel mai lin, iar sunetul motoarelor rămâne constant.",
+        "2": "Culoarul ajută dacă te simți închis; geamul ajută dacă te liniștește să vezi orizontul.",
+        "3": "Apasă Ajutor în fila În timpul zborului a călătoriei pentru un exercițiu de respirație care merge și în modul avion."
+      },
+      "motion": {
+        "1": "Privește orizontul și ține capul nemișcat, sprijinit de tetieră.",
+        "2": "Nu citi la decolare și când se zgâlțâie avionul, și îndreaptă ventilația spre față."
+      },
+      "legroom": {
+        "1": "Rândurile de la ieșiri sunt doar pentru adulți care pot și vor să ajute la deschiderea ușii; echipajul te poate muta dacă nu ești potrivit.",
+        "2": "Primul rând are spațiu în plus, dar la decolare și aterizare nu poți ține bagaje sub scaunul din față."
+      },
+      "quickExit": {
+        "1": "Primele rânduri, pe culoar, sunt cele mai bune pentru o legătură scurtă.",
+        "2": "În caz de urgență contează cel mai mult distanța până la o ieșire liberă: când te așezi, numără rândurile până la ieșirile din față și din spate."
+      },
+      "sleep": {
+        "1": "La geam ai de ce să te sprijini și nu trece nimeni peste tine.",
+        "2": "În fața și în spatele cabinei sunt toaletele și bucătăriile: lumină, zgomot și cozi."
+      },
+      "mobility": {
+        "1": "Cere companiei asistență gratuită cu cel puțin 48 de ore înainte de zbor — regulile UE îți dau acest drept.",
+        "2": "Unele locuri de pe culoar au cotiere rabatabile, care te ajută să te muți mai ușor; întreabă la rezervare."
+      }
+    },
+    "rows": "Rândurile {{list}}",
+    "avoidRows": "evită {{list}}",
+    "columns": "locuri: {{list}}",
+    "col": {
+      "window": "geam (A, F)",
+      "middle": "mijloc (B, E)",
+      "aisle": "culoar (C, D)"
+    },
+    "legendBest": "Cele mai bune locuri",
+    "legendGood": "Rând bun",
+    "legendAvoid": "De evitat",
+    "legendExit": "Ieșire",
+    "legendWing": "Aripă",
+    "comfortOnly": "Sfat de confort — nu are la bază date de siguranță.",
+    "aircraftNote": "Desenat pe un avion obișnuit cu 30 de rânduri (A320 / Boeing 737). Rândurile de la aripă și de la ieșiri diferă pe avionul tău; verifică harta locurilor când îți alegi locul."
+  },
+  "trips": {
+    "eyebrow": "Zborurile tale",
+    "title": "Călătoriile mele",
+    "subtitle": "Fiecare zbor adăugat are propriile secțiuni Înainte de zbor, În timpul zborului și La sosire.",
+    "planHint": "Găsește zboruri, cazare și costul călătoriei.",
+    "ticketHint": "Scanează cartea de îmbarcare sau scrie zborul.",
+    "empty": "Nicio călătorie încă. Planifică una sau adaugă un zbor deja rezervat.",
+    "signInSync": "Conectează-te ca să ai călătoriile și fișa medicală pe orice telefon.",
+    "signIn": "Conectează-te",
+    "synced": "Salvată în cont",
+    "deviceOnly": "Doar pe acest telefon",
+    "status": {
+      "upcoming": "Urmează",
+      "today": "Zbori azi",
+      "away": "În călătorie",
+      "past": "Trecută"
+    },
+    "delete": "Șterge călătoria",
+    "deleteConfirm": "Ștergi {{title}} din călătoriile tale?",
+    "stages": "Etapele călătoriei",
+    "tab": {
+      "before": "Înainte de zbor",
+      "during": "În timpul zborului",
+      "arrival": "La sosire"
+    },
+    "switch": "Schimbă călătoria",
+    "notFound": "Această călătorie nu este pe acest telefon.",
+    "backToTrips": "Călătoriile mele",
+    "arrivalIn": "La sosire în {{city}}",
+    "addToTrips": "Adaugă la călătoriile mele",
+    "adding": "Se adaugă…",
+    "addError": "Nu am putut adăuga zborul. Încearcă din nou.",
+    "during": {
+      "subtitle": "Totul de aici merge și în modul avion",
+      "tipsTitle": "La bord",
+      "tips": [
+        "Ține centura prinsă cât timp stai pe scaun.",
+        "Bea apă des și limitează alcoolul și cafeaua.",
+        "Ridică-te, întinde-te și mișcă gleznele la fiecare oră-două.",
+        "La coborâre, înghite, cască sau mestecă, ca să scadă presiunea din urechi."
+      ],
+      "helpHint": "Respirație, chemarea echipajului, când ți-e rău și fișa medicală.",
+      "savedOffline": "Salvat pe telefon — merge în modul avion"
+    }
+  },
+  "ticket": {
+    "eyebrow": "Am deja bilet",
+    "title": "Adaugă zborul tău",
+    "subtitle": "Scanează cartea de îmbarcare sau scrie detaliile zborului. Primești tot ce-ți trebuie înainte, în timpul și după zbor, salvat în Călătoriile mele."
+  },
+  "start": {
+    "fromYou": "Distanțe de unde ești acum, actualizate pe măsură ce te miști (în linie dreaptă).",
+    "fromAirport": "Distanțe de la aeroport (în linie dreaptă). Pornește locația ca să măsurăm de unde ești.",
+    "far": "Ești departe de acest aeroport, așa că distanțele sunt de la aeroport (în linie dreaptă).",
+    "denied": "Locația e oprită, așa că distanțele sunt de la aeroport (în linie dreaptă).",
+    "useMine": "Folosește locația mea",
+    "locating": "Te căutăm…",
+    "you": "Locația ta"
   }
 }
