@@ -3,6 +3,7 @@ import { adviceSchema, bookingLinks, comfortScore, dateMatches, searchMonths, tr
 import { tripGateway } from "./gateway.server";
 import { readTripCache, writeTripCache } from "./cache.server";
 import { LIVE_TTL, liveFares } from "./live.server";
+import { kiwiFares } from "./kiwi.server";
 
 async function http(url: string, init?: RequestInit) {
   const r = await fetch(url,init);
@@ -108,8 +109,8 @@ export async function handleTrip(request: Request): Promise<Response> {
       if(cached){
         let flights=cached.flights;
         // A stored live fare goes stale in minutes: re-check it before showing it again.
-        if(flights?.source==="live"&&Date.now()-Date.parse(flights.fetchedAt)>LIVE_TTL){
-          const fresh=await liveFares(input,request.signal).catch(()=>null);
+        if((flights?.source==="live"||flights?.source==="kiwi")&&Date.now()-Date.parse(flights.fetchedAt)>LIVE_TTL){
+          const fresh=await kiwiFares(input,request.signal).catch(()=>null)??await liveFares(input,request.signal).catch(()=>null);
           if(fresh?.flights.length)flights=fresh;
         }
         if(flights)emit({type:"flights",value:flights});
@@ -125,8 +126,10 @@ export async function handleTrip(request: Request): Promise<Response> {
         }catch(e){const message=safeAiError(e,input.lang);result.adviceError=message;emit({type:"error",section:"advice",message});}
       })();
       const extraTask=extras(input,destination,request.signal).then(value=>{result.extras=value;emit({type:"extras",value});});
-      // Live Google Flights fares when a provider key exists, cached fares otherwise.
+      // Live fares first: the free live search, then a paid Google Flights reader when a key exists, cached fares only as the last resort.
       const flightTask=(async()=>{
+        const free=await kiwiFares(input,request.signal).catch(()=>null);
+        if(free?.flights.length){result.flights=free;emit({type:"flights",value:free});return;}
         const live=await liveFares(input,request.signal).catch(()=>null);
         const value=live?.flights.length?live:await flights(input,request.signal);
         result.flights=value;emit({type:"flights",value});

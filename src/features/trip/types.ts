@@ -26,7 +26,7 @@ export type Flight = {
   score: number; link: string; currency: string; flightNumber?: string | null; live?: boolean;
 };
 export type PriceInsights = { lowest: number | null; level: string | null; low: number | null; high: number | null };
-export type FlightResult = { flights: Flight[]; error: string | null; fetchedAt: string; baggageUnknown: boolean; source?: "live" | "cached"; insights?: PriceInsights | null };
+export type FlightResult = { flights: Flight[]; error: string | null; fetchedAt: string; baggageUnknown: boolean; source?: "live" | "cached" | "kiwi"; insights?: PriceInsights | null };
 export const adviceSchema = z.object({
   areas: z.array(z.object({ name: z.string(), reason: z.string(), nightlyMinEur: z.number(), nightlyMaxEur: z.number() }).strict()).length(3),
   foodPerPersonEur: z.array(z.number()).length(2),
