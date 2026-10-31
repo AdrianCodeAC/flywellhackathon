@@ -137,7 +137,13 @@ export function AirportMap({
     [placed, width, height],
   );
 
+  // Start on the whole airport; zoom to a step only after the passenger picks one.
+  const first = useRef(true);
   useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
     if (active >= 0) focus(active);
     // only when the selected step changes
     // eslint-disable-next-line react-hooks/exhaustive-deps

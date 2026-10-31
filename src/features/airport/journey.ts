@@ -71,11 +71,21 @@ function nearest(pois: AirportPoi[], to: LatLon | undefined): AirportPoi | undef
   return [...pois].sort((a, b) => dist(a.at, to) - dist(b.at, to))[0];
 }
 
-function mainTerminal(layout: AirportLayout, side: "departures" | "arrivals") {
+function size(rings: LatLon[][]) {
+  const pts = rings.flat();
+  const lats = pts.map((p) => p[0]);
+  const lons = pts.map((p) => p[1]);
+  return (Math.max(...lats) - Math.min(...lats)) * (Math.max(...lons) - Math.min(...lons));
+}
+
+/** The hall for this side: named and larger buildings win over unnamed annexes. */
+export function mainTerminal(layout: AirportLayout, side: "departures" | "arrivals") {
+  const rank = (list: AirportLayout["terminals"]) =>
+    [...list].sort((a, b) => Number(Boolean(b.name)) - Number(Boolean(a.name)) || size(b.rings) - size(a.rings))[0];
   return (
-    layout.terminals.find((t) => t.role === side) ??
-    layout.terminals.find((t) => t.role === "mixed") ??
-    layout.terminals[0]
+    rank(layout.terminals.filter((t) => t.role === side)) ??
+    rank(layout.terminals.filter((t) => t.role === "mixed")) ??
+    rank(layout.terminals)
   );
 }
 

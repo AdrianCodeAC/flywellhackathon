@@ -19,7 +19,10 @@ type Side = "departures" | "arrivals";
 
 /** Step-by-step airport walk-through drawn on a virtual map of each airport. */
 export function AirportGuide({ input }: { input: PreflightInput }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const number = new Intl.NumberFormat(i18n.language === "ro" ? "ro-RO" : "en-GB", { maximumFractionDigits: 1 });
+  const params = (p: Record<string, string | number> | undefined) =>
+    Object.fromEntries(Object.entries(p ?? {}).map(([k, v]) => [k, typeof v === "number" ? number.format(v) : v]));
   const [side, setSide] = useState<Side>("departures");
   const [layouts, setLayouts] = useState<Record<string, AirportLayout | null | undefined>>({});
   const [active, setActive] = useState(0);
@@ -133,7 +136,7 @@ export function AirportGuide({ input }: { input: PreflightInput }) {
             </p>
           </div>
         ) : mapped && layout ? (
-          <AirportMap layout={layout} steps={steps} active={active} onSelect={setActive} gate={side === "departures" ? gate : ""} layers={layers} />
+          <AirportMap key={`${side}-${airport.iata}`} layout={layout} steps={steps} active={active} onSelect={setActive} gate={side === "departures" ? gate : ""} layers={layers} />
         ) : (
           <div className="rounded-xl border border-dashed p-5 text-sm text-muted-foreground">
             {offline ? <CloudOff className="mb-2 size-5" /> : <Signpost className="mb-2 size-5" />}
@@ -176,9 +179,9 @@ export function AirportGuide({ input }: { input: PreflightInput }) {
             >
               <span className="journey-number">{i + 1}</span>
               <span className="min-w-0 flex-1">
-                <span className="block font-semibold">{t(`airportGuide.step.${step.id}.title`, step.params ?? {})}</span>
+                <span className="block font-semibold">{t(`airportGuide.step.${step.id}.title`, params(step.params))}</span>
                 <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
-                  {t(`airportGuide.step.${step.id}.detail`, step.params ?? {})}
+                  {t(`airportGuide.step.${step.id}.detail`, params(step.params))}
                 </span>
                 {mapped && (
                   <Badge variant={step.exact ? "secondary" : "outline"} className="mt-2 gap-1 whitespace-normal font-normal">
