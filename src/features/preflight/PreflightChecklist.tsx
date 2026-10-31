@@ -71,9 +71,16 @@ function loadTicks(key: string): string[] {
 export function PreflightChecklist({
   input,
   onEdit,
+  onArrival,
+  returnTo,
+  hideJetLag = false,
 }: {
   input: PreflightInput;
   onEdit: () => void;
+  /** Inside a trip, the arrival button switches to its "On arrival" tab instead of leaving. */
+  onArrival?: () => void;
+  returnTo?: string;
+  hideJetLag?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const storageKey = checklistStorageKey(input);
@@ -138,7 +145,7 @@ export function PreflightChecklist({
   return (
     <section aria-labelledby="preflight-summary">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5">
-        <div>
+        <div className={onArrival ? "sr-only" : undefined}>
           <p className="section-index">{t("preflight.yourFlight")}</p>
           <h2 id="preflight-summary" className="font-display text-3xl sm:text-4xl">
             {input.origin.city} → {input.destination.city}
@@ -155,7 +162,7 @@ export function PreflightChecklist({
             title={`${input.origin.city} → ${input.destination.city}`}
             travelDate={input.date}
             label={t("account.saveChecklist")}
-            returnTo={`/preflight?from=${input.origin.iata}&to=${input.destination.iata}&date=${input.date}`}
+            returnTo={returnTo ?? `/preflight?from=${input.origin.iata}&to=${input.destination.iata}&date=${input.date}`}
             onSignedOut={() => sessionStorage.setItem(OPEN_PREFLIGHT_KEY, JSON.stringify(input))}
             onLoaded={(stored) => {
               const saved = (stored as { ticks?: unknown } | null)?.ticks;
@@ -216,7 +223,7 @@ export function PreflightChecklist({
       })}
 
       <SeatAdvice input={input} />
-      <JetLagCard input={input} />
+      {!hideJetLag && <JetLagCard input={input} />}
       <LandingWeather input={input} />
 
       <div className="mt-8 rounded-lg border border-dashed p-4 text-sm" role="status">
@@ -244,20 +251,27 @@ export function PreflightChecklist({
       <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
         {t("preflight.disclaimer")}
       </p>
-      <Button
-        asChild
-        variant="outline"
-        className="mt-4 min-h-11 w-full whitespace-normal sm:w-auto"
-      >
-        <Link
-          to="/arrival"
-          search={{ iata: input.destination.iata }}
-          onClick={() => localStorage.setItem("flywell:tab", "arrival")}
-        >
+      {onArrival ? (
+        <Button variant="outline" className="mt-4 min-h-11 w-full whitespace-normal sm:w-auto" onClick={onArrival}>
           <PlaneLanding />
           {t("preflight.toArrival", { city: input.destination.city })}
-        </Link>
-      </Button>
+        </Button>
+      ) : (
+      <Button
+          asChild
+          variant="outline"
+          className="mt-4 min-h-11 w-full whitespace-normal sm:w-auto"
+        >
+          <Link
+            to="/arrival"
+            search={{ iata: input.destination.iata }}
+            onClick={() => localStorage.setItem("flywell:tab", "arrival")}
+          >
+            <PlaneLanding />
+            {t("preflight.toArrival", { city: input.destination.city })}
+          </Link>
+        </Button>
+      )}
     </section>
   );
 }

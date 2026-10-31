@@ -16,7 +16,10 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { initials } from "./AccountButton";
-import { CHOSEN_FLIGHT_KEY, OPEN_PREFLIGHT_KEY } from "./device";
+import { MedicalCardEditor } from "./MedicalCardEditor";
+import { makeTrip, tripIdFor } from "@/features/trips/model";
+import { getTrip, removeTrip, upsertTrip } from "@/features/trips/store";
+import { CHOSEN_FLIGHT_KEY } from "./device";
 import { deleteSaved, listSaved, loadProfile, profileQueryKey, savedQueryKey, updateProfile, uploadAvatar, type SavedRow } from "./saved";
 
 type TripData = { input?: Record<string, unknown> & { departure?: string; returnDate?: string; oneWay?: boolean }; flight?: { price: number; currency: string; airline: string } | null; total?: [number, number] | null; currency?: string };
@@ -63,6 +66,10 @@ export function AccountPage() {
   async function remove(row: SavedRow) {
     if (!window.confirm(t("account.deleteConfirm", { title: row.title }))) return;
     await deleteSaved(row.id).catch(() => {});
+    if (row.kind === "preflight") {
+      const parsed = preflightInputSchema.safeParse((row.data as ChecklistData).input);
+      if (parsed.success) removeTrip(tripIdFor(parsed.data));
+    }
     void queryClient.invalidateQueries({ queryKey: savedQueryKey(userId) });
   }
   function openTrip(row: SavedRow) {
@@ -76,9 +83,10 @@ export function AccountPage() {
     const parsed = preflightInputSchema.safeParse(d.input);
     if (!parsed.success) return;
     localStorage.setItem(checklistStorageKey(parsed.data), JSON.stringify(d.ticks ?? []));
-    sessionStorage.setItem(OPEN_PREFLIGHT_KEY, JSON.stringify(parsed.data));
-    localStorage.setItem("flywell:tab", "preflight");
-    void navigate({ to: "/preflight", search: { from: parsed.data.origin.iata, to: parsed.data.destination.iata, date: parsed.data.date } });
+    const id = tripIdFor(parsed.data);
+    if (!getTrip(id)) upsertTrip({ ...makeTrip(parsed.data), synced: true });
+    localStorage.setItem("flywell:tab", "trips");
+    void navigate({ to: "/trips/$tripId", params: { tripId: id }, search: { tab: "" } });
   }
   async function signOut() {
     await queryClient.cancelQueries();
@@ -112,6 +120,8 @@ export function AccountPage() {
           </form>
         </div>
       </section>
+
+      {user && <MedicalCardEditor userId={user.id} />}
 
       <h2 className="mt-9 font-display text-3xl">{t("account.savedTrips")}</h2>
       {saved.isError && <p role="alert" className="mt-3 text-sm text-destructive">{t("account.loadError")}</p>}

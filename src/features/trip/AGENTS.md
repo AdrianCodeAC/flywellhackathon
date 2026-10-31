@@ -1,0 +1,6 @@
+# Trip planner rules
+- Server-only external integrations, progressive NDJSON search and AI SDK chat streams; the planner UI is the index route. Why: isolates planning from arrival behaviour.
+- Trip conversations use one owner-scoped row per user; trip search caches store only public destination advice, never chat messages. Why: private discussions stay private.
+- Discovery uses server functions for airport-exact fare validation, route inventory, price calendars and city thumbnails; pure discovery rules are tested. Why: cached metro-city fares cannot prove a route from a particular airport.
+- One-way inputs set returnDate equal to departure as a transport sentinel; UI omits return and shows only daily non-flight estimates. Why: keeps the trip-agent input contract without inventing a stay length.
+- /flights browses all fares; selecting one hands a validated input to the planner via origin-scoped session storage and a runTrip flag. Why: keeps search fields while the results page stays navigable.

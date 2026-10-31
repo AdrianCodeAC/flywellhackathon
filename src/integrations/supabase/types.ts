@@ -32,6 +32,24 @@ export type Database = {
         }
         Relationships: []
       }
+      medical_cards: {
+        Row: {
+          card: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          card?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          card?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       overpass_cache: {
         Row: {
           cache_key: string

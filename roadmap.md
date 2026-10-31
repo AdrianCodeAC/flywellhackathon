@@ -42,3 +42,5 @@
 - [x] Seat advice in Before you fly: recommended seats per situation (child, less turbulence, fear of flying, tall, quick exit, sleep, motion sickness, accessibility) with sourced safety statistics; never invent numbers.
 - [x] Recolor the whole app from the user's palette (base green), defined globally per element
 - [x] Remove seat safety statistics
+- [x] Medical card saved in the account (plus phone copy), edited only in the account; Help shows it read-only
+- [x] New flow: menu = My trips · Plan a trip · I already have a ticket; each saved trip opens with tabs Before you fly · During the flight · On arrival

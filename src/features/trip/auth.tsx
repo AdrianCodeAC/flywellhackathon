@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { SocialButtons } from "@/features/account/SignInOptions";
 import { AFTER_LOGIN_KEY, safeRedirect } from "@/features/account/device";
+import { AccountSync } from "@/features/account/AccountSync";
+import { clearCard } from "@/features/inflight/medical-card";
+import { forgetSyncedTrips } from "@/features/trips/store";
 import "@lovable.dev/cloud-auth-js/styles.css";
 
 const AuthContext = createContext<User | null>(null);
@@ -27,6 +30,8 @@ export function TripAuthProvider({ children }: { children: ReactNode }) {
         setReady(true);
       }
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      // Account copies of health details and trips leave a shared phone on sign-out.
+      if (event === "SIGNED_OUT") { clearCard(); forgetSyncedTrips(); }
       void router.invalidate();
       if (event !== "SIGNED_OUT") void queryClient.invalidateQueries();
       if (event === "SIGNED_IN") {
@@ -44,7 +49,7 @@ export function TripAuthProvider({ children }: { children: ReactNode }) {
     });
     return () => { active = false; data.subscription.unsubscribe(); };
   }, [router, queryClient]);
-  return <ReadyContext.Provider value={ready}><AuthContext.Provider value={user}>{children}</AuthContext.Provider></ReadyContext.Provider>;
+  return <ReadyContext.Provider value={ready}><AuthContext.Provider value={user}><AccountSync />{children}</AuthContext.Provider></ReadyContext.Provider>;
 }
 export const useTripUser = () => useContext(AuthContext);
 export const useAuthReady = () => useContext(ReadyContext);
