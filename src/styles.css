@@ -433,23 +433,23 @@ h1, h2, h3 { letter-spacing: 0; }
 @keyframes step-pulse { from { transform: scale(1); opacity: 0.45; } to { transform: scale(2.4); opacity: 0; } }
 @keyframes gate-glow { 50% { transform: scale(1.18); } }
 
-/* In-flight help: calm deep-green night screen that works offline. */
+/* In-flight help: calm deep-navy night screen that works offline. */
 :root {
-  --help-bg: oklch(0.22 0.035 180);
-  --help-bg-2: oklch(0.34 0.06 172);
+  --help-bg: oklch(0.24 0.032 267);
+  --help-bg-2: oklch(0.36 0.05 250);
   --help-fg: var(--palette-white);
-  --help-muted: color-mix(in oklab, var(--palette-aquamarine) 55%, var(--palette-white));
+  --help-muted: color-mix(in oklab, var(--palette-steel) 55%, var(--palette-white));
   --help-panel: oklch(1 0 0 / 8%);
   --help-panel-edge: oklch(1 0 0 / 16%);
-  --help-calm: var(--palette-pearl-aqua);
-  --help-glow: var(--palette-aquamarine);
-  --help-alert: var(--palette-grapefruit-deep);
-  --help-alert-soft: oklch(0.56 0.19 22 / 24%);
-  --help-care: var(--palette-powder-blush);
-  --help-card: var(--palette-aquamarine);
+  --help-calm: var(--palette-steel);
+  --help-glow: var(--palette-clay);
+  --help-alert: var(--palette-alert);
+  --help-alert-soft: oklch(0.50 0.11 45 / 24%);
+  --help-care: var(--palette-clay);
+  --help-card: var(--palette-mint);
   --help-crew-bg: var(--palette-white);
-  --help-crew-fg: var(--palette-green-ink);
-  --panic: var(--palette-grapefruit-deep);
+  --help-crew-fg: var(--palette-navy);
+  --panic: var(--palette-alert);
   --panic-fg: var(--palette-white);
 }
 .panic-button { background: var(--panic); color: var(--panic-fg); isolation: isolate; }
@@ -504,20 +504,20 @@ h1, h2, h3 { letter-spacing: 0; }
 /* Seat advice: cabin map. */
 :root {
   --seat-body: var(--palette-white);
-  --seat-edge: var(--palette-green-line);
-  --seat-wing: var(--palette-green-soft);
-  --seat-plain: oklch(0.9 0.012 176);
-  --seat-good: var(--palette-pearl-aqua);
-  --seat-best: var(--palette-green-deep);
-  --seat-avoid: var(--palette-powder-blush);
-  --seat-exit: var(--palette-grapefruit);
+  --seat-edge: var(--palette-line);
+  --seat-wing: var(--palette-steel-soft);
+  --seat-plain: oklch(0.9 0.012 220);
+  --seat-good: color-mix(in oklab, var(--palette-steel) 45%, var(--palette-white));
+  --seat-best: var(--palette-navy);
+  --seat-avoid: var(--palette-clay);
+  --seat-exit: var(--palette-alert);
 }
 .dark {
-  --seat-body: oklch(0.3 0.02 176);
-  --seat-edge: oklch(0.45 0.03 176);
-  --seat-wing: oklch(0.36 0.03 176);
-  --seat-plain: oklch(0.42 0.015 176);
-  --seat-good: oklch(0.55 0.08 176);
+  --seat-body: oklch(0.32 0.02 267);
+  --seat-edge: oklch(0.47 0.03 267);
+  --seat-wing: oklch(0.38 0.03 267);
+  --seat-plain: oklch(0.44 0.015 267);
+  --seat-good: oklch(0.57 0.07 250);
 }
 .seat-cabin { background: color-mix(in oklch, var(--card) 70%, var(--secondary)); }
 .seat-body { fill: var(--seat-body); stroke: var(--seat-edge); stroke-width: 1.2; }
@@ -561,9 +561,9 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-help-tile { display: flex; align-items: center; gap: 12px; min-height: 76px; padding: 14px; border-radius: 16px; border: 1px solid var(--border); background: var(--card); transition: border-color 160ms, transform 160ms; }
 .trip-help-tile:hover { border-color: var(--tile-tone); transform: translateY(-2px); }
 .trip-help-icon { display: flex; flex-shrink: 0; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; background: var(--tile-tone); color: var(--tile-text); }
-.trip-help-calm { --tile-tone: var(--palette-pearl-aqua); --tile-text: var(--palette-green-ink); }
+.trip-help-calm { --tile-tone: var(--palette-steel); --tile-text: var(--palette-navy); }
 .trip-help-alert { --tile-tone: var(--ui-danger); --tile-text: var(--ui-danger-text); }
-.trip-help-care { --tile-tone: var(--palette-powder-blush); --tile-text: var(--palette-green-ink); }
+.trip-help-care { --tile-tone: var(--palette-clay); --tile-text: var(--palette-navy); }
 @media (prefers-reduced-motion: reduce) { .trip-start, .trip-help-tile { transition: none; } }
 
 /* Checklist progress stays in view while scrolling; pages with sticky tabs raise --checklist-top. */
