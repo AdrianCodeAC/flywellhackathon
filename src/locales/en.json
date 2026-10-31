@@ -1099,5 +1099,14 @@
     "eyebrow": "I already have a ticket",
     "title": "Add your flight",
     "subtitle": "Scan your boarding pass or type the flight details. You get everything for before, during and after the flight, saved in My trips."
+  },
+  "start": {
+    "fromYou": "Distances from where you are now, updated as you move (straight line).",
+    "fromAirport": "Distances from the airport (straight line). Turn on location to measure from where you are.",
+    "far": "You're far from this airport, so distances are from the airport (straight line).",
+    "denied": "Location is off, so distances are from the airport (straight line).",
+    "useMine": "Use my location",
+    "locating": "Finding you…",
+    "you": "Your location"
   }
 }

@@ -1099,5 +1099,14 @@
     "eyebrow": "Am deja bilet",
     "title": "Adaugă zborul tău",
     "subtitle": "Scanează cartea de îmbarcare sau scrie detaliile zborului. Primești tot ce-ți trebuie înainte, în timpul și după zbor, salvat în Călătoriile mele."
+  },
+  "start": {
+    "fromYou": "Distanțe de unde ești acum, actualizate pe măsură ce te miști (în linie dreaptă).",
+    "fromAirport": "Distanțe de la aeroport (în linie dreaptă). Pornește locația ca să măsurăm de unde ești.",
+    "far": "Ești departe de acest aeroport, așa că distanțele sunt de la aeroport (în linie dreaptă).",
+    "denied": "Locația e oprită, așa că distanțele sunt de la aeroport (în linie dreaptă).",
+    "useMine": "Folosește locația mea",
+    "locating": "Te căutăm…",
+    "you": "Locația ta"
   }
 }
