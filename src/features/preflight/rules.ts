@@ -114,6 +114,7 @@ export const preflightInputSchema = z.object({
   citizenship: z.enum(["ro", "eu", "other"]),
   bag: z.enum(["cabin", "checked"]),
   airline: z.string().trim().max(60).default(""),
+  seat: z.string().trim().max(4).default(""),
   children: z.boolean(),
   medication: z.boolean(),
   pet: z.boolean(),

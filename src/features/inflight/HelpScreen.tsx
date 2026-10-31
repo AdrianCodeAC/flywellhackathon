@@ -41,12 +41,19 @@ function useWakeLock(active: boolean) {
   }, [active]);
 }
 
-export default function HelpScreen({ open, onOpenChange, initialView = "home" }: { open: boolean; onOpenChange: (v: boolean) => void; initialView?: View }) {
+export default function HelpScreen({ open, onOpenChange, initialView = "home", seat = "" }: { open: boolean; onOpenChange: (v: boolean) => void; initialView?: View; seat?: string }) {
   const { t } = useTranslation();
   const [view, setView] = useState<View>(initialView);
   const [card, setCard] = useState<MedicalCard>(() => loadCard());
   useWakeLock(open);
   useEffect(() => setView(initialView), [initialView]);
+  // The trip's seat (from the boarding pass or the ticket form) is the one the crew sees.
+  useEffect(() => {
+    if (!seat) return;
+    const next = { ...loadCard(), seat };
+    setCard(next);
+    saveCard(next);
+  }, [seat]);
   // The account copy can arrive while the screen is open.
   useEffect(() => {
     const refresh = () => setCard(loadCard());
@@ -253,7 +260,6 @@ function Crew({ card, onSeat, onEdit }: { card: MedicalCard; onSeat: (s: string)
           <Input
             value={card.seat}
             onChange={(e) => onSeat(e.target.value.toUpperCase().slice(0, 4))}
-            placeholder="14C"
             spellCheck={false}
             autoComplete="off"
             aria-label={t("help.crew.seat")}

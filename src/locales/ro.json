@@ -650,7 +650,10 @@
       "assistTitle": "Câini de asistență — {{airline}}"
     },
     "tickAll": "Bifează tot",
-    "untickAll": "Debifează tot"
+    "untickAll": "Debifează tot",
+    "seat": "Loc",
+    "seatPlaceholder": "ex. 23A",
+    "errorSeat": "Scrie numărul locului de pe bilet, ex. 23A."
   },
   "weather": {
     "unavailable": "Vremea nu este disponibilă acum.",

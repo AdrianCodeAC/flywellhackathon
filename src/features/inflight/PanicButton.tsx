@@ -14,7 +14,7 @@ export function openHelp(view: View = "home") {
 }
 
 /** Always-visible help button in the header; the help screen works in airplane mode. */
-export function PanicButton() {
+export function PanicButton({ seat = "" }: { seat?: string } = {}) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<View>("home");
