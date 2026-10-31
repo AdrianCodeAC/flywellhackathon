@@ -36,7 +36,9 @@ export function isoTime(time: string | undefined) {
   return time && /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(time) ? time.replace(" ", "T") : null;
 }
 
-export function parseLiveFares(payload: LivePayload, input: TripInput, currency: string, link: string): Flight[] {
+export function parseLiveFares(payload: LivePayload, input: TripInput, currency: string, fallbackLink: string): Flight[] {
+  // Google hands back the exact search it priced: that link beats a generic search.
+  const link = payload.search_metadata?.google_flights_url ?? fallbackLink;
   const offers = [...(payload.best_flights ?? []), ...(payload.other_flights ?? [])];
   const found: Flight[] = [];
   for (const offer of offers) {

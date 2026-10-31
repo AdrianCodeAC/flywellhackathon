@@ -43,8 +43,7 @@ export async function liveFares(input: TripInput, signal: AbortSignal): Promise<
     console.info(`[Trip HTTP] ${new URL(source.base).hostname} status=${response.status}`);
     if (!response.ok) return null;
     const payload = (await response.json()) as LivePayload;
-    const link = payload.search_metadata?.google_flights_url ?? bookingLinks(input, input.destination).google;
-    const flights = parseLiveFares(payload, input, currency, link);
+    const flights = parseLiveFares(payload, input, currency, bookingLinks(input, input.destination).google);
     const result: FlightResult = {
       flights,
       error: flights.length ? null : "noFlights",
