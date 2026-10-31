@@ -131,6 +131,9 @@ export function parseKiwi(payload: KiwiPayload, input: TripInput, currency: stri
       link: itinerary.bookingUrl?.startsWith("https://") ? itinerary.bookingUrl : fallbackLink,
       currency: String(payload.currency ?? currency).toUpperCase(),
       flightNumber,
+      // First segment of each leg: the number shown on that day's boarding pass.
+      outFlight: outbound?.segments?.[0]?.flightNumber?.replace(/\s/g, "").toUpperCase() || null,
+      backFlight: inbound?.segments?.[0]?.flightNumber?.replace(/\s/g, "").toUpperCase() || null,
       live: true,
     };
     if (!flight.airline) continue;

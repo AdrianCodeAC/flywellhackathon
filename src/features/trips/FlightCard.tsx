@@ -42,7 +42,8 @@ export function FlightCard({ trip }: { trip: MyTrip }) {
     const saved = loadSettings(trip.id);
     setS({
       ...saved,
-      flight: saved.flight || flightNumber(trip.airline || trip.input.airline) || "",
+      flight: saved.flight || trip.input.flight || flightNumber(trip.airline || trip.input.airline) || "",
+      time: saved.time || trip.input.time || "",
     });
     setPermission(notificationsSupported() ? Notification.permission : "unsupported");
     if (saved.tz) return;
@@ -148,7 +149,6 @@ export function FlightCard({ trip }: { trip: MyTrip }) {
             id="flight-number"
             className="h-11 uppercase"
             value={s.flight}
-            placeholder="W6 3101"
             maxLength={8}
             autoComplete="off"
             onChange={(e) =>

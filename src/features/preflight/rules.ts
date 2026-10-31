@@ -115,6 +115,9 @@ export const preflightInputSchema = z.object({
   bag: z.enum(["cabin", "checked"]),
   airline: z.string().trim().max(60).default(""),
   seat: z.string().trim().max(4).optional(),
+  /** Flight number ("W63101") and local departure "HH:MM", from the boarding pass or the chosen fare. */
+  flight: z.string().trim().max(8).optional(),
+  time: z.string().regex(/^\d{2}:\d{2}$/).optional(),
   children: z.boolean(),
   medication: z.boolean(),
   pet: z.boolean(),
