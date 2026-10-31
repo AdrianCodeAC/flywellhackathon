@@ -5,6 +5,7 @@ import { accountCard, hasMedicalInfo, loadCard, mergeAccountCard, saveCard, type
 import { makeTrip, tripIdFor, type MyTrip } from "@/features/trips/model";
 import { getTrip, listTrips, markSynced, removeTrip, upsertTrip } from "@/features/trips/store";
 import { deleteSaved, findSaved, listSaved, saveItem } from "./saved";
+import { loadAdvice, parseStoredAdvice, storeAdvice } from "@/features/preflight/advice-store";
 
 function storedTicks(key: string): string[] {
   try {
@@ -20,9 +21,10 @@ export async function pullTrips() {
   const rows = await listSaved();
   for (const row of rows) {
     if (row.kind !== "preflight") continue;
-    const data = (row.data ?? {}) as { input?: unknown; returnDate?: unknown; airline?: unknown; ticks?: unknown };
+    const data = (row.data ?? {}) as { input?: unknown; returnDate?: unknown; airline?: unknown; ticks?: unknown; aiAdvice?: unknown };
     const parsed = preflightInputSchema.safeParse(data.input);
     if (!parsed.success) continue;
+    if (data.aiAdvice) storeAdvice(checklistStorageKey(parsed.data), parseStoredAdvice(data.aiAdvice));
     const id = tripIdFor(parsed.data);
     const local = getTrip(id);
     if (local) {
@@ -58,7 +60,7 @@ export async function pushTrips(userId: string) {
           kind: "preflight",
           title: `${trip.input.origin.city} → ${trip.input.destination.city}`,
           travelDate: trip.input.date,
-          data: { key, input: trip.input, ticks: storedTicks(key), total: 0, returnDate: trip.returnDate, airline: trip.airline },
+          data: { key, input: trip.input, ticks: storedTicks(key), total: 0, returnDate: trip.returnDate, airline: trip.airline, aiAdvice: loadAdvice(key) },
         });
       }
       markSynced(trip.id);

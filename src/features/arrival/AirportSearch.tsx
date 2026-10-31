@@ -74,7 +74,7 @@ export function AirportSearch({ selected, onSelect, onClear, label }: AirportSea
 
   if (selected) {
     return (
-      <div className="flex min-h-14 w-full max-w-full items-center gap-3 rounded-lg border border-primary/20 bg-secondary pl-4 text-sm text-secondary-foreground">
+      <div className="flex min-h-14 w-full max-w-full items-center gap-3 rounded-lg border border-primary/20 bg-input pl-4 text-sm text-secondary-foreground">
         <Plane className="h-4 w-4 shrink-0" />
         <span className="font-semibold">{selected.iata}</span>
         <span className="min-w-0 truncate">{selected.city}</span>

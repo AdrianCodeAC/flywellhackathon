@@ -25,6 +25,7 @@ import { SaveButton } from "@/features/account/SaveButton";
 import { OPEN_PREFLIGHT_KEY } from "@/features/account/device";
 import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
 import { repeatsChecklist } from "./ai-dedupe";
+import { loadAdvice, parseStoredAdvice, storeAdvice, type StoredAdvice } from "./advice-store";
 import { AirlineBaggage } from "./AirlineBaggage";
 import { PetPolicyCard } from "./PetPolicyCard";
 import { JetLagCard } from "./JetLagCard";
@@ -94,23 +95,32 @@ export function PreflightChecklist({
   const fixed = useMemo(() => buildChecklist(input), [input]);
   useEffect(() => setTicks(loadTicks(storageKey)), [storageKey]);
 
+  const lang = i18n.language === "ro" ? "ro" : "en";
+  const [stored, setStored] = useState<StoredAdvice>({});
   useEffect(() => {
     let active = true;
+    const saved = loadAdvice(storageKey);
+    setStored(saved);
+    if (saved[lang]) {
+      setAdvice(saved[lang]);
+      setAdviceState("ready");
+      return;
+    }
     setAdvice(undefined);
     setAdviceState("loading");
-    preflightAdvice({
-      data: {
-        ...input,
-        lang: i18n.language === "ro" ? "ro" : "en",
-        covered: fixed.map((i) => i.key),
-      },
-    })
-      .then((value) => active && (setAdvice(value), setAdviceState("ready")))
+    preflightAdvice({ data: { ...input, lang, covered: fixed.map((i) => i.key) } })
+      .then((value) => {
+        if (!active) return;
+        const next = storeAdvice(storageKey, { [lang]: value });
+        setStored(next);
+        setAdvice(next[lang]);
+        setAdviceState("ready");
+      })
       .catch(() => active && setAdviceState("error"));
     return () => {
       active = false;
     };
-  }, [input, fixed, i18n.language]);
+  }, [input, fixed, lang, storageKey]);
 
   const rows: Row[] = [
     ...fixed.map((i) => ({
@@ -168,8 +178,14 @@ export function PreflightChecklist({
             label={t("account.saveChecklist")}
             returnTo={returnTo ?? `/preflight?from=${input.origin.iata}&to=${input.destination.iata}&date=${input.date}`}
             onSignedOut={() => sessionStorage.setItem(OPEN_PREFLIGHT_KEY, JSON.stringify(input))}
-            onLoaded={(stored) => {
-              const saved = (stored as { ticks?: unknown } | null)?.ticks;
+            onLoaded={(account) => {
+              const savedAdvice = (account as { aiAdvice?: unknown } | null)?.aiAdvice;
+              if (savedAdvice) {
+                const next = storeAdvice(storageKey, parseStoredAdvice(savedAdvice));
+                setStored(next);
+                if (next[lang]) (setAdvice(next[lang]), setAdviceState("ready"));
+              }
+              const saved = (account as { ticks?: unknown } | null)?.ticks;
               if (!Array.isArray(saved)) return;
               const extra = saved.filter((v): v is string => typeof v === "string");
               setTicks((current) => {
@@ -182,7 +198,7 @@ export function PreflightChecklist({
                 return next;
               });
             }}
-            data={{ input, ticks: ticks.filter((id) => rows.some((r) => r.id === id)), total: rows.length }}
+            data={{ input, ticks: ticks.filter((id) => rows.some((r) => r.id === id)), total: rows.length, aiAdvice: stored }}
           />
           <Button variant="outline" className="min-h-11" onClick={onEdit}>
             {t("trip.edit")}

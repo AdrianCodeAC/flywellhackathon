@@ -55,6 +55,12 @@
 - [x] No AI checklist items that repeat fixed ones (e.g. "No visa needed" next to "Your ID card or passport is enough").
 - [x] On arrival food/sights: card distances and "Show route" start from the same point (live location when nearby, else the airport); short trips use walking routes.
 - [x] Help → Call the crew: phone vibrates and plays a ring to get attention.
+- [ ] Plan a trip: live, non-cached flight prices — provider, parser, fallback and labels are built and tested; waiting on a provider key (SEARCHAPI_KEY or SERPAPI_KEY) added to the deployment.
+- [ ] Recolor to the new palette (navy, steel, mint, plum, gold) with much less pink, and switch the typeface to Inter everywhere.
+- [x] Jet lag coach: show in Before you fly tab of a trip, not During
+- [x] Replace the pink accent with pine #2E7D6B (gold stays the warm accent) and make flight cards show real city photos (Wikimedia thumbnail host fixed); checked 22 destinations EN/RO, 375px.
+- [x] All surfaces cream (page #F4EDE1, cards #FBF6EC, fields #F0E7D7): no mint, no pure-white panel on cream, no pink; checked EN/RO 375px.
+- [x] Plan a trip: explicit round-trip choice (Dus-întors · Doar dus) and a round trip saves BOTH legs to My trips (outbound + home-bound, each with its own tabs); checked CRA–BGY 25–29 Nov in Romanian at 375px.
 - [x] Flight status (AviationStack, 10 min shared cache, only around the flight day) and reminders (check-in 24 h before, leave for the airport 30 min before setting off) as notifications while the app is open plus a calendar file with alarms.
 - [x] Profile: small button with free PRM assistance under Regulation (EC) No 1107/2006 (48 h notice, assistance point, SSR codes, official links).
 - [ ] Set AVIATIONSTACK_KEY in Lovable Cloud secrets; check live status on a real flight day.

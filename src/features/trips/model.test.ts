@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defaultTab, inputFromPlan, makeTrip, sortTrips, tripIdFor } from "./model";
+import { defaultTab, inputFromPlan, makeTrip, returnLegOf, sortTrips, tripIdFor } from "./model";
 import { accountCard, EMPTY_CARD, mergeAccountCard } from "@/features/inflight/medical-card";
 import type { PreflightInput } from "@/features/preflight/rules";
 
@@ -39,6 +39,16 @@ describe("my trips", () => {
     const input = inputFromPlan({ origin: base.origin, destination: base.destination, departure: "2026-11-21T06:10:00+02:00", airline: "W6", children: 2, bag: true, lang: "en" });
     expect(input).toMatchObject({ date: "2026-11-21", airline: "W6", children: true, bag: "checked", citizenship: "eu" });
     expect(inputFromPlan({ origin: base.origin, destination: base.destination, departure: "2026-11-21", airline: "", children: 0, bag: false, lang: "en", previous: { citizenship: "other" } }).citizenship).toBe("other");
+  });
+
+  it("a round trip's return flight is its own trip, flying home on the return day", () => {
+    const back = returnLegOf(base, "2026-11-24");
+    expect(tripIdFor(back)).toBe("LTN-OTP-2026-11-24");
+    expect(back.date).toBe("2026-11-24");
+    expect(back.origin.iata).toBe("LTN");
+    expect(back.destination.iata).toBe("OTP");
+    expect(back.citizenship).toBe(base.citizenship);
+    expect(makeTrip(back).returnDate).toBeNull();
   });
 });
 

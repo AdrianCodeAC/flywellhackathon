@@ -101,7 +101,7 @@ function TripView({ trip, trips, tab }: { trip: MyTrip; trips: MyTrip[]; tab: Tr
 
       {panel("before", <div style={{ "--checklist-top": "calc(env(safe-area-inset-top) + 12.25rem)" } as CSSProperties}>
         <FlightCard trip={trip} />
-        <PreflightChecklist input={trip.input} returnTo={`/trips/${trip.id}`} hideJetLag onArrival={() => setTab("arrival")}
+        <PreflightChecklist input={trip.input} returnTo={`/trips/${trip.id}`} onArrival={() => setTab("arrival")}
           onEdit={() => void navigate({ to: "/preflight", search: { from: "", to: "", date: "", edit: trip.id } })} />
         <PreflightChat input={trip.input} />
       </div>)}
