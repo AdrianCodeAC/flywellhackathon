@@ -293,6 +293,19 @@ h1, h2, h3 { letter-spacing: 0; }
 .calendar-expensive { color: var(--food-tone); background: var(--food-soft); }
 .calendar-no-price { color: var(--muted-foreground); }
 .calendar-best { color: var(--primary); }
+/* The chosen days turn solid navy, so their number must be cream whatever the
+   price colour was — otherwise cocoa-on-navy makes the date unreadable. */
+.trip-price-calendar [data-range-start="true"],
+.trip-price-calendar [data-range-end="true"],
+.trip-price-calendar [data-selected-single="true"] {
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+.trip-price-calendar [data-range-start="true"] .calendar-best,
+.trip-price-calendar [data-range-end="true"] .calendar-best,
+.trip-price-calendar [data-selected-single="true"] .calendar-best {
+  color: var(--palette-gold);
+}
 .trip-price-calendar button { min-height: 44px; }
 .trip-date-sheet { display:flex; flex-direction:column; }
 .trip-date-sheet > div { min-height:0; flex:1; }
