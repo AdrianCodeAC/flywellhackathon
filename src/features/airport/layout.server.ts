@@ -111,7 +111,7 @@ export async function buildAirportLayout(
 }
 
 export async function airportLayout(iata: string, baseUrl: string): Promise<AirportLayout | null> {
-  const raw = await cachedText(`airport-layout-v1:${iata}`, 30 * DAY, async () => {
+  const raw = await cachedText(`airport-layout-v2:${iata}`, 30 * DAY, async () => {
     const res = await fetch(new URL("/data/airports.json", baseUrl));
     const rows = (await res.json()) as [string, string, string, string, number, number][];
     const row = rows.find((r) => r[0] === iata);

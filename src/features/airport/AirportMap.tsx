@@ -245,7 +245,7 @@ export function AirportMap({
                   className={`map-step ${on ? "map-step-active" : ""} ${s.exact ? "" : "map-step-approx"}`}
                   onClick={() => onSelect(s.index)}
                   role="button"
-                  aria-label={t(`airportGuide.step.${s.id}.title`)}
+                  aria-label={t(`airportGuide.step.${s.id}.title`, s.params ?? {})}
                 >
                   {on && <circle r={r} className="map-step-pulse" />}
                   <circle r={r} className="map-step-dot" strokeWidth={unit * 0.12} strokeDasharray={s.exact ? undefined : `${unit * 0.22} ${unit * 0.14}`} />
