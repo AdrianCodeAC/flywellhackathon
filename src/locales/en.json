@@ -584,5 +584,226 @@
     "tooFar_one": "The forecast is available 15 days ahead — check back in {{count}} day.",
     "tooFar_few": "The forecast is available 15 days ahead — check back in {{count}} days.",
     "tooFar_other": "The forecast is available 15 days ahead — check back in {{count}} days."
+  },
+  "airportGuide": {
+    "eyebrow": "Your way through the airport",
+    "title": "Where to go, step by step",
+    "subtitle": "Only the steps you need for this flight, drawn on a map of the airport. Tap a step to see it on the map.",
+    "whichAirport": "Choose the airport",
+    "departTab": "Departure",
+    "arriveTab": "Arrival",
+    "gateLabel": "Gate number",
+    "gateHint": "From your boarding pass or the departure screens",
+    "loading": "Mapping {{airport}} airport…",
+    "noMap": "{{airport}} airport is not mapped in detail yet. Follow the steps below and the airport signs.",
+    "offlineNoMap": "No internet and this airport map is not saved yet. Follow the steps below and the airport signs.",
+    "mapLabel": "Map of {{airport}} airport",
+    "departuresHall": "Departures",
+    "arrivalsHall": "Arrivals",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetView": "Show the whole airport",
+    "layers": "Show on map",
+    "layer": {
+      "gates": "Gates",
+      "toilets": "Toilets",
+      "food": "Food",
+      "transport": "Transport",
+      "money": "Money",
+      "services": "Help & lounges"
+    },
+    "poi": {
+      "checkin": "Check-in",
+      "security": "Security",
+      "passport": "Passport control",
+      "baggage": "Baggage claim",
+      "customs": "Customs",
+      "gate": "Gate",
+      "toilets": "Toilets",
+      "food": "Food & drink",
+      "pharmacy": "Pharmacy",
+      "medical": "First aid",
+      "atm": "Cash machine",
+      "exchange": "Currency exchange",
+      "info": "Information",
+      "lounge": "Lounge",
+      "bus": "Bus",
+      "train": "Train",
+      "taxi": "Taxi",
+      "carRental": "Car rental",
+      "parking": "Parking"
+    },
+    "exact": "Exact spot on the map",
+    "exactNamed": "On the map: {{name}}",
+    "approx": "In this building — follow the signs",
+    "gateArea": "Gate area — type your gate number above",
+    "savedOffline": "Both airport maps are saved on this phone, so they open in airplane mode. Map data © OpenStreetMap contributors; layouts change, so always follow the airport signs.",
+    "rides": "Getting into {{city}}: taxis, apps and public transport",
+    "step": {
+      "arrive": {
+        "title": "Arrive at the departures hall",
+        "detail": "Be there {{hours}} h before departure, with your ID or passport and boarding pass ready."
+      },
+      "checkin": {
+        "title": "Drop your checked bag",
+        "detail": "Find your airline's desk on the departure screens. Bag drop usually closes 40–60 minutes before departure; your booking has the exact time."
+      },
+      "security": {
+        "title": "Security check",
+        "detail": "Liquids up to 100 ml in one clear 1-litre bag, laptop and power banks out, nothing sharp."
+      },
+      "passportOut": {
+        "title": "Passport control",
+        "detail": "Your flight leaves the Schengen area, so a border officer checks your passport or ID before the gates."
+      },
+      "gate": {
+        "title": "Go to your gate",
+        "detail": "The gate appears on the departure screens. Boarding usually closes 15–30 minutes before departure."
+      },
+      "passportIn": {
+        "title": "Passport control",
+        "detail": "Your flight comes from outside the Schengen area: queue for the border check with your passport or ID."
+      },
+      "baggage": {
+        "title": "Collect your checked bag",
+        "detail": "Look for your flight number on the baggage-claim screens to find the right belt."
+      },
+      "customs": {
+        "title": "Customs",
+        "detail": "Your flight crosses the EU border: take the green channel if you have nothing to declare, the red one if you do (for example €10,000 or more in cash)."
+      },
+      "exit": {
+        "title": "Exit and transport to {{city}}",
+        "detail": "Follow the exit signs; trains, buses and taxis are marked on the map."
+      }
+    },
+    "gatePlaceholder": "e.g. 12"
+  },
+  "help": {
+    "button": "Help",
+    "title": "You're not alone.",
+    "subtitle": "Choose what you need. Everything here works without internet, even in airplane mode.",
+    "offlineReady": "Works in airplane mode",
+    "back": "Back",
+    "close": "Close help",
+    "tile": {
+      "breathe": {
+        "title": "Breathe with me",
+        "detail": "Guided calm breathing for panic or fear of flying"
+      },
+      "crew": {
+        "title": "Call the crew",
+        "detail": "A big card to show the flight attendants"
+      },
+      "unwell": {
+        "title": "I feel unwell",
+        "detail": "What to do for nausea, ear pain, dizziness and more"
+      },
+      "card": {
+        "title": "My medical card",
+        "detail": "Allergies, medication and an emergency contact"
+      }
+    },
+    "disclaimer": "Flywell gives general first-aid tips, not a diagnosis. If you feel seriously unwell, press the call button and tell the crew straight away.",
+    "breathe": {
+      "title": "Breathe with me",
+      "intro": "Follow the circle. Breathe in through your nose, breathe out slowly through your mouth.",
+      "inhale": "Breathe in",
+      "hold": "Hold",
+      "exhale": "Breathe out",
+      "cycles_one": "{{count}} calm breath",
+      "cycles_few": "{{count}} calm breaths",
+      "cycles_other": "{{count}} calm breaths",
+      "haptics": "Vibrate with each breath",
+      "groundTitle": "Still anxious? Try 5-4-3-2-1",
+      "ground": "Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell and 1 you can taste. Turbulence feels strong, but planes are built for it."
+    },
+    "crew": {
+      "title": "Show this to the crew",
+      "seat": "Seat",
+      "callButton": "Press the call button above your seat (the person symbol), then show this screen to the flight attendant.",
+      "medicalTitle": "My medical information",
+      "addCard": "Add allergies and medication to this card"
+    },
+    "unwell": {
+      "title": "I feel unwell",
+      "urgentTitle": "Call the crew now if you have",
+      "urgent": "chest pain, trouble breathing, swelling of the face or lips, fainting, weakness on one side, confusion or heavy bleeding. If you carry your own adrenaline pen or inhaler, use it as prescribed.",
+      "showCrew": "Show the crew card"
+    },
+    "symptom": {
+      "panic": {
+        "title": "Panic or fear of flying",
+        "steps": [
+          "Breathe slowly: in for 4, hold for 4, out for 6.",
+          "Press your feet into the floor and relax your shoulders.",
+          "Tell the crew you are anxious; they help nervous flyers every day."
+        ]
+      },
+      "nausea": {
+        "title": "Nausea or motion sickness",
+        "steps": [
+          "Look at a fixed point and keep your head still.",
+          "Open the air vent above you and loosen tight clothing.",
+          "Sip water in small amounts; the sick bag is in the seat pocket."
+        ]
+      },
+      "ears": {
+        "title": "Ear pain or pressure",
+        "steps": [
+          "Swallow, yawn or chew gum, especially during descent.",
+          "Gently pinch your nose, close your mouth and blow softly.",
+          "Babies: feed them or give a dummy during take-off and landing."
+        ]
+      },
+      "faint": {
+        "title": "Dizzy or about to faint",
+        "steps": [
+          "Sit back, loosen your belt and lower your head if you can.",
+          "Drink water and eat something sweet if you have it.",
+          "Tell the crew; do not stand up quickly or walk alone."
+        ]
+      },
+      "headache": {
+        "title": "Headache or dehydration",
+        "steps": [
+          "Drink a glass of water every hour; cabin air is very dry.",
+          "Skip alcohol and extra coffee on the flight.",
+          "Take only medicine you already know you can use."
+        ]
+      },
+      "turbulence": {
+        "title": "Scared of turbulence",
+        "steps": [
+          "Keep your seatbelt fastened; turbulence is uncomfortable but normal.",
+          "Breathe out slowly and let your body move with the seat.",
+          "Listen to the crew: if they keep serving, all is routine."
+        ]
+      }
+    },
+    "card": {
+      "title": "My medical card",
+      "privacy": "Saved only on this phone. Nothing is sent anywhere, so it works in airplane mode.",
+      "autosave": "Saved automatically.",
+      "name": "Name",
+      "seat": "Seat",
+      "conditions": "Medical conditions",
+      "allergies": "Allergies",
+      "medication": "Medication",
+      "bloodType": "Blood type",
+      "contactName": "Emergency contact",
+      "contactPhone": "Contact phone",
+      "contact": "Emergency contact",
+      "placeholder": {
+        "name": "Your full name",
+        "seat": "14C",
+        "conditions": "e.g. asthma, diabetes, epilepsy",
+        "allergies": "e.g. peanuts, penicillin",
+        "medication": "e.g. insulin, inhaler in my bag",
+        "bloodType": "e.g. A+",
+        "contactName": "e.g. Ana Popescu (sister)",
+        "contactPhone": "+40 7…"
+      }
+    }
   }
 }

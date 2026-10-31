@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Shimmer } from "@/components/ai-elements/shimmer";
+import { AirportGuide } from "@/features/airport/AirportGuide";
 import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
 import { AirlineBaggage } from "./AirlineBaggage";
 import { JetLagCard } from "./JetLagCard";
@@ -207,6 +208,8 @@ export function PreflightChecklist({
           </p>
         )}
       </div>
+
+      <AirportGuide input={input} />
 
       <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
         {t("preflight.disclaimer")}

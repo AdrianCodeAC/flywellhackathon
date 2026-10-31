@@ -584,5 +584,226 @@
     "tooFar_one": "Prognoza e disponibilă cu 15 zile înainte — revino peste {{count}} zi.",
     "tooFar_few": "Prognoza e disponibilă cu 15 zile înainte — revino peste {{count}} zile.",
     "tooFar_other": "Prognoza e disponibilă cu 15 zile înainte — revino peste {{count}} de zile."
+  },
+  "airportGuide": {
+    "eyebrow": "Drumul tău prin aeroport",
+    "title": "Unde mergi, pas cu pas",
+    "subtitle": "Doar pașii de care ai nevoie pentru acest zbor, desenați pe harta aeroportului. Atinge un pas ca să-l vezi pe hartă.",
+    "whichAirport": "Alege aeroportul",
+    "departTab": "Plecare",
+    "arriveTab": "Sosire",
+    "gateLabel": "Numărul porții",
+    "gateHint": "De pe tichetul de îmbarcare sau de pe ecranele de plecări",
+    "loading": "Cartografiem aeroportul {{airport}}…",
+    "noMap": "Aeroportul {{airport}} nu este încă cartografiat în detaliu. Urmează pașii de mai jos și indicatoarele din aeroport.",
+    "offlineNoMap": "Nu ai internet, iar harta acestui aeroport nu este încă salvată. Urmează pașii de mai jos și indicatoarele din aeroport.",
+    "mapLabel": "Harta aeroportului {{airport}}",
+    "departuresHall": "Plecări",
+    "arrivalsHall": "Sosiri",
+    "zoomIn": "Mărește",
+    "zoomOut": "Micșorează",
+    "resetView": "Arată tot aeroportul",
+    "layers": "Arată pe hartă",
+    "layer": {
+      "gates": "Porți",
+      "toilets": "Toalete",
+      "food": "Mâncare",
+      "transport": "Transport",
+      "money": "Bani",
+      "services": "Ajutor și lounge-uri"
+    },
+    "poi": {
+      "checkin": "Check-in",
+      "security": "Control de securitate",
+      "passport": "Control pașapoarte",
+      "baggage": "Preluare bagaje",
+      "customs": "Vamă",
+      "gate": "Poartă",
+      "toilets": "Toalete",
+      "food": "Mâncare și băuturi",
+      "pharmacy": "Farmacie",
+      "medical": "Prim ajutor",
+      "atm": "Bancomat",
+      "exchange": "Schimb valutar",
+      "info": "Informații",
+      "lounge": "Lounge",
+      "bus": "Autobuz",
+      "train": "Tren",
+      "taxi": "Taxi",
+      "carRental": "Închirieri auto",
+      "parking": "Parcare"
+    },
+    "exact": "Locul exact pe hartă",
+    "exactNamed": "Pe hartă: {{name}}",
+    "approx": "În această clădire — urmează indicatoarele",
+    "gateArea": "Zona porților — scrie mai sus numărul porții",
+    "savedOffline": "Ambele hărți sunt salvate pe acest telefon, așa că se deschid și în modul avion. Date hartă © contribuitorii OpenStreetMap; aeroporturile se mai schimbă, așa că urmează mereu indicatoarele.",
+    "rides": "Cum ajungi în {{city}}: taxi, aplicații și transport public",
+    "step": {
+      "arrive": {
+        "title": "Ajungi în sala de plecări",
+        "detail": "Fii acolo cu {{hours}} h înainte de decolare, cu buletinul sau pașaportul și tichetul de îmbarcare la îndemână."
+      },
+      "checkin": {
+        "title": "Predai bagajul de cală",
+        "detail": "Găsește ghișeul companiei pe ecranele de plecări. Predarea bagajelor se închide de obicei cu 40–60 de minute înainte de decolare; ora exactă e în rezervare."
+      },
+      "security": {
+        "title": "Controlul de securitate",
+        "detail": "Lichide de maximum 100 ml într-o singură pungă transparentă de 1 litru, laptopul și power bank-urile scoase, nimic ascuțit."
+      },
+      "passportOut": {
+        "title": "Controlul pașapoartelor",
+        "detail": "Zborul tău iese din spațiul Schengen, așa că un polițist de frontieră îți verifică pașaportul sau buletinul înainte de porți."
+      },
+      "gate": {
+        "title": "Mergi la poartă",
+        "detail": "Poarta apare pe ecranele de plecări. Îmbarcarea se închide de obicei cu 15–30 de minute înainte de decolare."
+      },
+      "passportIn": {
+        "title": "Controlul pașapoartelor",
+        "detail": "Zborul tău vine din afara spațiului Schengen: stai la coadă la controlul de frontieră cu pașaportul sau buletinul."
+      },
+      "baggage": {
+        "title": "Îți iei bagajul de cală",
+        "detail": "Caută numărul zborului pe ecranele de la preluarea bagajelor ca să afli banda corectă."
+      },
+      "customs": {
+        "title": "Vama",
+        "detail": "Zborul tău trece granița UE: mergi pe culoarul verde dacă nu ai nimic de declarat și pe cel roșu dacă ai (de exemplu 10.000 € sau mai mult în numerar)."
+      },
+      "exit": {
+        "title": "Ieșirea și transportul spre {{city}}",
+        "detail": "Urmează indicatoarele de ieșire; trenurile, autobuzele și taxiurile sunt marcate pe hartă."
+      }
+    },
+    "gatePlaceholder": "ex. 12"
+  },
+  "help": {
+    "button": "Ajutor",
+    "title": "Nu ești singur.",
+    "subtitle": "Alege de ce ai nevoie. Totul de aici funcționează fără internet, chiar și în modul avion.",
+    "offlineReady": "Merge în modul avion",
+    "back": "Înapoi",
+    "close": "Închide ajutorul",
+    "tile": {
+      "breathe": {
+        "title": "Respiră cu mine",
+        "detail": "Respirație ghidată pentru atac de panică sau frică de zbor"
+      },
+      "crew": {
+        "title": "Cheamă echipajul",
+        "detail": "Un card mare de arătat însoțitorilor de zbor"
+      },
+      "unwell": {
+        "title": "Mi-e rău",
+        "detail": "Ce faci la greață, dureri de urechi, amețeală și altele"
+      },
+      "card": {
+        "title": "Fișa mea medicală",
+        "detail": "Alergii, medicamente și un contact de urgență"
+      }
+    },
+    "disclaimer": "Flywell oferă sfaturi generale de prim ajutor, nu un diagnostic. Dacă ți-e foarte rău, apasă butonul de apel și spune imediat echipajului.",
+    "breathe": {
+      "title": "Respiră cu mine",
+      "intro": "Urmează cercul. Inspiră pe nas și expiră încet pe gură.",
+      "inhale": "Inspiră",
+      "hold": "Ține",
+      "exhale": "Expiră",
+      "cycles_one": "{{count}} respirație calmă",
+      "cycles_few": "{{count}} respirații calme",
+      "cycles_other": "{{count}} de respirații calme",
+      "haptics": "Vibrează la fiecare respirație",
+      "groundTitle": "Încă ești agitat? Încearcă 5-4-3-2-1",
+      "ground": "Numește 5 lucruri pe care le vezi, 4 pe care le poți atinge, 3 pe care le auzi, 2 pe care le miroși și 1 pe care îl guști. Turbulențele se simt puternic, dar avioanele sunt construite pentru ele."
+    },
+    "crew": {
+      "title": "Arată asta echipajului",
+      "seat": "Locul",
+      "callButton": "Apasă butonul de apel de deasupra locului tău (simbolul cu omuleț), apoi arată acest ecran însoțitorului de zbor.",
+      "medicalTitle": "Informațiile mele medicale",
+      "addCard": "Adaugă alergiile și medicamentele pe acest card"
+    },
+    "unwell": {
+      "title": "Mi-e rău",
+      "urgentTitle": "Cheamă imediat echipajul dacă ai",
+      "urgent": "durere în piept, greutate la respirat, umflarea feței sau a buzelor, leșin, slăbiciune pe o parte a corpului, confuzie sau sângerare puternică. Dacă ai propriul stilou cu adrenalină sau inhalator, folosește-l conform prescripției.",
+      "showCrew": "Arată cardul pentru echipaj"
+    },
+    "symptom": {
+      "panic": {
+        "title": "Atac de panică sau frică de zbor",
+        "steps": [
+          "Respiră încet: inspiră 4, ține 4, expiră 6.",
+          "Apasă tălpile în podea și relaxează umerii.",
+          "Spune echipajului că ești agitat; ajută zilnic pasageri emoționați."
+        ]
+      },
+      "nausea": {
+        "title": "Greață sau rău de mișcare",
+        "steps": [
+          "Privește un punct fix și ține capul nemișcat.",
+          "Deschide ventilația de deasupra și slăbește hainele strâmte.",
+          "Bea apă în înghițituri mici; punga pentru vomă e în buzunarul scaunului."
+        ]
+      },
+      "ears": {
+        "title": "Durere sau presiune în urechi",
+        "steps": [
+          "Înghite, cască sau mestecă gumă, mai ales la coborâre.",
+          "Prinde-ți ușor nasul, ține gura închisă și suflă încet.",
+          "Bebeluși: hrănește-i sau dă-le suzeta la decolare și aterizare."
+        ]
+      },
+      "faint": {
+        "title": "Amețeală sau senzație de leșin",
+        "steps": [
+          "Stai rezemat, slăbește centura și coboară capul dacă poți.",
+          "Bea apă și mănâncă ceva dulce dacă ai.",
+          "Spune echipajului; nu te ridica brusc și nu merge singur."
+        ]
+      },
+      "headache": {
+        "title": "Durere de cap sau deshidratare",
+        "steps": [
+          "Bea un pahar de apă la fiecare oră; aerul din cabină e foarte uscat.",
+          "Evită alcoolul și cafeaua în plus în timpul zborului.",
+          "Ia doar medicamente pe care știi deja că le poți folosi."
+        ]
+      },
+      "turbulence": {
+        "title": "Frică de turbulențe",
+        "steps": [
+          "Ține centura legată; turbulențele sunt neplăcute, dar normale.",
+          "Expiră încet și lasă corpul să se miște odată cu scaunul.",
+          "Urmărește echipajul: dacă servesc în continuare, totul e de rutină."
+        ]
+      }
+    },
+    "card": {
+      "title": "Fișa mea medicală",
+      "privacy": "Salvată doar pe acest telefon. Nu se trimite nicăieri, deci merge și în modul avion.",
+      "autosave": "Se salvează automat.",
+      "name": "Nume",
+      "seat": "Locul",
+      "conditions": "Afecțiuni",
+      "allergies": "Alergii",
+      "medication": "Medicamente",
+      "bloodType": "Grupa sanguină",
+      "contactName": "Contact de urgență",
+      "contactPhone": "Telefon contact",
+      "contact": "Contact de urgență",
+      "placeholder": {
+        "name": "Numele tău complet",
+        "seat": "14C",
+        "conditions": "ex. astm, diabet, epilepsie",
+        "allergies": "ex. arahide, penicilină",
+        "medication": "ex. insulină, inhalator în bagaj",
+        "bloodType": "ex. A+",
+        "contactName": "ex. Ana Popescu (sora)",
+        "contactPhone": "+40 7…"
+      }
+    }
   }
 }

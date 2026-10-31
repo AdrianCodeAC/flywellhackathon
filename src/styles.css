@@ -277,3 +277,142 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-price-calendar .rdp-week > td { flex:0 0 calc(100% / 7); min-width:0; width:calc(100% / 7); }
 .trip-price-calendar .rdp-weekdays > th { flex:0 0 calc(100% / 7); min-width:0; }
 @media (min-width:768px) { .trip-price-calendar { width:680px; } }
+
+/* Airport guide: virtual airport map drawn from OpenStreetMap geometry. */
+:root {
+  --map-ground: oklch(0.965 0.012 150);
+  --map-apron: oklch(0.91 0.008 240);
+  --map-taxiway: oklch(0.86 0.02 85);
+  --map-runway: oklch(0.42 0.012 250);
+  --map-runway-line: oklch(0.98 0 0);
+  --map-terminal: oklch(0.99 0.004 180);
+  --map-terminal-edge: oklch(0.58 0.07 180);
+  --map-departures: oklch(0.93 0.045 180);
+  --map-arrivals: oklch(0.93 0.04 245);
+  --map-gate: oklch(0.3 0.03 250);
+  --map-gate-text: oklch(1 0 0);
+  --map-mine: oklch(0.66 0.17 50);
+  --map-step: var(--primary);
+  --map-step-text: var(--primary-foreground);
+  --map-transport: var(--visit-tone);
+  --map-food: var(--food-tone);
+  --map-money: oklch(0.55 0.11 140);
+  --map-services: var(--ask-tone);
+  --map-toilets: oklch(0.5 0.08 220);
+  --map-gates: var(--map-gate);
+}
+.dark {
+  --map-ground: oklch(0.24 0.015 175);
+  --map-apron: oklch(0.3 0.01 240);
+  --map-taxiway: oklch(0.38 0.02 85);
+  --map-runway: oklch(0.16 0.01 250);
+  --map-terminal: oklch(0.36 0.02 180);
+  --map-departures: oklch(0.38 0.05 180);
+  --map-arrivals: oklch(0.38 0.05 245);
+  --map-gate: oklch(0.85 0.02 250);
+  --map-gate-text: oklch(0.2 0.02 250);
+}
+.airport-map { height: min(62vh, 520px); min-height: 320px; background: var(--map-ground); touch-action: none; }
+.map-ground { fill: var(--map-ground); }
+.map-apron { fill: var(--map-apron); }
+.map-taxiway { fill: none; stroke: var(--map-taxiway); stroke-width: 18; stroke-linecap: round; stroke-linejoin: round; }
+.map-runway { fill: none; stroke: var(--map-runway); stroke-width: 50; }
+.map-runway-line { fill: none; stroke: var(--map-runway-line); stroke-width: 2; stroke-dasharray: 30 25; }
+.map-terminal { fill: var(--map-terminal); stroke: var(--map-terminal-edge); stroke-width: 1.25; vector-effect: non-scaling-stroke; }
+.map-terminal-departures { fill: var(--map-departures); }
+.map-terminal-arrivals { fill: var(--map-arrivals); }
+.map-terminal-label { fill: var(--foreground); font-weight: 700; paint-order: stroke; stroke: var(--map-ground); stroke-width: 3; vector-effect: non-scaling-stroke; pointer-events: none; }
+.map-gate circle { fill: var(--map-gate); }
+.map-gate text { fill: var(--map-gate-text); font-weight: 700; pointer-events: none; }
+.map-gate-mine circle { fill: var(--map-mine); animation: gate-glow 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.map-poi circle { fill: var(--card); stroke: var(--poi-tone, var(--primary)); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.map-poi svg { color: var(--poi-tone, var(--primary)); }
+.map-poi-dot circle { fill: var(--poi-tone, var(--primary)); stroke: var(--card); }
+.map-poi-transport { --poi-tone: var(--map-transport); }
+.map-poi-food { --poi-tone: var(--map-food); }
+.map-poi-money { --poi-tone: var(--map-money); }
+.map-poi-services { --poi-tone: var(--map-services); }
+.map-poi-toilets { --poi-tone: var(--map-toilets); }
+.map-journey { fill: none; stroke: var(--map-step); stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; animation: journey-flow 1.2s linear infinite; }
+.map-step { cursor: pointer; }
+.map-step-dot { fill: var(--map-step); stroke: var(--card); }
+.map-step-approx .map-step-dot { fill: var(--card); stroke: var(--map-step); }
+.map-step-approx .map-step-number { fill: var(--map-step); }
+.map-step-number { fill: var(--map-step-text); font-weight: 800; pointer-events: none; }
+.map-step-pulse { fill: var(--map-step); opacity: 0.35; transform-box: fill-box; transform-origin: center; animation: step-pulse 1.8s ease-out infinite; }
+.map-attribution { color: var(--muted-foreground); background: color-mix(in oklch, var(--card) 80%, transparent); padding: 1px 6px; border-radius: 4px; }
+.map-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--chip-tone, var(--primary)); }
+.map-chip-gates { --chip-tone: var(--map-gates); }
+.map-chip-toilets { --chip-tone: var(--map-toilets); }
+.map-chip-food { --chip-tone: var(--map-food); }
+.map-chip-transport { --chip-tone: var(--map-transport); }
+.map-chip-money { --chip-tone: var(--map-money); }
+.map-chip-services { --chip-tone: var(--map-services); }
+.journey-number { display: flex; flex-shrink: 0; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 50%; background: var(--secondary); color: var(--primary); font-weight: 800; transition: background 200ms, color 200ms; }
+.journey-step-active { border-color: var(--primary); box-shadow: var(--shadow-travel); }
+.journey-step-active .journey-number { background: var(--primary); color: var(--primary-foreground); }
+@keyframes journey-flow { to { stroke-dashoffset: -100; } }
+@keyframes step-pulse { from { transform: scale(1); opacity: 0.45; } to { transform: scale(2.4); opacity: 0; } }
+@keyframes gate-glow { 50% { transform: scale(1.18); } }
+
+/* In-flight help: calm night-sky screen that works offline. */
+:root {
+  --help-bg: oklch(0.22 0.045 230);
+  --help-bg-2: oklch(0.3 0.07 200);
+  --help-fg: oklch(0.97 0.01 200);
+  --help-muted: oklch(0.82 0.03 210);
+  --help-panel: oklch(1 0 0 / 8%);
+  --help-panel-edge: oklch(1 0 0 / 14%);
+  --help-calm: oklch(0.78 0.11 185);
+  --help-glow: oklch(0.72 0.12 260);
+  --help-alert: oklch(0.6 0.2 25);
+  --help-alert-soft: oklch(0.6 0.2 25 / 22%);
+  --help-care: oklch(0.8 0.12 75);
+  --help-card: oklch(0.78 0.09 300);
+  --help-crew-bg: oklch(0.985 0.004 90);
+  --help-crew-fg: oklch(0.2 0.02 30);
+  --panic: oklch(0.6 0.19 25);
+  --panic-fg: oklch(1 0 0);
+}
+.panic-button { background: var(--panic); color: var(--panic-fg); isolation: isolate; }
+.panic-button:hover { background: color-mix(in oklch, var(--panic) 88%, black); }
+.panic-ring { position: absolute; inset: 0; border-radius: inherit; background: var(--panic); z-index: -1; animation: panic-ring 2.6s ease-out infinite; }
+@keyframes panic-ring { 0% { transform: scale(1); opacity: 0.5; } 70%, 100% { transform: scale(1.35, 1.6); opacity: 0; } }
+.help-screen { background: radial-gradient(120% 80% at 50% 0%, var(--help-bg-2), var(--help-bg) 70%); color: var(--help-fg); animation: help-in 260ms ease-out; }
+.help-screen-alert { background: radial-gradient(120% 80% at 50% 0%, color-mix(in oklch, var(--help-alert) 55%, var(--help-bg)), var(--help-bg) 75%); }
+@keyframes help-in { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: none; } }
+.help-aurora { position: fixed; inset: -20% -10% auto; height: 60vh; pointer-events: none; background: radial-gradient(40% 50% at 30% 40%, color-mix(in oklch, var(--help-calm) 35%, transparent), transparent 70%), radial-gradient(35% 45% at 75% 30%, color-mix(in oklch, var(--help-glow) 30%, transparent), transparent 70%); filter: blur(30px); animation: aurora 14s ease-in-out infinite alternate; }
+@keyframes aurora { to { transform: translate3d(4%, 6%, 0) rotate(6deg); } }
+.help-muted { color: var(--help-muted); }
+.help-ghost { color: var(--help-fg); }
+.help-ghost:hover { background: var(--help-panel); color: var(--help-fg); }
+.help-offline-chip { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 600; background: var(--help-panel); border: 1px solid var(--help-panel-edge); }
+.help-tile { display: flex; align-items: center; gap: 14px; min-height: 84px; padding: 16px; border-radius: 16px; background: var(--help-panel); border: 1px solid var(--help-panel-edge); color: var(--help-fg); backdrop-filter: blur(8px); transition: background 180ms, border-color 180ms; }
+.help-tile:hover { background: color-mix(in oklch, var(--tile-tone) 18%, transparent); border-color: var(--tile-tone); }
+.help-tile-icon { display: flex; flex-shrink: 0; width: 52px; height: 52px; align-items: center; justify-content: center; border-radius: 50%; color: var(--help-bg); background: var(--tile-tone); box-shadow: 0 0 24px color-mix(in oklch, var(--tile-tone) 55%, transparent); }
+.help-tile-calm { --tile-tone: var(--help-calm); }
+.help-tile-alert { --tile-tone: var(--help-alert); }
+.help-tile-alert .help-tile-icon { color: var(--help-fg); animation: alert-beat 1.8s ease-in-out infinite; }
+.help-tile-care { --tile-tone: var(--help-care); }
+.help-tile-card { --tile-tone: var(--help-card); }
+@keyframes alert-beat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.12); } 30% { transform: scale(1); } 45% { transform: scale(1.08); } }
+.help-panel { border-radius: 14px; padding: 14px 16px; background: var(--help-panel); border: 1px solid var(--help-panel-edge); }
+.help-outline { background: transparent; color: var(--help-fg); border-color: var(--help-panel-edge); }
+.help-outline:hover { background: var(--help-panel); color: var(--help-fg); }
+.help-input { background: var(--help-panel); color: var(--help-fg); border-color: var(--help-panel-edge); }
+.help-input::placeholder { color: color-mix(in oklch, var(--help-muted) 70%, transparent); }
+.help-bullet { flex-shrink: 0; width: 6px; height: 6px; margin-top: 8px; border-radius: 50%; background: var(--help-calm); }
+.help-urgent { border-radius: 14px; padding: 14px 16px; background: var(--help-alert-soft); border: 1px solid var(--help-alert); }
+.help-urgent-button { background: var(--help-alert); color: var(--help-fg); }
+.help-urgent-button:hover { background: color-mix(in oklch, var(--help-alert) 85%, black); }
+.breath-orb { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 30%, color-mix(in oklch, var(--help-calm) 85%, white), var(--help-calm) 45%, color-mix(in oklch, var(--help-glow) 80%, var(--help-bg)) 100%); box-shadow: 0 0 60px color-mix(in oklch, var(--help-calm) 60%, transparent), inset 0 -20px 40px color-mix(in oklch, var(--help-bg) 40%, transparent); }
+.breath-halo { position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--help-calm); }
+.breath-orb + span, .breath-orb ~ span { color: var(--help-bg); }
+.crew-card { border-radius: 20px; padding: 24px 20px; background: var(--help-crew-bg); color: var(--help-crew-fg); box-shadow: 0 20px 60px oklch(0 0 0 / 35%); }
+.crew-bell { color: var(--help-alert); animation: bell-ring 2.2s ease-in-out infinite; transform-origin: top center; }
+@keyframes bell-ring { 0%, 60%, 100% { transform: rotate(0); } 10% { transform: rotate(14deg); } 20% { transform: rotate(-12deg); } 30% { transform: rotate(8deg); } 40% { transform: rotate(-5deg); } }
+.crew-seat { color: var(--help-crew-fg); background: transparent; border: 2px solid var(--help-alert); }
+.help-phrase { border-radius: 12px; padding: 10px 14px; background: var(--help-panel); border: 1px solid var(--help-panel-edge); }
+@media (prefers-reduced-motion: reduce) {
+  .panic-ring, .help-aurora, .crew-bell, .help-tile-alert .help-tile-icon, .map-journey, .map-step-pulse, .map-gate-mine circle, .help-screen { animation: none; }
+}
