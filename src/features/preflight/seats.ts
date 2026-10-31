@@ -92,6 +92,6 @@ export const SEAT_STATS = {
   ],
   rearMiddleSeats: 28,
   middleAisleSeats: 44,
-  /** Greenwich: survivors moved on average within this many rows to a usable exit. */
+  /** Greenwich: within this many rows of a usable exit, survivors outnumbered those who died in fire accidents. */
   exitRows: 5,
 } as const;
