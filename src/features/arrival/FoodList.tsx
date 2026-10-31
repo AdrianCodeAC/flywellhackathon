@@ -85,8 +85,8 @@ export function FoodList({ airport, start, onBack, onShowRoute }: FoodListProps)
       .map((p): Place => {
         const openNow = isOpenNow(p.openingHours, now);
         // Measured from the same point "Show route" starts at, never from the search centre.
-        const distance = from ? Math.round(distanceMeters([from.lat, from.lon], [p.lat, p.lon])) : p.distance;
-        return openNow === undefined ? { ...p, distance } : { ...p, distance, openNow };
+        const q: Place = from ? { ...p, distance: Math.round(distanceMeters([from.lat, from.lon], [p.lat, p.lon])) } : p;
+        return openNow === undefined ? q : { ...q, openNow };
       })
       .filter((p) => (filter === "all" || p.kind === filter) && (!openOnly || p.openNow === true));
     // Live position: nearest to you first.
