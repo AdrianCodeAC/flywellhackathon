@@ -50,3 +50,4 @@
 - [ ] What to visit: pick notable sights (parks, museums…) instead of the 50 nearest articles; food near small airports widens the search when too few places.
 - [ ] During the flight works fully offline (everything in that tab cached on the phone); remove the medical card block from the During tab (only in account and inside Help).
 - [ ] Move seat advice ("Pick the right seat") out of Before you fly into Plan a trip, shown after a destination is chosen.
+- [ ] Trip page checklist: progress stays visible while scrolling; a button to tick a whole category at once.
