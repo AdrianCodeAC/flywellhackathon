@@ -22,3 +22,5 @@
 - [x] Default food area to city center.
 
 - [x] Creative visual redesign: shared theme, arrival page, search and options, phone/desktop EN/RO verification.
+
+- [ ] Trip planner: save spec, navigation, search, flight API, AI advice, costs, extras, adjustment chat, 6h cache, EN/RO 375px tests.
