@@ -26,9 +26,9 @@ export type Flight = {
 export type FlightResult = { flights: Flight[]; error: string | null; fetchedAt: string; baggageUnknown: boolean };
 export const adviceSchema = z.object({
   areas: z.array(z.object({ name: z.string(), reason: z.string(), nightlyMinEur: z.number(), nightlyMaxEur: z.number() }).strict()).length(3),
-  foodPerPersonEur: z.tuple([z.number(), z.number()]),
-  transportPerPersonEur: z.tuple([z.number(), z.number()]),
-  activitiesPerPersonEur: z.tuple([z.number(), z.number()]),
+  foodPerPersonEur: z.array(z.number()).length(2),
+  transportPerPersonEur: z.array(z.number()).length(2),
+  activitiesPerPersonEur: z.array(z.number()).length(2),
   documents: z.string(),
   wellbeing: z.array(z.string()).length(3),
   currency: z.string(),

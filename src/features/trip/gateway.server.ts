@@ -10,8 +10,9 @@ export function tripGateway(signal: AbortSignal, initialRunId?: string) {
   const provider = createOpenAI({apiKey:key,baseURL:"https://ai.gateway.lovable.dev/v1",headers:{"Lovable-API-Key":key,"X-Lovable-AIG-SDK":"vercel-ai-sdk"},fetch:run.fetch});
   const options = {openai:{forceReasoning:true,reasoningEffort:"low",reasoningSummary:"auto",store:false,include:["reasoning.encrypted_content"]}};
   async function object<S extends z.ZodTypeAny>(schema:S,instructions:string,prompt:string):Promise<z.infer<S>> {
-    const result = streamText({model:provider.responses("openai/gpt-6-astra"),instructions,messages:[{role:"user",content:prompt}],output:Output.object({schema}),providerOptions:options,abortSignal:signal,maxRetries:0});
-    return await result.output;
+    let failure:unknown;
+    const result = streamText({model:provider.responses("openai/gpt-6-astra"),instructions,messages:[{role:"user",content:prompt}],output:Output.object({schema}),providerOptions:options,abortSignal:signal,maxRetries:0,onError:({error})=>{failure=error;}});
+    try { return await result.output; } catch(error) { throw failure ?? error; }
   }
   return {object,provider,options,run};
 }
