@@ -23,7 +23,7 @@ import { Shimmer } from "@/components/ai-elements/shimmer";
 import { AirportGuide } from "@/features/airport/AirportGuide";
 import { SaveButton } from "@/features/account/SaveButton";
 import { OPEN_PREFLIGHT_KEY } from "@/features/account/device";
-import { preflightAdvice, type PreflightAdvice } from "./ai.functions";
+import { isPetItem, preflightAdvice, type PreflightAdvice } from "./ai.functions";
 import { AirlineBaggage } from "./AirlineBaggage";
 import { PetPolicyCard } from "./PetPolicyCard";
 import { JetLagCard } from "./JetLagCard";
