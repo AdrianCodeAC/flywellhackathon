@@ -108,10 +108,12 @@ export async function handleTrip(request: Request): Promise<Response> {
       const cached=preference?undefined:await readTripCache<TripResult>(key).catch(()=>undefined);
       if(cached){
         let flights=cached.flights;
-        // A stored live fare goes stale in minutes: re-check it before showing it again.
-        if((flights?.source==="live"||flights?.source==="kiwi")&&Date.now()-Date.parse(flights.fetchedAt)>LIVE_TTL){
-          const fresh=await kiwiFares(input,request.signal).catch(()=>null)??await liveFares(input,request.signal).catch(()=>null);
-          if(fresh?.flights.length)flights=fresh;
+        // Only a fresh live fare may be reused; old cached prices, empty answers or stale live fares are searched live again.
+        const freshLive=(flights?.source==="live"||flights?.source==="kiwi")&&!!flights.flights.length&&Date.now()-Date.parse(flights.fetchedAt)<=LIVE_TTL;
+        if(!freshLive){
+          const kiwi=await kiwiFares(input,request.signal).catch(()=>null);
+          const fresh=kiwi?.flights.length?kiwi:await liveFares(input,request.signal).catch(()=>null);
+          if(fresh?.flights.length){flights=fresh;void writeTripCache(key,{...cached,flights:fresh}).catch(()=>{});}
         }
         if(flights)emit({type:"flights",value:flights});
         if(cached.advice)emit({type:"advice",value:cached.advice});
