@@ -29,3 +29,5 @@
 - Trip discovery uses server functions for airport-exact fare validation, route inventory, price calendars and city thumbnails; pure discovery rules are independently tested. Why: cached metro-city fares cannot prove a route from a particular airport.
 - One-way inputs set returnDate equal to departure as a transport sentinel; UI omits return and shows only daily non-flight estimates. Why: preserves the existing trip-agent input contract without inventing a stay length.
 - All-flight browsing has a dedicated /flights route; selecting a fare hands a validated input to the planner through origin-scoped session storage and a runTrip navigation flag. Why: preserves the search fields while keeping the results page independently navigable.
+
+- Pre-flight lives in src/features/preflight; rules.ts builds the checklist deterministically and only cites the hand-checked SOURCES catalogue; the AI adds at most 6 marked items and may cite sources only by id. Why: official-regulation advice must not depend on the AI or on model-invented URLs.

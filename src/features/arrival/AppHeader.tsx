@@ -11,8 +11,10 @@ export function AppHeader() {
   const [offline, setOffline] = useState(false);
   const location = useLocation();
   const arrival = location.pathname === "/arrival";
+  const preflight = location.pathname === "/preflight";
+  const plan = !arrival && !preflight;
 
-  useEffect(() => { if (arrival) localStorage.setItem("flywell:tab", "arrival"); }, [arrival]);
+  useEffect(() => { if (arrival || preflight) localStorage.setItem("flywell:tab", arrival ? "arrival" : "preflight"); }, [arrival, preflight]);
 
   // Apply the saved / phone language only after hydration so server and client HTML match.
   useEffect(() => {
@@ -41,8 +43,9 @@ export function AppHeader() {
         <LanguageSwitcher />
       </div>
       <nav aria-label={t("trip.navigation")} className="mx-auto flex max-w-6xl gap-1 px-3 pb-2 sm:px-8">
-        <Button asChild variant={!arrival ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-3 text-sm sm:flex-none"><Link to="/" aria-current={!arrival ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "plan")}>{t("trip.planTab")}</Link></Button>
-        <Button asChild variant={arrival ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-3 text-sm sm:flex-none"><Link to="/arrival" search={{iata:""}} aria-current={arrival ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "arrival")}>{t("trip.arrivalTab")}</Link></Button>
+        <Button asChild variant={plan ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-2 text-sm sm:flex-none sm:px-3"><Link to="/" aria-current={plan ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "plan")}>{t("trip.planTab")}</Link></Button>
+        <Button asChild variant={preflight ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-2 text-sm sm:flex-none sm:px-3"><Link to="/preflight" search={{from:"",to:"",date:""}} aria-current={preflight ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "preflight")}>{t("preflight.tab")}</Link></Button>
+        <Button asChild variant={arrival ? "secondary" : "ghost"} className="min-h-11 flex-1 whitespace-normal px-2 text-sm sm:flex-none sm:px-3"><Link to="/arrival" search={{iata:""}} aria-current={arrival ? "page" : undefined} onClick={() => localStorage.setItem("flywell:tab", "arrival")}>{t("trip.arrivalTab")}</Link></Button>
       </nav>
       {offline && (
         <div

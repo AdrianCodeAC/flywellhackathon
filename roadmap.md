@@ -28,3 +28,7 @@
 - [x] Update trip search: From/price-backed To, real price calendar and one-way, flight recommendations; verified CRA/OTP/BGY EN/RO at 375px and real CRA–BGY/CRA–MAD flows.
 - Provider limits: absent cached price does not prove no flight; legacy route inventory misses CRA routes, so recent airport-exact direct fares supplement it. Price-drop groups remain hidden without a real historical baseline.
 - [x] Make To free autocomplete with route hints; all-flights period page, sorting/filters/grouping, trip handoff; checked CRA/OTP 12–16 Nov EN/RO 375px (2 CRA fares, 18 OTP fares), real CRA–MAD handoff.
+
+- [x] Before you fly: /preflight tab with a rule-based checklist (documents, security, baggage, timeline, customs, EU261) linked to official sources, AI trip-specific items, pre-flight agent chat, planner handoff; EN/RO 375px checked locally.
+- [ ] Verify the pre-flight AI items and chat on the Lovable deployment (needs LOVABLE_API_KEY, not available locally).
+- [ ] Airport maps (terminals, gates, services).

@@ -308,5 +308,190 @@
     "flightCount_one": "{{count}} zbor",
     "flightCount_few": "{{count}} zboruri",
     "flightCount_other": "{{count}} de zboruri"
+  },
+  "preflight": {
+    "tab": "Înainte de zbor",
+    "eyebrow": "Reguli oficiale, pe înțeles",
+    "title": "Înainte de zbor",
+    "subtitle": "Spune-ne despre zborul tău și primești o listă pentru acte, controlul de securitate, bagaje, vamă și drepturile tale — apoi întreabă agentul orice.",
+    "from": "Aeroport de plecare",
+    "to": "Aeroport de destinație",
+    "date": "Data zborului",
+    "airline": "Compania aeriană (opțional)",
+    "airlinePlaceholder": "ex. Wizz Air, Ryanair, TAROM",
+    "citizenship": "Cetățenie",
+    "citizen": {
+      "ro": "Română",
+      "eu": "Alt stat UE",
+      "other": "Non-UE"
+    },
+    "bag": "Bagaj",
+    "bagType": {
+      "cabin": "Doar bagaj de mână",
+      "checked": "Bagaj de cală"
+    },
+    "extras": "Călătoresc cu",
+    "flag": {
+      "children": "Copii",
+      "medication": "Medicamente",
+      "pet": "Un animal de companie"
+    },
+    "submit": "Vezi lista mea",
+    "errorAirports": "Alege două aeroporturi diferite.",
+    "errorDate": "Alege o dată a zborului de azi încolo.",
+    "yourFlight": "Zborul tău",
+    "progress": "Progresul listei",
+    "done": "{{done}} din {{total}} bifate",
+    "category": {
+      "documents": "Acte",
+      "security": "Controlul de securitate",
+      "baggage": "Bagaje",
+      "timeline": "Ce faci și când",
+      "customs": "Vamă",
+      "rights": "Drepturile tale"
+    },
+    "must": "Obligatoriu",
+    "aiTitle": "Verificat de agentul de dinainte de zbor",
+    "aiLoading": "Caut reguli specifice acestei călătorii…",
+    "aiError": "Agentul nu este disponibil acum. Lista de mai sus rămâne completă pentru regulile generale.",
+    "aiAdded_one": "Am adăugat {{count}} punct specific acestei călătorii (marcat AI). Confirmă-l pe sursa oficială.",
+    "aiAdded_few": "Am adăugat {{count}} puncte specifice acestei călătorii (marcate AI). Confirmă-le pe sursele oficiale.",
+    "aiAdded_other": "Am adăugat {{count}} de puncte specifice acestei călătorii (marcate AI). Confirmă-le pe sursele oficiale.",
+    "aiNone": "Nimic în plus pentru această călătorie față de lista de mai sus.",
+    "disclaimer": "Flywell rezumă ghidurile oficiale ale UE și ale României. Regulile se schimbă, iar companiile aeriene au regulile lor; confirmă întotdeauna pe paginile oficiale indicate și la compania aeriană înainte de plecare.",
+    "toArrival": "Ai aterizat? Deschide ghidul de sosire pentru {{city}}",
+    "fromPlanner": "Înainte de zbor: vezi lista de verificare",
+    "chatTitle": "Întreabă agentul de dinainte de zbor",
+    "chatIntro": "Întrebări despre acte, lichide, baterii, bagaje, vamă sau întârzieri. Răspunsurile trimit la surse oficiale.",
+    "chatPlaceholder": "Pot lua powerbank-ul? Am nevoie de pașaport?…",
+    "chatError": "Agentul nu a putut răspunde. Încearcă din nou.",
+    "examples": {
+      "q1": "Pot lua un parfum de 150 ml în bagajul de mână?",
+      "q2": "Îmi ajunge buletinul pentru această călătorie?",
+      "q3": "Zborul meu a întârziat 4 ore. Ce drepturi am?",
+      "q4": "Ce nu am voie să pun în bagajul de cală?"
+    },
+    "rule": {
+      "idCardOk": {
+        "title": "Îți ajunge cartea de identitate sau pașaportul",
+        "detail": "Pentru {{city}} ajunge o carte de identitate sau un pașaport valabil. Cartea de identitate provizorie nu este valabilă pentru călătorii în străinătate."
+      },
+      "idCardExtra": {
+        "title": "Cartea de identitate e acceptată — pașaportul e recomandat",
+        "detail": "Cetățenii români pot intra de obicei cu buletinul aici, dar pașaportul evită probleme la frontieră. Verifică ghidul MAE pentru {{city}} înainte de plecare."
+      },
+      "passportNeeded": {
+        "title": "Ia pașaportul",
+        "detail": "În afara UE/SEE buletinul nu ajunge. Verifică pe site-ul MAE dacă ai nevoie de viză sau autorizație de călătorie pentru {{city}}."
+      },
+      "visaCheck": {
+        "title": "Verifică viza și regulile de intrare",
+        "detail": "Cetățenii din afara UE pot avea nevoie de viză pentru {{city}}. Verifică regulile oficiale pentru cetățenia ta înainte să cumperi biletul."
+      },
+      "ukEta": {
+        "title": "Marea Britanie: pașaport + ETA",
+        "detail": "Marea Britanie nu acceptă cărți de identitate din UE. Cetățenii UE au nevoie de pașaport și de o autorizație electronică de călătorie (ETA) aprobată înainte de zbor."
+      },
+      "usEsta": {
+        "title": "SUA: pașaport + ESTA sau viză",
+        "detail": "Ai nevoie de pașaport electronic valabil și fie de ESTA aprobat (Visa Waiver Program), fie de viză. Regulile pentru cetățenii români s-au schimbat recent: confirmă pe site-ul oficial."
+      },
+      "ees": {
+        "title": "Sistemul de intrare/ieșire UE (EES)",
+        "detail": "Călătorilor din afara UE li se înregistrează amprentele și o fotografie la frontiera Schengen. Lasă timp în plus; autorizația ETIAS va începe mai târziu — verifică dacă se aplică la data ta."
+      },
+      "validity": {
+        "title": "Verifică data de expirare a actului",
+        "detail": "Actul trebuie să fie valabil pe toată durata călătoriei. Multe țări din afara UE cer un pașaport valabil încă 3–6 luni după sosire."
+      },
+      "maeAlerts": {
+        "title": "Citește alerta de călătorie MAE",
+        "detail": "Ministerul Afacerilor Externe publică regulile de intrare și alertele de siguranță pentru fiecare țară, inclusiv pentru {{city}}."
+      },
+      "childrenRo": {
+        "title": "Acte pentru copii",
+        "detail": "Fiecare copil are nevoie de propria carte de identitate sau propriul pașaport. Un minor care iese din România doar cu un părinte sau cu alt adult are nevoie de acordul notarial al părintelui (părinților) care rămân."
+      },
+      "children": {
+        "title": "Acte pentru copii",
+        "detail": "Fiecare copil are nevoie de propriul act de călătorie. Dacă un copil nu călătorește cu ambii părinți, ia acordul scris al părintelui absent."
+      },
+      "pet": {
+        "title": "Animal de companie: pașaport, microcip, vaccin antirabic",
+        "detail": "În UE animalul are nevoie de pașaport european pentru animale, microcip și vaccin antirabic valabil. Compania aeriană trebuie să aprobe animalul în avans."
+      },
+      "liquids": {
+        "title": "Lichide: regula de 100 ml",
+        "detail": "În bagajul de mână, lichidele, gelurile și cremele trebuie să fie în recipiente de maximum 100 ml, toate într-o pungă transparentă, resigilabilă, de aproximativ 1 litru. Unele aeroporturi cu scanere noi permit mai mult — doar dacă aeroportul spune asta."
+      },
+      "powerBank": {
+        "title": "Powerbank și baterii de rezervă: doar în cabină",
+        "detail": "Nu pune niciodată powerbank-uri sau baterii de litiu de rezervă în bagajul de cală. Până la 100 Wh e în regulă; între 100 și 160 Wh ai nevoie de aprobarea companiei. Multe companii interzic folosirea powerbank-ului în timpul zborului."
+      },
+      "sharp": {
+        "title": "Fără obiecte ascuțite sau contondente în cabină",
+        "detail": "Cuțitele, foarfecele cu lame mai lungi de 6 cm, uneltele, bâtele și obiectele similare merg în bagajul de cală sau rămân acasă."
+      },
+      "medication": {
+        "title": "Medicamente",
+        "detail": "Ține medicamentele în bagajul de mână, în ambalajul original, împreună cu rețeta. Medicamentele lichide necesare în timpul zborului sunt exceptate de la regula de 100 ml — declară-le la control."
+      },
+      "babyFood": {
+        "title": "Hrană și lapte pentru bebeluși",
+        "detail": "Hrana și laptele necesare pe drum sunt permise peste 100 ml. Agenții de securitate îți pot cere să le deschizi sau să le testeze."
+      },
+      "cabinOnly": {
+        "title": "Verifică dimensiunea bagajului de mână",
+        "detail": "Biletele low-cost includ adesea doar o geantă mică sub scaun (aproximativ 40 × 30 × 20 cm); un troler mai mare costă în plus. Verifică dimensiunea și greutatea exacte la compania ta ca să eviți taxele de la poartă."
+      },
+      "checkedBag": {
+        "title": "Bagajul de cală e plătit și cântărit?",
+        "detail": "Asigură-te că bagajul de cală e inclus în rezervare. Adăugat online înainte de zbor e de obicei mult mai ieftin decât la aeroport."
+      },
+      "valuables": {
+        "title": "Lucrurile de valoare în cabină",
+        "detail": "Ține actele, banii, cheile, medicamentele și electronicele în bagajul de mână, nu în cel de cală."
+      },
+      "weigh": {
+        "title": "Cântărește bagajele acasă",
+        "detail": "Un cântar de bagaje te scapă de surprize la aeroport, unde taxele pentru supragreutate sunt mari."
+      },
+      "renewEarly": {
+        "title": "Pașaport: acționează acum dacă e nevoie",
+        "detail": "Mai sunt {{days}} zile. Dacă nu ai pașaport sau îți expiră curând, depune cererea acum; pentru plecări urgente se poate elibera mai repede un pașaport temporar."
+      },
+      "onlineCheckin": {
+        "title": "Fă check-in online",
+        "detail": "Multe companii deschid check-in-ul online cu 24–48 de ore înainte de zbor. Companiile low-cost pot taxa check-in-ul la aeroport."
+      },
+      "arriveEarly": {
+        "title": "Fii la aeroport cu {{hours}} h înainte",
+        "detail": "Recomandat pentru acest zbor, ca să ai timp de check-in, control de securitate și control de pașapoarte. Predarea bagajelor și porțile se închid înainte de decolare."
+      },
+      "boardingPass": {
+        "title": "Cartea de îmbarcare pregătită",
+        "detail": "Ține cartea de îmbarcare în aplicația companiei sau tipărită, plus o captură de ecran în caz că nu ai semnal."
+      },
+      "cash": {
+        "title": "Sumele de 10.000 € sau mai mult se declară",
+        "detail": "Când intri sau ieși din UE cu 10.000 € sau mai mult (ori echivalentul), trebuie să declari suma la vamă."
+      },
+      "meatDairy": {
+        "title": "Fără carne sau lactate în UE",
+        "detail": "Nu ai voie să aduci în UE carne, lapte sau produse din acestea din majoritatea țărilor din afara UE, nici măcar sandvișuri."
+      },
+      "allowances": {
+        "title": "Limitele scutite de taxe",
+        "detail": "Când ajungi în UE cu avionul poți aduce fără taxe, de exemplu, 200 de țigări, 1 L de băuturi spirtoase, 4 L de vin și alte bunuri de până la 430 €. Peste aceste limite, le declari."
+      },
+      "eu261": {
+        "title": "Se aplică drepturile pasagerilor din UE",
+        "detail": "Zborul pleacă din UE, deci se aplică Regulamentul 261/2004: la întârzieri mari, anulări sau refuz la îmbarcare poți primi asistență și o compensație de 250–600 €."
+      },
+      "eu261Inbound": {
+        "title": "Drepturi UE: depinde de companie",
+        "detail": "Zborurile spre UE sunt acoperite de Regulamentul 261/2004 doar dacă operatorul este o companie din UE. Păstrează bonurile și cartea de îmbarcare dacă apare o problemă."
+      }
+    }
   }
 }

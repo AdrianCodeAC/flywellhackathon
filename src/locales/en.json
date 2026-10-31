@@ -308,5 +308,190 @@
     "flightCount_one": "{{count}} flight",
     "flightCount_other": "{{count}} flights",
     "flightCount_few": "{{count}} flights"
+  },
+  "preflight": {
+    "tab": "Before you fly",
+    "eyebrow": "Official rules, made simple",
+    "title": "Before you fly",
+    "subtitle": "Tell us about your flight and get a checklist for documents, airport security, baggage, customs and your rights — then ask the pre-flight agent anything.",
+    "from": "Departure airport",
+    "to": "Destination airport",
+    "date": "Flight date",
+    "airline": "Airline (optional)",
+    "airlinePlaceholder": "e.g. Wizz Air, Ryanair, TAROM",
+    "citizenship": "Citizenship",
+    "citizen": {
+      "ro": "Romanian",
+      "eu": "Other EU",
+      "other": "Non-EU"
+    },
+    "bag": "Baggage",
+    "bagType": {
+      "cabin": "Cabin bag only",
+      "checked": "Checked bag"
+    },
+    "extras": "Travelling with",
+    "flag": {
+      "children": "Children",
+      "medication": "Medication",
+      "pet": "A pet"
+    },
+    "submit": "Get my checklist",
+    "errorAirports": "Choose two different airports.",
+    "errorDate": "Choose a flight date from today onwards.",
+    "yourFlight": "Your flight",
+    "progress": "Checklist progress",
+    "done": "{{done}} of {{total}} done",
+    "category": {
+      "documents": "Documents",
+      "security": "Airport security",
+      "baggage": "Baggage",
+      "timeline": "When to do what",
+      "customs": "Customs",
+      "rights": "Your rights"
+    },
+    "must": "Required",
+    "aiTitle": "Checked by the pre-flight agent",
+    "aiLoading": "Looking for rules specific to this trip…",
+    "aiError": "The agent is unavailable right now. The checklist above is still complete for the general rules.",
+    "aiAdded_one": "Added {{count}} item specific to this trip (marked AI). Confirm it on the official source.",
+    "aiAdded_few": "Added {{count}} items specific to this trip (marked AI). Confirm them on the official sources.",
+    "aiAdded_other": "Added {{count}} items specific to this trip (marked AI). Confirm them on the official sources.",
+    "aiNone": "Nothing extra for this trip beyond the checklist above.",
+    "disclaimer": "Flywell summarises official EU and Romanian guidance. Rules change and airlines add their own; always confirm on the linked official pages and with your airline before you travel.",
+    "toArrival": "Landed? Open the arrival guide for {{city}}",
+    "fromPlanner": "Before you fly: get the checklist",
+    "chatTitle": "Ask the pre-flight agent",
+    "chatIntro": "Questions about documents, liquids, batteries, baggage, customs or delays. Answers point to official sources.",
+    "chatPlaceholder": "Can I take my power bank? Do I need a passport?…",
+    "chatError": "The agent could not answer. Please try again.",
+    "examples": {
+      "q1": "Can I take a 150 ml perfume in my cabin bag?",
+      "q2": "Is my Romanian ID card enough for this trip?",
+      "q3": "My flight was delayed 4 hours. What are my rights?",
+      "q4": "What can't I pack in my checked bag?"
+    },
+    "rule": {
+      "idCardOk": {
+        "title": "Your ID card or passport is enough",
+        "detail": "For {{city}} a valid ID card or passport is enough. A provisional ID card (carte de identitate provizorie) is not valid for travel abroad."
+      },
+      "idCardExtra": {
+        "title": "ID card accepted — passport recommended",
+        "detail": "Romanian citizens can usually enter with a valid ID card here, but a passport avoids problems at the border. Check MAE guidance for {{city}} before you go."
+      },
+      "passportNeeded": {
+        "title": "Bring a passport",
+        "detail": "An ID card is not enough outside the EU/EEA. Check visa or entry-authorisation rules for {{city}} on the MAE site."
+      },
+      "visaCheck": {
+        "title": "Check visa and entry rules",
+        "detail": "Non-EU citizens may need a visa for {{city}}. Check the official rules for your nationality before booking."
+      },
+      "ukEta": {
+        "title": "UK: passport + ETA",
+        "detail": "The UK does not accept EU ID cards. EU citizens need a passport and an Electronic Travel Authorisation (ETA) approved before travel."
+      },
+      "usEsta": {
+        "title": "USA: passport + ESTA or visa",
+        "detail": "You need a valid e-passport and either an approved ESTA (Visa Waiver Program) or a visa. Rules for Romanian citizens changed recently: confirm on the official site."
+      },
+      "ees": {
+        "title": "EU Entry/Exit System (EES)",
+        "detail": "Non-EU travellers have fingerprints and a photo registered at the Schengen border. Allow extra time; ETIAS authorisation is expected to start later — check if it applies on your date."
+      },
+      "validity": {
+        "title": "Check your document's expiry date",
+        "detail": "Your document must be valid for the whole trip. Many non-EU countries require a passport valid for 3–6 months after you arrive."
+      },
+      "maeAlerts": {
+        "title": "Read the MAE travel alert",
+        "detail": "The Romanian Ministry of Foreign Affairs publishes entry rules and safety alerts for every country, including {{city}}."
+      },
+      "childrenRo": {
+        "title": "Documents for children",
+        "detail": "Each child needs their own ID card or passport. A child leaving Romania with only one parent, or with another adult, needs a notarised consent from the parent(s) who stay."
+      },
+      "children": {
+        "title": "Documents for children",
+        "detail": "Each child needs their own travel document. If a child travels without both parents, carry written consent from the absent parent."
+      },
+      "pet": {
+        "title": "Pet: passport, microchip, rabies vaccine",
+        "detail": "Within the EU a pet needs an EU pet passport, a microchip and a valid rabies vaccination. The airline must approve the pet in advance."
+      },
+      "liquids": {
+        "title": "Liquids: 100 ml rule",
+        "detail": "In your cabin bag, liquids, gels and creams must be in containers of max 100 ml, all in one transparent resealable bag of about 1 litre. Some airports with new scanners allow more — only if the airport says so."
+      },
+      "powerBank": {
+        "title": "Power banks and spare batteries: cabin only",
+        "detail": "Never put power banks or spare lithium batteries in checked baggage. Up to 100 Wh is fine; 100–160 Wh needs airline approval. Many airlines forbid using power banks during the flight."
+      },
+      "sharp": {
+        "title": "No sharp or blunt items in the cabin",
+        "detail": "Knives, scissors with blades longer than 6 cm, tools, bats and similar items must go in checked baggage or stay at home."
+      },
+      "medication": {
+        "title": "Medication",
+        "detail": "Keep medicines in your cabin bag in their original packaging, with the prescription. Liquid medicines needed during the flight are exempt from the 100 ml rule — declare them at security."
+      },
+      "babyFood": {
+        "title": "Baby food and milk",
+        "detail": "Baby food and milk needed during the trip are allowed over 100 ml. Security may ask you to open or test them."
+      },
+      "cabinOnly": {
+        "title": "Check your cabin-bag size",
+        "detail": "Low-cost fares often include only a small under-seat bag (around 40 × 30 × 20 cm); a larger trolley costs extra. Check your airline's exact size and weight to avoid gate fees."
+      },
+      "checkedBag": {
+        "title": "Checked bag paid and weighed?",
+        "detail": "Make sure the checked bag is included in your booking. Adding it online before the flight is usually much cheaper than at the airport."
+      },
+      "valuables": {
+        "title": "Valuables in the cabin",
+        "detail": "Keep documents, money, keys, medicines and electronics in your cabin bag, not in the checked one."
+      },
+      "weigh": {
+        "title": "Weigh your bags at home",
+        "detail": "A luggage scale avoids surprises at the airport, where overweight fees are high."
+      },
+      "renewEarly": {
+        "title": "Passport: act now if needed",
+        "detail": "{{days}} days to go. If your passport is missing or expires soon, apply now; for urgent trips a temporary passport can be issued faster."
+      },
+      "onlineCheckin": {
+        "title": "Check in online",
+        "detail": "Many airlines open online check-in 24–48 hours before departure. Low-cost airlines may charge for check-in at the airport."
+      },
+      "arriveEarly": {
+        "title": "Be at the airport {{hours}} h before",
+        "detail": "Recommended for this flight, to leave time for check-in, security and passport control. Bag drop and gates close earlier than departure."
+      },
+      "boardingPass": {
+        "title": "Boarding pass ready",
+        "detail": "Keep the boarding pass in the airline app or printed, plus a screenshot in case you have no signal."
+      },
+      "cash": {
+        "title": "Cash of €10,000 or more must be declared",
+        "detail": "When you enter or leave the EU carrying €10,000 or more (or the equivalent), you must declare it to customs."
+      },
+      "meatDairy": {
+        "title": "No meat or dairy products into the EU",
+        "detail": "You cannot bring meat, milk or products made from them into the EU from most non-EU countries, even sandwiches."
+      },
+      "allowances": {
+        "title": "Duty-free allowances",
+        "detail": "Arriving in the EU by air you can bring, tax-free, e.g. 200 cigarettes, 1 L of spirits, 4 L of wine and other goods up to €430. Above that, declare them."
+      },
+      "eu261": {
+        "title": "EU passenger rights apply",
+        "detail": "Your flight departs from the EU, so Regulation 261/2004 applies: for long delays, cancellations or denied boarding you may get care and €250–600 compensation."
+      },
+      "eu261Inbound": {
+        "title": "EU rights: depends on the airline",
+        "detail": "Flights into the EU are covered by Regulation 261/2004 only if the airline is an EU airline. Keep receipts and the boarding pass if something goes wrong."
+      }
+    }
   }
 }
