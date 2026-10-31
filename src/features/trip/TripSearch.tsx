@@ -1,66 +1,57 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useServerFn } from "@tanstack/react-start";
 import { format, addDays, startOfDay } from "date-fns";
-import { ro, enGB } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
-import { MapPin, CalendarDays, Users, Minus, Plus, ArrowRight, SlidersHorizontal, LocateFixed } from "lucide-react";
+import { MapPin, CalendarDays, Users, Minus, Plus, ArrowRight, SlidersHorizontal, Plane, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import { loadAirports, distanceMeters } from "@/features/arrival/services";
+import { AirportSearch } from "@/features/arrival/AirportSearch";
+import { loadAirports } from "@/features/arrival/services";
 import type { Airport } from "@/features/arrival/types";
 import { nights, type TripInput } from "./types";
+import { getDiscovery } from "./discovery.functions";
+import { type Discovery, type RouteFare } from "./discovery";
+import { TripDates } from "./TripDates";
+import { TripRecommendations } from "./TripRecommendations";
 
 export function TripSearch({initial,busy,onSearch}:{initial?:TripInput|undefined;busy:boolean;onSearch:(input:TripInput)=>void}) {
   const {t,i18n}=useTranslation();
-  const [destination,setDestination]=useState(initial?.destination??"");const [iata,setIata]=useState<string|null>(initial?.destinationIata??null);
+  const [destination,setDestination]=useState(initial?.destination??""),[iata,setIata]=useState<string|null>(initial?.destinationIata??null);
   const [range,setRange]=useState<DateRange|undefined>();const [adults,setAdults]=useState(initial?.adults??1),[children,setChildren]=useState(initial?.children??0);
   const [more,setMore]=useState(false),[flexible,setFlexible]=useState(initial?.flexible??false),[origin,setOrigin]=useState(initial?.origin??"CRA");
-  const [budget,setBudget]=useState<TripInput["budget"]>(initial?.budget??"medium"),[direct,setDirect]=useState(initial?.direct??false),[bag,setBag]=useState(initial?.bag??false);
-  const [airports,setAirports]=useState<Airport[]>([]),[suggest,setSuggest]=useState(false),[error,setError]=useState("");
-  useEffect(()=>{setRange({from:initial?new Date(`${initial.departure}T12:00:00`):addDays(startOfDay(new Date()),12),to:initial?new Date(`${initial.returnDate}T12:00:00`):addDays(startOfDay(new Date()),16)});},[initial]);
-  useEffect(()=>{void loadAirports().then(setAirports).catch(()=>{});},[]);
-  const from=range?.from?format(range.from,"yyyy-MM-dd"):"",to=range?.to?format(range.to,"yyyy-MM-dd"):"";
-  const hits=destination.length>=2?airports.filter(a=>`${a.iata} ${a.city} ${a.name}`.toLowerCase().includes(destination.toLowerCase())).slice(0,5):[];
-  function gps(){
-    if(!navigator.geolocation){setError(t("search.locationUnsupported"));return;}
-    navigator.geolocation.getCurrentPosition(({coords})=>{
-      const closest=[...airports].sort((a,b)=>distanceMeters([coords.latitude,coords.longitude],[a.lat,a.lon])-distanceMeters([coords.latitude,coords.longitude],[b.lat,b.lon]))[0];if(closest)setOrigin(closest.iata);
-    },()=>setError(t("search.locationDenied")),{timeout:10000});
+  const [budget,setBudget]=useState<TripInput["budget"]>(initial?.budget??"medium"),[direct,setDirect]=useState(initial?.direct??false),[bag,setBag]=useState(initial?.bag??false),[oneWay,setOneWay]=useState(initial?.oneWay??false);
+  const [airports,setAirports]=useState<Airport[]>([]),[suggest,setSuggest]=useState(false),[error,setError]=useState(""),[includeStop,setIncludeStop]=useState(false),[discovery,setDiscovery]=useState<Discovery>(),[loading,setLoading]=useState(false),[selectedFare,setSelectedFare]=useState<RouteFare>();
+  const card=useRef<HTMLFormElement>(null);const load=useServerFn(getDiscovery);const lang=i18n.language==="ro"?"ro":"en";
+  useEffect(()=>{setRange({from:initial?new Date(`${initial.departure}T12:00:00`):addDays(startOfDay(new Date()),12),to:initial&&!initial.oneWay?new Date(`${initial.returnDate}T12:00:00`):initial?undefined:addDays(startOfDay(new Date()),16)});void loadAirports().then(setAirports);if(!initial){try{const saved=localStorage.getItem('flywell:origin');if(saved&&/^[A-Z]{3}$/.test(saved))setOrigin(saved);}catch{}}},[initial]);
+  useEffect(()=>{if(!origin){setDiscovery(undefined);return;}let active=true;setLoading(true);setDiscovery(undefined);void load({data:{origin,lang,includeStop}}).then(value=>{if(!active)return;setDiscovery(value);}).catch(()=>{if(active)setError(t('trip.providerUnavailable'));}).finally(()=>{if(active)setLoading(false);});return()=>{active=false;};},[origin,lang,includeStop,load,t]);
+  useEffect(()=>{if(discovery&&!discovery.unavailable&&iata&&!discovery.routes.some(r=>r.destinationIata===iata)){setIata(null);setDestination('');}},[discovery,iata]);
+  const from=range?.from?format(range.from,"yyyy-MM-dd"):"",to=oneWay?from:range?.to?format(range.to,"yyyy-MM-dd"):"";
+  const hits=discovery?.routes.filter(a=>`${a.destinationIata} ${a.city} ${new Intl.DisplayNames([lang],{type:'region'}).of(a.country)}`.toLowerCase().includes(destination.toLowerCase()))??[];
+  function changeOrigin(a:Airport|null){setOrigin(a?.iata??'');setSelectedFare(undefined);setDestination('');setIata(null);if(a){try{localStorage.setItem('flywell:origin',a.iata);}catch{}}}
+  function choose(f:RouteFare){setDestination(f.city);setIata(f.destinationIata);setSuggest(false);setSelectedFare(f);setOneWay(!f.returnDate);setRange({from:new Date(f.departure),to:f.returnDate?new Date(f.returnDate):undefined});card.current?.scrollIntoView({behavior:'smooth',block:'start'});}
+  function submit(e:React.FormEvent){e.preventDefault();setError("");if(!iata||!from||!to||(!oneWay&&nights(from,to)<1)||!airports.some(a=>a.iata===origin)||!discovery?.routes.some(r=>r.destinationIata===iata)){setError(t("trip.invalidInput"));return;}
+    onSearch({destination,destinationIata:iata,origin,departure:from,returnDate:to,adults,children,flexible,budget,direct,bag,oneWay,lang});
   }
-  function submit(e:React.FormEvent){e.preventDefault();setError("");if(!from||!to||nights(from,to)<1||!airports.some(a=>a.iata===origin)){setError(t("trip.invalidInput"));return;}
-    onSearch({destination,destinationIata:iata,origin,departure:from,returnDate:to,adults,children,flexible,budget,direct,bag,lang:i18n.language==="ro"?"ro":"en"});
-  }
-  return <form onSubmit={submit} className="trip-search rounded-lg border bg-card p-5 sm:p-7">
-    <div className="grid gap-6 md:grid-cols-[1.25fr_1.1fr_1fr]">
-      <div className="relative"><label htmlFor="trip-where" className="mb-3 flex items-center gap-2 text-sm font-semibold"><MapPin className="size-4 text-primary"/>{t("trip.where")}</label>
-        <Input id="trip-where" autoComplete="off" required value={destination} onFocus={()=>setSuggest(true)} onChange={e=>{setDestination(e.target.value);setIata(null);setSuggest(true);}} placeholder={t("trip.wherePlaceholder")} className="min-h-12 text-base" role="combobox" aria-expanded={suggest&&hits.length>0} aria-controls="trip-destinations"/>
-        {suggest&&hits.length>0&&<div id="trip-destinations" role="listbox" className="absolute top-full z-20 mt-1 w-full rounded-md border bg-popover p-1 shadow-md">{hits.map(a=><Button type="button" role="option" aria-selected={iata===a.iata} key={a.iata} variant="ghost" className="h-auto min-h-11 w-full justify-start whitespace-normal text-left" onClick={()=>{setDestination(a.city);setIata(a.iata);setSuggest(false);}}>{a.city}<span className="ml-auto pl-3 text-xs text-muted-foreground">{a.iata}</span></Button>)}</div>}
+  const originAirport=airports.find(a=>a.iata===origin)??null;
+  return <><form ref={card} onSubmit={submit} className="trip-search rounded-lg border bg-card p-5 sm:p-7">
+    <div className="grid gap-6 lg:grid-cols-2">
+      <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><Plane className="size-4 text-primary"/>{t('trip.from')}</label><AirportSearch selected={originAirport} onSelect={changeOrigin} onClear={()=>changeOrigin(null)} label={t('trip.from')}/></div>
+      <div className="relative"><label htmlFor="trip-to" className="mb-3 flex items-center gap-2 text-sm font-semibold"><MapPin className="size-4 text-primary"/>{t('trip.to')}</label>
+        <Input id="trip-to" autoComplete="off" required value={destination} disabled={!origin||loading} onFocus={()=>{setDestination('');setSuggest(true);}} onChange={e=>{setDestination(e.target.value);setIata(null);setSuggest(true);setSelectedFare(undefined);}} onKeyDown={e=>{if(e.key==='Escape')setSuggest(false);if(e.key==='Enter'&&suggest){e.preventDefault();const first=hits[0];if(first){setDestination(first.city);setIata(first.destinationIata);setSuggest(false);}}}} placeholder={t('trip.toPlaceholder')} className="min-h-14 text-base" role="combobox" aria-expanded={suggest} aria-controls="trip-destinations"/>
+        {loading&&<p role="status" className="mt-2 flex items-center gap-2 text-xs text-muted-foreground"><LoaderCircle className="size-4 animate-spin"/>{t('trip.loadingRoutes')}</p>}
+        {suggest&&!loading&&<div id="trip-destinations" role="listbox" className="absolute z-20 mt-1 max-h-80 w-full overflow-y-auto rounded-md border bg-popover p-1 shadow-md">{hits.map(a=><Button type="button" role="option" aria-selected={iata===a.destinationIata} key={a.destinationIata} variant="ghost" className="h-auto min-h-14 w-full items-start justify-start whitespace-normal text-left" onClick={()=>{setDestination(a.city);setIata(a.destinationIata);setSuggest(false);}}><span className="min-w-0"><span className="font-semibold">{a.destinationIata} · {a.city}</span><span className="mt-1 block text-xs text-muted-foreground">{new Intl.DisplayNames([lang],{type:'region'}).of(a.country)} · {a.stops?t('trip.stops',{count:a.stops}):t('trip.directFlight')}</span></span><span className="ml-auto shrink-0 text-xs text-primary">{t('trip.fromPrice',{price:new Intl.NumberFormat(lang,{style:'currency',currency:a.currency,maximumFractionDigits:0}).format(a.price)})}</span></Button>)}{!hits.length&&<p className="p-3 text-sm text-muted-foreground">{t('trip.noRoutes')}</p>}</div>}
+        <label className="mt-2 flex min-h-11 items-center gap-2 text-xs text-muted-foreground"><Switch checked={includeStop} onCheckedChange={setIncludeStop}/>{t('trip.includeStop')}</label>
+        {!loading&&origin&&discovery&&!discovery.routes.length&&<div className="mt-2 text-sm text-muted-foreground"><p>{t(discovery.unavailable?'trip.providerUnavailable':'trip.noRoutes')}</p><Button asChild type="button" variant="link" className="min-h-11 px-0"><a href={`https://www.google.com/travel/flights?q=${encodeURIComponent(`Flights from ${origin}`)}`} target="_blank" rel="noreferrer">{t('trip.googleFlights')}</a></Button></div>}
       </div>
-      <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><CalendarDays className="size-4 text-primary"/>{t("trip.when")}</label>
-        <Popover><PopoverTrigger asChild><Button type="button" variant="outline" className="min-h-12 w-full justify-start text-left font-normal" aria-label={t("trip.dates")}>{range?.from&&range.to?`${format(range.from,"d MMM",{locale:i18n.language==="ro"?ro:enGB})} — ${format(range.to,"d MMM yyyy",{locale:i18n.language==="ro"?ro:enGB})}`:t("trip.dates")}</Button></PopoverTrigger>
-          <PopoverContent className="w-auto max-w-[calc(100vw-24px)] p-0" align="start"><Calendar mode="range" selected={range} onSelect={setRange} min={1} max={90} {...(range?.from?{defaultMonth:range.from}:{})} disabled={{before:startOfDay(new Date())}} locale={i18n.language==="ro"?ro:enGB} className="pointer-events-auto [--cell-size:44px]"/></PopoverContent>
-        </Popover>
-        <div className="mt-2 flex items-center justify-between gap-2 text-xs text-muted-foreground"><span>{from&&to?t("trip.nights",{count:nights(from,to)}):""}</span><label className="flex min-h-11 items-center gap-2"><Switch checked={flexible} onCheckedChange={setFlexible} aria-label={t("trip.flexible")}/>{t("trip.flexible")}</label></div>
-      </div>
-      <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><Users className="size-4 text-primary"/>{t("trip.who")}</label>
-        <Stepper label={t("trip.adults")} value={adults} min={1} max={9-children} onChange={setAdults}/><Stepper label={t("trip.children")} value={children} min={0} max={9-adults} onChange={setChildren}/>
-      </div>
+      <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><CalendarDays className="size-4 text-primary"/>{t('trip.when')}</label><TripDates origin={origin} destination={iata} range={range} onChange={value=>{setRange(value);setSelectedFare(undefined);}} oneWay={oneWay} setOneWay={setOneWay} flexible={flexible} setFlexible={setFlexible}/></div>
+      <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><Users className="size-4 text-primary"/>{t('trip.who')}</label><Stepper label={t('trip.adults')} value={adults} min={1} max={9-children} onChange={setAdults}/><Stepper label={t('trip.children')} value={children} min={0} max={9-adults} onChange={setChildren}/></div>
     </div>
-    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t pt-4"><Button type="button" variant="ghost" className="min-h-11 px-0 text-muted-foreground" aria-expanded={more} onClick={()=>setMore(!more)}><SlidersHorizontal className="size-4"/>{t("trip.more")}</Button>
-      <Button type="submit" disabled={busy} className="min-h-12 w-full px-7 text-base sm:w-auto">{t("trip.find")}<ArrowRight className="size-4"/></Button>
-    </div>
-    {more&&<div className="mt-4 grid gap-5 border-t pt-5 sm:grid-cols-2">
-      <div><label htmlFor="trip-origin" className="text-sm font-medium">{t("trip.origin")}</label><div className="mt-2 flex gap-2"><Input id="trip-origin" list="trip-airports" value={origin} maxLength={3} onChange={e=>setOrigin(e.target.value.toUpperCase())} className="min-h-11"/><Button type="button" variant="outline" size="icon" className="size-11 shrink-0" title={t("search.useLocation")} aria-label={t("search.useLocation")} onClick={gps}><LocateFixed/></Button></div><datalist id="trip-airports">{airports.map(a=><option key={a.iata} value={a.iata}>{a.city}</option>)}</datalist></div>
-      <div><p className="mb-2 text-sm font-medium">{t("trip.budget")}</p><div className="flex" role="group" aria-label={t("trip.budget")}>{(["budget","medium","comfort"] as const).map(b=><Button type="button" key={b} variant={budget===b?"default":"outline"} aria-pressed={budget===b} className="min-h-11 flex-1 rounded-none first:rounded-l-md last:rounded-r-md px-2" onClick={()=>setBudget(b)}>{t(`trip.${b}`)}</Button>)}</div></div>
-      <label className="flex min-h-11 items-center justify-between gap-3"><span className="text-sm">{t("trip.direct")}</span><Switch checked={direct} onCheckedChange={setDirect}/></label>
-      <label className="flex min-h-11 items-center justify-between gap-3"><span className="text-sm">{t("trip.bag")}</span><Switch checked={bag} onCheckedChange={setBag}/></label>
-    </div>}
+    {selectedFare&&<p className="mt-4 border-t pt-4 text-sm text-primary">{t('trip.selectedFlight',{city:selectedFare.city})} · {new Intl.NumberFormat(lang,{style:'currency',currency:selectedFare.currency,maximumFractionDigits:0}).format(selectedFare.price)} · {t('trip.cachedFares')}</p>}
+    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t pt-4"><Button type="button" variant="ghost" className="min-h-11 px-0 text-muted-foreground" aria-expanded={more} onClick={()=>setMore(!more)}><SlidersHorizontal className="size-4"/>{t('trip.more')}</Button><Button type="submit" disabled={busy||loading||!iata} className="min-h-12 w-full px-7 text-base sm:w-auto">{t('trip.find')}<ArrowRight className="size-4"/></Button></div>
+    {more&&<div className="mt-4 grid gap-5 border-t pt-5 sm:grid-cols-2"><div><p className="mb-2 text-sm font-medium">{t('trip.budget')}</p><div className="flex" role="group" aria-label={t('trip.budget')}>{(['budget','medium','comfort'] as const).map(b=><Button type="button" key={b} variant={budget===b?'default':'outline'} aria-pressed={budget===b} className="min-h-11 flex-1 rounded-none first:rounded-l-md last:rounded-r-md px-2" onClick={()=>setBudget(b)}>{t(`trip.${b}`)}</Button>)}</div></div><label className="flex min-h-11 items-center justify-between gap-3"><span className="text-sm">{t('trip.direct')}</span><Switch checked={direct} onCheckedChange={setDirect}/></label><label className="flex min-h-11 items-center justify-between gap-3"><span className="text-sm">{t('trip.bag')}</span><Switch checked={bag} onCheckedChange={setBag}/></label></div>}
     {error&&<p role="alert" className="mt-3 text-sm text-destructive">{error}</p>}
-  </form>;
+  </form><TripRecommendations fares={discovery?.fares.filter(f=>!iata||f.destinationIata===iata)??[]} city={originAirport?.city??origin} loading={loading} onPick={choose}/></>;
 }
-function Stepper({label,value,min,max,onChange}:{label:string;value:number;min:number;max:number;onChange:(n:number)=>void}){
-  const {t}=useTranslation();return <div className="flex min-h-12 items-center justify-between gap-2"><span className="text-sm">{label}</span><div className="flex items-center gap-1"><Button type="button" variant="ghost" size="icon" className="size-11" disabled={value<=min} aria-label={t("trip.decrease",{group:label})} onClick={()=>onChange(value-1)}><Minus className="size-4"/></Button><output className="w-6 text-center font-semibold">{value}</output><Button type="button" variant="ghost" size="icon" className="size-11" disabled={value>=max} aria-label={t("trip.increase",{group:label})} onClick={()=>onChange(value+1)}><Plus className="size-4"/></Button></div></div>;
-}
+function Stepper({label,value,min,max,onChange}:{label:string;value:number;min:number;max:number;onChange:(n:number)=>void}){const {t}=useTranslation();return <div className="flex min-h-12 items-center justify-between gap-2"><span className="text-sm">{label}</span><div className="flex items-center gap-1"><Button type="button" variant="ghost" size="icon" className="size-11" disabled={value<=min} aria-label={t('trip.decrease',{group:label})} onClick={()=>onChange(value-1)}><Minus className="size-4"/></Button><output className="w-6 text-center font-semibold">{value}</output><Button type="button" variant="ghost" size="icon" className="size-11" disabled={value>=max} aria-label={t('trip.increase',{group:label})} onClick={()=>onChange(value+1)}><Plus className="size-4"/></Button></div></div>;}
