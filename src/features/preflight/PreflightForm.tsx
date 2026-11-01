@@ -46,6 +46,7 @@ export function PreflightForm({
   const [airline, setAirline] = useState(initial?.airline ?? "");
   const [seat, setSeat] = useState(initial?.seat ?? "");
   const [flight, setFlight] = useState(initial?.flight ?? "");
+  const [time, setTime] = useState(initial?.time ?? "");
   const [flags, setFlags] = useState({
     children: initial?.children ?? false,
     medication: initial?.medication ?? false,
@@ -107,7 +108,7 @@ export function PreflightForm({
       airline: airline.trim(),
       seat: seat.trim().toUpperCase(),
       ...(flight ? { flight } : {}),
-      ...(initial?.time ? { time: initial.time } : {}),
+      ...(time ? { time } : {}),
       ...flags,
       lang: i18n.language === "ro" ? "ro" : "en",
     });
@@ -189,6 +190,19 @@ export function PreflightForm({
             autoComplete="off"
             spellCheck={false}
             className="min-h-14 text-base uppercase"
+          />
+        </div>
+        <div>
+          <label htmlFor="preflight-time" className={label}>
+            <CalendarDays className="size-4 text-primary" />
+            {t("preflight.time", { iata: origin?.iata ?? "" })}
+          </label>
+          <Input
+            id="preflight-time"
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="min-h-14 text-base"
           />
         </div>
         <div>
