@@ -19,8 +19,12 @@ export function ScanBoardingPass({ onScan }: { onScan: (pass: BoardingPass) => v
       const { decodeBarcode } = await import("./decode-barcode");
       const raw = await decodeBarcode(file);
       const pass = raw ? parseBoardingPass(raw) : null;
-      if (pass) onScan(pass);
-      else setMessage(t(raw ? "preflight.scan.notBoardingPass" : "preflight.scan.notFound"));
+      if (pass) {
+        // The barcode has no time; OCR the printed "Departure"/"Gate closes" labels.
+        const { readPassTime } = await import("./ocr-time");
+        pass.time = (await readPassTime(file)) ?? undefined;
+        onScan(pass);
+      } else setMessage(t(raw ? "preflight.scan.notBoardingPass" : "preflight.scan.notFound"));
     } catch {
       setMessage(t("preflight.scan.notFound"));
     } finally {

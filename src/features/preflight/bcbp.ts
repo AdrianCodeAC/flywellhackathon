@@ -13,6 +13,8 @@ export interface BoardingPass {
   julianDay: number;
   compartment: string;
   seat: string;
+  /** Departure time read by OCR from the printed pass (HH:MM), when found. */
+  time?: string | undefined;
 }
 
 export function parseBoardingPass(raw: string): BoardingPass | null {
