@@ -1,4 +1,5 @@
 # Trip planner rules
+- City-photo lookup normalizes ambiguous airport city names and rejects unrelated Wikipedia articles rather than using a biography thumbnail; bump the photo cache version when selection rules change. Why: destination cards and banners must show the city, not a person with a matching name.
 - The planner banner follows the resolved origin airport via TripSearch's origin callback and reuses the city-photo lookup; discard stale image requests and never show Craiova as another city's fallback. Why: the banner must reflect the airport selection and saved origin.
 - Server-only external integrations, progressive NDJSON search and AI SDK chat streams; the planner UI is the index route. Why: isolates planning from arrival behaviour.
 - Trip conversations use one owner-scoped row per user; trip search caches store only public destination advice, never chat messages. Why: private discussions stay private.
