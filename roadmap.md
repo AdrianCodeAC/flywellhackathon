@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Fix and verify Book and Google Flights links from found planner flights.
+- [x] Fix and verify Book and Google Flights links: structured route/date searches; replace failing Kiwi checkout handoff with verified Google Flights search.
 
 - [x] Correct Roma destination photo: resolve Rome, reject unrelated biography thumbnails, and refresh outdated photo cache.
 
