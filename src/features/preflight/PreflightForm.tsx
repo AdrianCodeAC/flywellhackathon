@@ -65,6 +65,7 @@ export function PreflightForm({
     setAirline(name);
     if (pass.seat) setSeat(pass.seat.toUpperCase());
     setFlight(`${pass.carrier}${pass.flight}`.replace(/\s/g, "").toUpperCase());
+    if (pass.time) setTime(pass.time);
     setError("");
     setScanned(
       t("preflight.scan.done", {
