@@ -1,5 +1,5 @@
 import { describe,it,expect } from 'vitest';
-import { pickDay,recentFare,reachable,ROUTE_TTL,recommendationGroups,isWikimediaPhoto,pickCommonsPhoto,pickPhotoCandidate,type RouteFare } from './discovery';
+import { pickDay,recentFare,reachable,ROUTE_TTL,recommendationGroups,isWikimediaPhoto,photoCityName,pickCommonsPhoto,pickPhotoCandidate,type RouteFare } from './discovery';
 import { tripInputSchema,bookingLinks } from './types';
 const fare:RouteFare={id:'a',destinationIata:'BGY',city:'Bergamo',country:'IT',foundAt:new Date().toISOString(),airline:'W4',departure:'2027-01-08',returnDate:'2027-01-11',price:196,currency:'RON',stops:0,duration:250,layover:null,arrival:null,score:98,link:'https://www.aviasales.com'};
 describe('Requested flight discovery rules',()=>{
@@ -15,6 +15,8 @@ describe('Requested flight discovery rules',()=>{
  it('validates one-way without adding a return leg to flight links',()=>{const input={destination:'Bergamo',destinationIata:'BGY',origin:'CRA',departure:'2027-01-08',returnDate:'2027-01-08',adults:1,children:0,flexible:false,budget:'medium',direct:false,bag:false,oneWay:true,lang:'ro'};const parsed=tripInputSchema.parse(input);expect(bookingLinks(parsed,'Bergamo').google).not.toContain('return');});
 });
 describe('City photo lookup',()=>{
+ it('resolves Roma from airport data to the city Rome',()=>expect(photoCityName('Roma')).toBe('Rome'));
+ it('does not select Roma Downey as a photograph of Roma',()=>expect(pickPhotoCandidate([{title:'Roma Downey',thumbnail:{source:'https://upload.wikimedia.org/wikipedia/commons/e/e9/Roma_Downey_2015.jpg'}}],'Roma')).toBeNull());
  const thumb='https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Kathedrale_von_Palma.jpg/500px-Kathedrale_von_Palma.jpg?utm_source=en.wikipedia.org&utm_campaign=api';
  it('accepts thumbnails served from thumb.wikimedia.org',()=>expect(isWikimediaPhoto(thumb)).toBe(true));
  it('drops tracking parameters from the stored photo address',()=>expect(pickPhotoCandidate([{title:'Palma',thumbnail:{source:thumb}}],'Palma')).toBe('https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Kathedrale_von_Palma.jpg/500px-Kathedrale_von_Palma.jpg'));

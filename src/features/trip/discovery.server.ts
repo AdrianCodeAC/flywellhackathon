@@ -1,6 +1,6 @@
 import { readTripCache, writeTripCache } from './cache.server';
 import { comfortScore } from './types';
-import { recentFare, reachable, ROUTE_TTL, pickCommonsPhoto, pickPhotoCandidate, type CommonsPage, type Discovery, type PhotoPage, type RouteFare, type PriceDay } from './discovery';
+import { recentFare, reachable, ROUTE_TTL, photoCityName, pickCommonsPhoto, pickPhotoCandidate, type CommonsPage, type Discovery, type PhotoPage, type RouteFare, type PriceDay } from './discovery';
 type Row=Record<string,unknown>;
 async function api(path:string,params:Record<string,string>,token:string){
  const response=await fetch(`https://api.travelpayouts.com${path}?${new URLSearchParams(params)}`,{headers:{'X-Access-Token':token},signal:AbortSignal.timeout(18000)});
@@ -58,7 +58,8 @@ async function wikiJson(url: string, label: string) {
 }
 const pagesOf = (body: { query?: { pages: Record<string, unknown> } } | null) => Object.values(body?.query?.pages ?? {});
 export async function cityPhoto(city: string, lang: string) {
-  const key = `city-photo-v2:${lang}:${city}`;
+  city = photoCityName(city);
+  const key = `city-photo-v3:${lang}:${city}`;
   const cached = await readTripCache<string | null>(key);
   if (cached !== undefined) return cached;
   const wiki = lang === 'ro' ? 'ro' : 'en';

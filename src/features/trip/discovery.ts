@@ -24,6 +24,11 @@ export function pickDay(range:{from?:Date|undefined;to?:Date|undefined}|undefine
 export type PhotoPage = { title?: string; thumbnail?: { source?: string } | null };
 export type CommonsPage = { title?: string; imageinfo?: { mime?: string; thumburl?: string; width?: number }[] | null };
 
+/** Airport data sometimes uses a local city name that is ambiguous in English. */
+export function photoCityName(city: string): string {
+  return city.trim().toLowerCase() === 'roma' ? 'Rome' : city.trim();
+}
+
 // Wikimedia serves article thumbnails from upload.wikimedia.org and thumb.wikimedia.org; both are real photos.
 const PHOTO_HOST = /(^|\.)(upload|thumb)\.wikimedia\.org$/i;
 // Logos, flags, maps and drawings sit next to photos in the same folders but say nothing about how a city looks.
@@ -42,7 +47,12 @@ export function isWikimediaPhoto(url: string | undefined | null): url is string 
 /** Best photo among Wikipedia search hits: the article named like the city wins, and a photograph beats a picture file. */
 export function pickPhotoCandidate(pages: PhotoPage[], city: string): string | null {
   const wanted = city.trim().toLowerCase();
-  const usable = pages.filter(page => isWikimediaPhoto(page.thumbnail?.source));
+  const usable = pages.filter(page => {
+    const title = (page.title ?? '').trim().toLowerCase();
+    // Never accept biographies merely because their name contains the city name.
+    const cityArticle = title === wanted || title.startsWith(`${wanted} (`) || title.startsWith(`${wanted} de `);
+    return cityArticle && isWikimediaPhoto(page.thumbnail?.source);
+  });
   if (!usable.length) return null;
   const score = (page: PhotoPage) => {
     const title = (page.title ?? '').trim().toLowerCase();

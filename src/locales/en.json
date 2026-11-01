@@ -216,6 +216,7 @@
     "total": "Total",
     "childFare": "Total uses the quoted adult fare for each traveller; child fares must be confirmed.",
     "book": "Book",
+    "bookingSearchNote": "Continue on Google Flights to choose the flight and confirm the current price with the seller.",
     "setArrival": "Set as my arrival",
     "missingToken": "Connect Travelpayouts to show real fares.",
     "noFlights": "No live price came back for these dates. Search them below; no price has been invented.",
