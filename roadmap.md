@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Seat diagram: quick-disembarkation recommendations consider front and rear doors, with conditional EN/RO guidance rather than a guaranteed front-door exit.
+
 - [x] Save Arrival Assistant spec
 - [x] /arrival page, shared types, services (airports), AirportSearch + chip + ?iata=
 - [x] App opens on /arrival (home redirects)

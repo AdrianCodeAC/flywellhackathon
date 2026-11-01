@@ -32,7 +32,7 @@ const SEAT = 8;
 const rowX = (row: number) => X0 + (row - 1) * PITCH;
 const seatY = (i: number) => 38 + i * 11 + (i >= 3 ? 10 : 0);
 
-/** "Where to sit": situation chips, an animated cabin map and sourced safety statistics. */
+/** "Where to sit": situation chips and an illustrative cabin map. */
 export function SeatAdvice({ input }: { input: { children: boolean } }) {
   const { t } = useTranslation();
   const reduce = useReducedMotion() ?? false;
@@ -116,8 +116,8 @@ export function SeatAdvice({ input }: { input: { children: boolean } }) {
               </g>
             );
           })}
-          <text x={40} y={136} className="seat-axis">{t("seats.front")}</text>
-          <text x={392} y={136} textAnchor="end" className="seat-axis">{t("seats.rear")}</text>
+          <text x={40} y={136} className="seat-axis">{t("seats.frontDoor")}</text>
+          <text x={392} y={136} textAnchor="end" className="seat-axis">{t("seats.rearDoor")}</text>
         </svg>
 
         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">

@@ -1009,7 +1009,7 @@
       "fear": "Sit over the wing, on the aisle, and tell the crew you are nervous — they are used to it.",
       "motion": "A window seat over the wing, where the ride is smoothest.",
       "legroom": "Exit rows or the first row have the most space.",
-      "quickExit": "An aisle seat in the first rows gets you off first.",
+      "quickExit": "An aisle seat near the front or rear door can help you get off sooner, depending on which doors are used.",
       "sleep": "A window seat away from the toilets and galleys.",
       "mobility": "An aisle seat near the front, not in an exit row, with assistance booked ahead."
     },
@@ -1037,8 +1037,8 @@
         "2": "The first row has extra room but no space under the seat in front for bags during take-off and landing."
       },
       "quickExit": {
-        "1": "Front rows on the aisle are best for tight connections.",
-        "2": "In an emergency the distance to a usable exit matters most: when you sit down, count the rows to the exits in front of and behind you."
+        "1": "If both front and rear doors are used, consider aisle seats in the first or last rows. The highlighted zones are alternatives, not a guarantee of getting off first.",
+        "2": "If only the front door is used, prefer the front rows; if only the rear door is used, prefer the back. Check with the airline or crew: the airport and parking stand determine which doors are used. Over-wing exits are not used for normal disembarkation."
       },
       "sleep": {
         "1": "A window gives you something to lean on and nobody climbs over you.",
@@ -1061,6 +1061,8 @@
     "legendGood": "Good row",
     "legendAvoid": "Avoid",
     "legendExit": "Exit",
+    "frontDoor": "Front door",
+    "rearDoor": "Rear door",
     "legendWing": "Wing",
     "comfortOnly": "Comfort tip — there is no safety data behind it.",
     "aircraftNote": "Drawn on a typical 30-row plane (A320 / Boeing 737). Wing and exit rows differ on your aircraft; check the seat map when you choose your seat."
