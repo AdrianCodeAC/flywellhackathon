@@ -58,12 +58,16 @@ export const SITUATIONS: SeatAdvice[] = [
   { situation: "fear", rows: [[9, 11], [14, 17]], avoid: [[25, 30]], columns: ["aisle"], tips: 3, sources: ["ntsb"] },
   { situation: "motion", rows: [[9, 11], [14, 17]], avoid: [[25, 30]], columns: ["window"], tips: 2, sources: ["ntsb"] },
   { situation: "legroom", rows: [[1, 1], [12, 13]], avoid: [], columns: ["window", "middle", "aisle"], tips: 2, sources: ["easaExits"] },
-  { situation: "quickExit", rows: [[1, 5]], avoid: [[25, 30]], columns: ["aisle"], tips: 2, sources: ["greenwich"] },
+  { situation: "quickExit", rows: [[1, 5], [26, 30]], avoid: [], columns: ["aisle"], tips: 2, sources: [] },
   { situation: "sleep", rows: [[4, 11], [14, 20]], avoid: [[1, 2], [28, 30]], columns: ["window"], tips: 2, sources: [] },
   { situation: "mobility", rows: [[2, 6]], avoid: [[12, 13]], columns: ["aisle"], tips: 2, sources: ["euRights", "easaExits"] },
 ];
 
-export const adviceFor = (s: Situation) => SITUATIONS.find((a) => a.situation === s)!;
+export const adviceFor = (s: Situation): SeatAdvice => {
+  const advice = SITUATIONS.find((a) => a.situation === s);
+  if (!advice) throw new Error(`Unknown seat situation: ${s}`);
+  return advice;
+};
 
 /** Children on the booking → start on the child advice; otherwise on the smoothest ride. */
 export const defaultSituation = (input: { children: boolean }): Situation => (input.children ? "child" : "turbulence");

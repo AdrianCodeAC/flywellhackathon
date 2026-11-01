@@ -19,6 +19,13 @@ describe("seat advice", () => {
     expect(inRanges(15, a.rows)).toBe(true);
     expect(inRanges(29, a.rows)).toBe(false);
   });
+  it("considers both front and rear doors for quick disembarkation", () => {
+    const a = adviceFor("quickExit");
+    expect(a.rows).toEqual([[1, 5], [26, 30]]);
+    expect(a.columns).toEqual(["aisle"]);
+    expect(inRanges(30, a.avoid)).toBe(false);
+    expect(inRanges(15, a.rows)).toBe(false);
+  });
   it("opens on the child advice when children are on the trip", () => {
     expect(defaultSituation({ children: true })).toBe("child");
     expect(defaultSituation({ children: false })).toBe("turbulence");

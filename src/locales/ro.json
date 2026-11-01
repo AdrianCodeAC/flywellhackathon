@@ -1009,7 +1009,7 @@
       "fear": "Stai deasupra aripii, pe culoar, și spune-le însoțitorilor că ai emoții — sunt obișnuiți.",
       "motion": "La geam, deasupra aripii, unde zborul e cel mai lin.",
       "legroom": "Rândurile de la ieșiri sau primul rând au cel mai mult spațiu.",
-      "quickExit": "Un loc pe culoar, în primele rânduri, te scoate primul din avion.",
+      "quickExit": "Un loc pe culoar, aproape de ușa din față sau din spate, te poate ajuta să cobori mai repede, în funcție de ușile folosite.",
       "sleep": "La geam, departe de toalete și de bucătării.",
       "mobility": "Pe culoar, în față, nu pe rândul de la ieșire, cu asistența cerută din timp."
     },
@@ -1037,8 +1037,8 @@
         "2": "Primul rând are spațiu în plus, dar la decolare și aterizare nu poți ține bagaje sub scaunul din față."
       },
       "quickExit": {
-        "1": "Primele rânduri, pe culoar, sunt cele mai bune pentru o legătură scurtă.",
-        "2": "În caz de urgență contează cel mai mult distanța până la o ieșire liberă: când te așezi, numără rândurile până la ieșirile din față și din spate."
+        "1": "Dacă se folosesc ușile din față și din spate, ia în calcul locurile pe culoar din primele sau ultimele rânduri. Zonele evidențiate sunt alternative, nu o garanție că vei coborî primul.",
+        "2": "Dacă se folosește doar ușa din față, preferă primele rânduri; dacă se folosește doar cea din spate, preferă ultimele. Verifică la companie sau echipaj: aeroportul și poziția de parcare determină ușile folosite. Ieșirile de la aripi nu se folosesc la debarcarea obișnuită."
       },
       "sleep": {
         "1": "La geam ai de ce să te sprijini și nu trece nimeni peste tine.",
@@ -1061,6 +1061,8 @@
     "legendGood": "Rând bun",
     "legendAvoid": "De evitat",
     "legendExit": "Ieșire",
+    "frontDoor": "Ușa din față",
+    "rearDoor": "Ușa din spate",
     "legendWing": "Aripă",
     "comfortOnly": "Sfat de confort — nu are la bază date de siguranță.",
     "aircraftNote": "Desenat pe un avion obișnuit cu 30 de rânduri (A320 / Boeing 737). Rândurile de la aripă și de la ieșiri diferă pe avionul tău; verifică harta locurilor când îți alegi locul."
