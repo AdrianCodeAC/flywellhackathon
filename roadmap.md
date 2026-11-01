@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Fix and verify Book and Google Flights links from found planner flights.
+
 - [x] Correct Roma destination photo: resolve Rome, reject unrelated biography thumbnails, and refresh outdated photo cache.
 
 - [x] Plan a trip banner follows the selected origin city, including the remembered airport; no Craiova photo for other cities.
