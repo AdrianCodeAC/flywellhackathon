@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { googleFlightsLink } from "./flight-links";
 
 export const SIX_HOURS = 6 * 60 * 60 * 1000;
 export function validDate(value:string){const time=Date.parse(value);return Number.isFinite(time)&&new Date(time).toISOString().slice(0,10)===value;}
@@ -62,7 +63,6 @@ export function searchMonths(date:string,flexible:boolean){
   return [...new Set(offsets.map(offset=>new Date(Date.parse(date)+offset*86400000).toISOString().slice(0,7)))];
 }
 export function bookingLinks(input: TripInput, city: string) {
-  const guests = input.adults + input.children;
   return {
     booking: `https://www.booking.com/searchresults.html?${new URLSearchParams({ ss: city, checkin: input.departure, checkout: input.returnDate, group_adults: String(input.adults), group_children: String(input.children), no_rooms: "1" })}`,
     airbnb: `https://www.airbnb.com/s/${encodeURIComponent(city)}/homes?${new URLSearchParams({ checkin: input.departure, checkout: input.returnDate, adults: String(input.adults), children: String(input.children) })}`,
