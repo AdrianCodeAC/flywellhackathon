@@ -8,7 +8,7 @@ const TIME = /([01]?\d|2[0-3])[:.]([0-5]\d)/g;
 
 /** Priority: the actual departure time first, then boarding/gate labels. */
 const LABELS: RegExp[] = [
-  /departure|departs|dep\.|std/i,
+  /departure|departs|\bdep\b\.?|std/i,
   /gate closes|gate close|boarding|board/i,
 ];
 
