@@ -18,7 +18,7 @@ import { type Discovery, type RouteFare } from "./discovery";
 import { TripDates } from "./TripDates";
 import { TripRecommendations } from "./TripRecommendations";
 
-export function TripSearch({initial,busy,onSearch}:{initial?:TripInput|undefined;busy:boolean;onSearch:(input:TripInput)=>void}) {
+export function TripSearch({initial,busy,onSearch,onOriginChange}:{initial?:TripInput|undefined;busy:boolean;onSearch:(input:TripInput)=>void;onOriginChange?:(airport:Airport|null)=>void}) {
   const {t,i18n}=useTranslation();
   const [destination,setDestination]=useState(initial?.destination??""),[iata,setIata]=useState<string|null>(initial?.destinationIata??null);
   const [range,setRange]=useState<DateRange|undefined>();const [adults,setAdults]=useState(initial?.adults??1),[children,setChildren]=useState(initial?.children??0);
@@ -37,6 +37,7 @@ export function TripSearch({initial,busy,onSearch}:{initial?:TripInput|undefined
     onSearch({destination,destinationIata:iata,origin,departure:from,returnDate:to,adults,children,flexible,budget,direct:discovery?.routes.some(r=>r.destinationIata===iata&&r.stops===0)?direct:false,bag,oneWay,lang});
   }
   const originAirport=airports.find(a=>a.iata===origin)??null;
+  useEffect(()=>{if(airports.length)onOriginChange?.(originAirport);},[originAirport,airports.length,onOriginChange]);
   return <><form ref={card} onSubmit={submit} className="trip-search rounded-lg border bg-card p-5 sm:p-7">
     <div className="grid gap-6 lg:grid-cols-2">
       <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><Plane className="size-4 text-primary"/>{t('trip.from')}</label><AirportSearch selected={originAirport} onSelect={changeOrigin} onClear={()=>changeOrigin(null)} label={t('trip.from')}/></div>

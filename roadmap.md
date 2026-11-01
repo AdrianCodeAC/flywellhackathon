@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Plan a trip banner follows the selected origin city, including the remembered airport; no Craiova photo for other cities.
+
 - [x] Seat diagram: quick-disembarkation recommendations consider front and rear doors, with conditional EN/RO guidance rather than a guaranteed front-door exit.
 
 - [x] Save Arrival Assistant spec
