@@ -193,6 +193,19 @@ export function PreflightForm({
           />
         </div>
         <div>
+          <label htmlFor="preflight-time" className={label}>
+            <CalendarDays className="size-4 text-primary" />
+            {t("preflight.time", { iata: origin?.iata ?? "" })}
+          </label>
+          <Input
+            id="preflight-time"
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="min-h-14 text-base"
+          />
+        </div>
+        <div>
           <label htmlFor="preflight-seat" className={label}>
             <Armchair className="size-4 text-primary" />
             {t("preflight.seat")} *
