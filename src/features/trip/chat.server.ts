@@ -6,6 +6,7 @@ import { tripInputSchema, type TripInput } from "./types";
 import { tripGateway } from "./gateway.server";
 import { withLovableAiGatewayRunIdHeader } from "./run-id.server";
 import { safeAiError } from "./services.server";
+import { guardRequest } from "@/lib/request-guard";
 import type { Database } from "@/integrations/supabase/types";
 
 export async function handleTripChat(request:Request) {
@@ -24,6 +25,7 @@ export async function handleTripChat(request:Request) {
     messages=await validateUIMessages({messages:body.messages});
   }catch{return Response.json({error:"Invalid conversation"},{status:400});}
   const userId=userData.user.id;
+  const blocked=guardRequest(request,"trip-chat",15,userId);if(blocked)return blocked;
   if(!process.env["LOVABLE_API_KEY"])return Response.json({error:input.lang==="ro"?"Agentul nu este configurat.":"Agent configuration is missing."},{status:503});
   const {error:saveError}=await client.from("trip_conversations").upsert({user_id:userId,messages:JSON.parse(JSON.stringify(messages)),trip_input:JSON.parse(JSON.stringify(input)),updated_at:new Date().toISOString()});
   if(saveError)return Response.json({error:input.lang==="ro"?"Discuția nu a putut fi salvată.":"Conversation could not be saved."},{status:503});

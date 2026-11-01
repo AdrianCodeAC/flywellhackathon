@@ -4,6 +4,7 @@ import { travelScope } from "@/lib/travel-scope";
  * already on screen go to the AI function; the browser never sees a credential.
  */
 import { createServerFn } from "@tanstack/react-start";
+import { guard } from "@/lib/request-guard";
 import { z } from "zod";
 import { answerSchema, parseAssistantAnswer, type AssistantAnswer } from "./assistant-schema";
 export type { AssistantAnswer } from "./assistant-schema";
@@ -50,6 +51,7 @@ function prompt(data: z.infer<typeof askInput>): string {
 
 /** Ask the assistant. Returns answer text plus up to 5 tappable places. */
 export const askAssistant = createServerFn({ method: "POST" })
+  .middleware([guard("ai", 15)])
   .inputValidator((d: unknown) => askInput.parse(d))
   .handler(async ({ data }): Promise<AssistantAnswer> => {
     const { askObject } = await import("./ai.server");

@@ -4,6 +4,8 @@ import { tripGateway } from "./gateway.server";
 import { readTripCache, writeTripCache } from "./cache.server";
 import { LIVE_TTL, liveFares } from "./live.server";
 import { kiwiFares } from "./kiwi.server";
+import { guardRequest } from "@/lib/request-guard";
+import { trustedOrigin } from "@/lib/site-origin";
 
 async function http(url: string, init?: RequestInit) {
   const r = await fetch(url,init);
@@ -12,7 +14,7 @@ async function http(url: string, init?: RequestInit) {
   return r;
 }
 async function airports(request: Request): Promise<Destination[]> {
-  const r = await http(new URL("/data/airports.json",request.url).href,{signal:request.signal});
+  const r = await http(new URL("/data/airports.json",trustedOrigin(request.url)).href,{signal:request.signal});
   const data = await r.json() as [string,string,string,string,number,number][];
   return data.map(([iata,,city,country,lat,lon])=>({iata,city,country,lat,lon}));
 }
@@ -83,6 +85,7 @@ async function extras(input:TripInput,d:Destination,signal:AbortSignal):Promise<
 
 export async function handleTrip(request: Request): Promise<Response> {
   if(request.headers.get("origin") && request.headers.get("origin")!==new URL(request.url).origin) return new Response("Forbidden",{status:403});
+  const blocked=guardRequest(request,"trip",10);if(blocked)return blocked;
   let input:TripInput;
   let preference="";
   try { const raw=await request.json();input=tripInputSchema.parse(raw);preference=z.string().max(300).parse(raw.preference??""); } catch {return Response.json({error:"invalidInput"},{status:400});}
@@ -147,7 +150,8 @@ export async function handleTrip(request: Request): Promise<Response> {
 export function safeAiError(error:unknown,lang:string){
   // SDK errors may hold headers/request bodies: never serialize the Error object.
   if(error && typeof error==="object" && "responseBody" in error && typeof error.responseBody==="string"){
-    try{const v=JSON.parse(error.responseBody);const m=v.message??v.error?.message;if(typeof m==="string")return m;}catch{/* fall through */}
+    // Provider messages can describe our account or setup: log them, show users a plain message.
+    try{const v=JSON.parse(error.responseBody);const m=v.message??v.error?.message;if(typeof m==="string")console.error(`[AI] ${m.slice(0,300)}`);}catch{/* fall through */}
   }
   return lang==="ro"?"Recomandările nu sunt disponibile momentan.":"Recommendations are unavailable right now.";
 }

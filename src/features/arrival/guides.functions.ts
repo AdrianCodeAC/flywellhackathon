@@ -4,6 +4,7 @@
  * the database, and the Romanian advice goes through the AI function.
  */
 import { createServerFn } from "@tanstack/react-start";
+import { guard } from "@/lib/request-guard";
 import { z } from "zod";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -26,6 +27,7 @@ const summaryInput = z.object({
  * Romanian readers get the Romanian article when Wikidata says one exists.
  */
 export const getPlaceSummaries = createServerFn({ method: "POST" })
+  .middleware([guard("places", 40)])
   .inputValidator((d: unknown) => summaryInput.parse(d))
   .handler(async ({ data }): Promise<Record<string, string>> => {
     const { cachedJson, cachedText, DAY } = await import("./content-cache.server");
@@ -68,6 +70,7 @@ export interface TransportGuide {
  * Saved per city; the Romanian version is translated once and saved too.
  */
 export const getTransportGuide = createServerFn({ method: "POST" })
+  .middleware([guard("places", 40)])
   .inputValidator((d: unknown) => guideInput.parse(d))
   .handler(async ({ data }): Promise<TransportGuide> => {
     const { cachedText } = await import("./content-cache.server");

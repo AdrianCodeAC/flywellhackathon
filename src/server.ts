@@ -44,12 +44,36 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+/** Largest request body the app needs (a long trip chat); bigger bodies are refused unread. */
+const MAX_BODY_BYTES = 512 * 1024;
+
+/** Browser hardening for every response. Framing is left alone so the Lovable editor preview keeps working. */
+function withSecurityHeaders(response: Response, request: Request): Response {
+  const headers = new Headers(response.headers);
+  const set = (name: string, value: string) => {
+    if (!headers.has(name)) headers.set(name, value);
+  };
+  set("X-Content-Type-Options", "nosniff");
+  set("Referrer-Policy", "strict-origin-when-cross-origin");
+  // Location is used for distances on arrival; nothing uses the camera API, microphone or payments.
+  set("Permissions-Policy", "camera=(), microphone=(), payment=(), usb=(), geolocation=(self)");
+  if (new URL(request.url).protocol === "https:")
+    set("Strict-Transport-Security", "max-age=31536000");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const length = Number(request.headers.get("content-length") ?? 0);
+    if (length > MAX_BODY_BYTES) return new Response("Payload Too Large", { status: 413 });
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response), request);
     } catch (error) {
       console.error(error);
       return new Response(renderErrorPage(), {

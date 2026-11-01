@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { guard } from "@/lib/request-guard";
 import { z } from "zod";
 import { sourceCacheKey } from "./place-sources";
 import type { Place } from "./types";
@@ -26,6 +27,7 @@ export interface OverpassResult {
  * Overpass mirrors. Only whitelisted categories and bounded radii are accepted.
  */
 export const getOverpassPlaces = createServerFn({ method: "POST" })
+  .middleware([guard("places", 40)])
   .inputValidator((d: unknown) => input.parse(d))
   .handler(async ({ data }): Promise<OverpassResult> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

@@ -4,6 +4,7 @@ import { travelScope } from "@/lib/travel-scope";
  * and a chat about official travel rules. The browser never sees a credential.
  */
 import { createServerFn } from "@tanstack/react-start";
+import { guard } from "@/lib/request-guard";
 import { z } from "zod";
 import { CATEGORIES, SOURCE_IDS, SOURCES, describeTrip, preflightInputSchema } from "./rules";
 import { repeatsChecklist } from "./ai-dedupe";
@@ -59,6 +60,7 @@ export { isPetItem } from "./ai-dedupe";
 
 /** Up to 6 extra checklist items specific to this route, airline and passenger. */
 export const preflightAdvice = createServerFn({ method: "POST" })
+  .middleware([guard("ai", 15)])
   .inputValidator((d: unknown) =>
     preflightInputSchema.extend({ covered: z.array(z.string().max(40)).max(40) }).parse(d),
   )
@@ -97,6 +99,7 @@ const askInput = z.object({
 
 /** Chat with the pre-flight agent about this trip. */
 export const askPreflight = createServerFn({ method: "POST" })
+  .middleware([guard("ai", 15)])
   .inputValidator((d: unknown) => askInput.parse(d))
   .handler(async ({ data }): Promise<PreflightAnswer> => {
     const { askObject } = await import("@/features/arrival/ai.server");

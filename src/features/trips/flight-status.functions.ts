@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { guard } from "@/lib/request-guard";
 import { z } from "zod";
 import { flightCodeSchema, parseFlightStatus, type FlightLookup } from "./flight";
 
@@ -9,6 +10,7 @@ const input = z.object({ flight: flightCodeSchema, date: z.string().regex(/^\d{4
  * month, so every phone shares one saved answer per flight for ten minutes.
  */
 export const getFlightStatus = createServerFn({ method: "POST" })
+  .middleware([guard("flight-status", 6)])
   .inputValidator((d: unknown) => input.parse(d))
   .handler(async ({ data }): Promise<FlightLookup> => {
     const key = process.env["AVIATIONSTACK_KEY"];

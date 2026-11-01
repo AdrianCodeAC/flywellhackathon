@@ -17,6 +17,8 @@ export function providerOrder(appleDevice: boolean): Provider[] {
 export function safeRedirect(value: unknown, fallback = "/account") {
   if (typeof value !== "string") return fallback;
   if (!value.startsWith("/") || value.startsWith("//") || value.startsWith("/\\")) return fallback;
+  // Browsers drop tabs and newlines and read a backslash as "/", which can turn a path into another host.
+  if (/[\\\u0000-\u001f\u007f]/.test(value)) return fallback;
   if (value.startsWith("/auth")) return fallback;
   return value.slice(0, 500);
 }
