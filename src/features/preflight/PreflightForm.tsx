@@ -196,7 +196,7 @@ export function PreflightForm({
         <div>
           <label htmlFor="preflight-time" className={label}>
             <CalendarDays className="size-4 text-primary" />
-            {t("preflight.time", { iata: origin?.iata ?? "" })}
+            {t("flight.time", { iata: origin?.iata ?? "" })}
           </label>
           <Input
             id="preflight-time"
