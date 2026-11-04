@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { Luggage } from "lucide-react";
 import { AppHeader } from "@/features/arrival/AppHeader";
 import { TripsList } from "@/features/trips/TripsList";
 
@@ -24,7 +23,6 @@ function TripsPage() {
     <>
       <AppHeader />
       <main className="arrival-main mx-auto w-full max-w-3xl px-5 pt-9 pb-[max(3rem,env(safe-area-inset-bottom))] sm:px-8 sm:pt-12">
-        <p className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase text-primary"><Luggage className="size-4" />{t("trips.eyebrow")}</p>
         <h1 className="font-display text-5xl font-normal leading-[1.05] sm:text-6xl">{t("trips.title")}</h1>
         <p className="mt-4 max-w-xl leading-relaxed text-muted-foreground">{t("trips.subtitle")}</p>
         <div className="mt-8"><TripsList /></div>

@@ -146,7 +146,6 @@
   "design": {
     "brand": "Flywell",
     "companion": "Ghidul tău după aterizare",
-    "eyebrow": "Ai aterizat. Hai să explorăm.",
     "begin": "Începe călătoria",
     "destination": "Următoarea oprire",
     "photoLocation": "Craiova, România",
@@ -156,7 +155,41 @@
   "landing": {
     "title": "Nu doar un bilet. Toată călătoria.",
     "subtitle": "Zboruri, reguli oficiale și ajutor la destinație, într-o singură aplicație.",
-    "recommended": "Zboruri recomandate"
+    "recommended": "Zboruri recomandate",
+    "journey": "Tot drumul, într-o singură aplicație",
+    "endText": "Alege destinația. De restul ne ocupăm împreună, de la rezervare până la destinație.",
+    "before": {
+      "title": "Înainte de zbor",
+      "text": "Scanezi biletul și primești o listă făcută pentru zborul tău, cu surse oficiale.",
+      "documents": "Acte",
+      "documentsDetail": "Buletin, pașaport, viză, ETIAS sau ESTA, după destinație.",
+      "bags": "Bagaje",
+      "bagsDetail": "Regulile companiei tale, pe tariful tău.",
+      "rules": "Securitate și drepturi",
+      "rulesDetail": "Ce ai voie la control, vama și ce ți se cuvine la întârzieri.",
+      "map": "Harta aeroportului",
+      "mapDetail": "Doar pașii tăi, salvată pentru modul avion."
+    },
+    "during": {
+      "title": "În avion",
+      "text": "Merge în modul avion, fără internet, chiar când ai nevoie de ajutor.",
+      "breathe": "Respiră cu mine",
+      "breatheDetail": "Exercițiu ghidat pentru panică sau frică.",
+      "crew": "Cheamă echipajul",
+      "crewDetail": "Un card de arătat, iar telefonul vibrează și sună.",
+      "sick": "Mi-e rău",
+      "sickDetail": "Greață, presiune în urechi, amețeală."
+    },
+    "arrival": {
+      "title": "La sosire",
+      "text": "Agentul local îți arată ce urmează, după preferințele tale.",
+      "food": "Unde mănânci",
+      "foodDetail": "Restaurante și cafenele, cu program și distanță.",
+      "ride": "Cum ajungi în oraș",
+      "rideDetail": "Uber, Bolt, taxi și transport public.",
+      "visit": "Ce vizitezi",
+      "visitDetail": "Obiective notabile, cu traseu pe hartă."
+    }
   },
   "trip": {
     "navigation": "Mod de călătorie",
@@ -319,7 +352,6 @@
   },
   "preflight": {
     "tab": "Înainte de zbor",
-    "eyebrow": "Reguli oficiale, pe înțeles",
     "title": "Înainte de zbor",
     "subtitle": "Spune-ne despre zborul tău și primești o listă pentru acte, controlul de securitate, bagaje, vamă și drepturile tale — apoi întreabă agentul orice.",
     "from": "Aeroport de plecare",
@@ -694,7 +726,6 @@
     "tooFar_other": "Prognoza e disponibilă cu 15 zile înainte — revino peste {{count}} de zile."
   },
   "airportGuide": {
-    "eyebrow": "Drumul tău prin aeroport",
     "title": "Unde mergi, pas cu pas",
     "subtitle": "Doar pașii de care ai nevoie pentru acest zbor, desenați pe harta aeroportului. Atinge un pas ca să-l vezi pe hartă.",
     "whichAirport": "Alege aeroportul",
@@ -989,7 +1020,6 @@
     "medicalError": "Nu s-a putut salva în cont — rămâne pe acest telefon."
   },
   "seats": {
-    "eyebrow": "Unde să stai",
     "title": "Locul potrivit pentru tine",
     "situations": "Situația ta",
     "subtitle": "Îți alegi locul la rezervare? Alege situația ta, iar avionul îți arată unde să țintești și ce să eviți. Rândurile diferă de la un avion la altul, așa că verifică harta locurilor companiei aeriene.",
@@ -1068,7 +1098,6 @@
     "aircraftNote": "Desenat pe un avion obișnuit cu 30 de rânduri (A320 / Boeing 737). Rândurile de la aripă și de la ieșiri diferă pe avionul tău; verifică harta locurilor când îți alegi locul."
   },
   "trips": {
-    "eyebrow": "Zborurile tale",
     "title": "Călătoriile mele",
     "subtitle": "Fiecare zbor adăugat are propriile secțiuni Înainte de zbor, În timpul zborului și La sosire.",
     "planHint": "Găsește zboruri, cazare și costul călătoriei.",
@@ -1114,7 +1143,6 @@
     }
   },
   "ticket": {
-    "eyebrow": "Am deja bilet",
     "title": "Adaugă zborul tău",
     "subtitle": "Scanează cartea de îmbarcare sau scrie detaliile zborului. Primești tot ce-ți trebuie înainte, în timpul și după zbor, salvat în Călătoriile mele."
   },

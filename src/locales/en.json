@@ -146,7 +146,6 @@
   "design": {
     "brand": "Flywell",
     "companion": "Your arrival companion",
-    "eyebrow": "Touch down. Head out.",
     "begin": "Start your journey",
     "destination": "Your next stop",
     "photoLocation": "Craiova, Romania",
@@ -154,9 +153,43 @@
     "photoCredit": "Photo: Sandri 90 · Wikimedia Commons · CC BY-SA 3.0"
   },
   "landing": {
-    "title": "Not just a ticket. The whole journey.",
+    "title": "Not just a ticket. The whole trip.",
     "subtitle": "Flights, official rules and help on arrival, all in one app.",
-    "recommended": "Recommended flights"
+    "recommended": "Recommended flights",
+    "journey": "The whole trip, in one app",
+    "endText": "Pick a destination. We'll handle the rest together, from booking to arrival.",
+    "before": {
+      "title": "Before you fly",
+      "text": "Scan your ticket and get a list made for your flight, with official sources.",
+      "documents": "Documents",
+      "documentsDetail": "ID, passport, visa, ETIAS or ESTA, depending on where you go.",
+      "bags": "Bags",
+      "bagsDetail": "Your airline's rules, on your fare.",
+      "rules": "Security and rights",
+      "rulesDetail": "What passes security, customs and what you're owed for delays.",
+      "map": "Airport map",
+      "mapDetail": "Only your steps, saved for airplane mode."
+    },
+    "during": {
+      "title": "On board",
+      "text": "It works in airplane mode, without internet, right when you need help.",
+      "breathe": "Breathe with me",
+      "breatheDetail": "A guided exercise for panic or fear.",
+      "crew": "Call the crew",
+      "crewDetail": "A card to show them, while the phone vibrates and rings.",
+      "sick": "I feel sick",
+      "sickDetail": "Nausea, ear pressure, dizziness."
+    },
+    "arrival": {
+      "title": "On arrival",
+      "text": "The local agent shows you what's next, based on what you like.",
+      "food": "Where to eat",
+      "foodDetail": "Restaurants and cafés, with hours and distance.",
+      "ride": "How to get into town",
+      "rideDetail": "Uber, Bolt, taxi and public transport.",
+      "visit": "What to see",
+      "visitDetail": "Notable sights, with a route on the map."
+    }
   },
   "trip": {
     "navigation": "Travel mode",
@@ -319,7 +352,6 @@
   },
   "preflight": {
     "tab": "Before you fly",
-    "eyebrow": "Official rules, made simple",
     "title": "Before you fly",
     "subtitle": "Tell us about your flight and get a checklist for documents, airport security, baggage, customs and your rights — then ask the pre-flight agent anything.",
     "from": "Departure airport",
@@ -694,7 +726,6 @@
     "tooFar_other": "The forecast is available 15 days ahead — check back in {{count}} days."
   },
   "airportGuide": {
-    "eyebrow": "Your way through the airport",
     "title": "Where to go, step by step",
     "subtitle": "Only the steps you need for this flight, drawn on a map of the airport. Tap a step to see it on the map.",
     "whichAirport": "Choose the airport",
@@ -989,7 +1020,6 @@
     "medicalError": "Couldn't save to your account — it's still on this phone."
   },
   "seats": {
-    "eyebrow": "Where to sit",
     "title": "The right seat for you",
     "situations": "Your situation",
     "subtitle": "Choosing a seat when you book? Pick your situation and the plane shows where to aim and what to avoid. Rows differ between aircraft, so match them to the airline's seat map.",
@@ -1068,7 +1098,6 @@
     "aircraftNote": "Drawn on a typical 30-row plane (A320 / Boeing 737). Wing and exit rows differ on your aircraft; check the seat map when you choose your seat."
   },
   "trips": {
-    "eyebrow": "Your flights",
     "title": "My trips",
     "subtitle": "Each flight you add gets its own Before you fly, During the flight and On arrival.",
     "planHint": "Find flights, a place to stay and the cost.",
@@ -1114,7 +1143,6 @@
     }
   },
   "ticket": {
-    "eyebrow": "I already have a ticket",
     "title": "Add your flight",
     "subtitle": "Scan your boarding pass or type the flight details. You get everything for before, during and after the flight, saved in My trips."
   },

@@ -3,6 +3,7 @@
 - Planner Book actions open the validated Google Flights route/date search rather than Kiwi tokenized checkout; disclose that the fare must be reconfirmed there. Why: Kiwi checkout can fail after redirect even when its search API returns valid fares.
 - City-photo lookup normalizes ambiguous airport city names and rejects unrelated Wikipedia articles rather than using a biography thumbnail; bump the photo cache version when selection rules change. Why: destination cards and banners must show the city, not a person with a matching name.
 - The home page (TripLanding, route /) shows only the message, the button into the search and one recommended-flights list from the saved origin; the search form and results live on /search, and a fare picked on the home page reaches the form through session storage. Why: the first screen must explain the app before asking for details.
+- Home page motion (Sky, useReveal, the --scroll value) is decorative CSS and stops under prefers-reduced-motion. Why: nobody should lose content or feel unwell because of an animation.
 - Entering /search from the home page passes fresh=true so a signed-in user is not jumped into their last saved trip. Why: the button promises a new search.
 - Server-only external integrations, progressive NDJSON search and AI SDK chat streams; the planner UI is the /search route. Why: isolates planning from arrival behaviour.
 - Trip conversations use one owner-scoped row per user; trip search caches store only public destination advice, never chat messages. Why: private discussions stay private.

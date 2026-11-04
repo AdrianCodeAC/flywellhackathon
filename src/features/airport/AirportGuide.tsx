@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
-import { CheckCircle2, CloudOff, MapPinned, Navigation, PlaneLanding, PlaneTakeoff, Signpost } from "lucide-react";
+import { CheckCircle2, CloudOff, Navigation, PlaneLanding, PlaneTakeoff, Signpost } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -78,10 +78,6 @@ export function AirportGuide({ input }: { input: PreflightInput }) {
 
   return (
     <section className="mt-12" aria-labelledby="airport-guide-title">
-      <p className="section-index flex items-center gap-1.5">
-        <MapPinned className="size-3.5" />
-        {t("airportGuide.eyebrow")}
-      </p>
       <h3 id="airport-guide-title" className="font-display text-3xl sm:text-4xl">
         {t("airportGuide.title")}
       </h3>

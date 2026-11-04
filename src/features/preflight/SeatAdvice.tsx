@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, useReducedMotion } from "motion/react";
-import { Armchair, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   EXIT_ROWS,
@@ -42,10 +42,6 @@ export function SeatAdvice({ input }: { input: { children: boolean } }) {
 
   return (
     <section className="mt-10" aria-labelledby="seat-advice-title">
-      <p className="section-index flex items-center gap-1.5">
-        <Armchair className="size-3.5" />
-        {t("seats.eyebrow")}
-      </p>
       <h3 id="seat-advice-title" className="font-display text-3xl sm:text-4xl">
         {t("seats.title")}
       </h3>

@@ -3,7 +3,6 @@ import { createFileRoute, useHydrated, useNavigate } from "@tanstack/react-route
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
-import { Ticket } from "lucide-react";
 import { AppHeader } from "@/features/arrival/AppHeader";
 import { PreflightForm } from "@/features/preflight/PreflightForm";
 import { preflightInputSchema, type PreflightInput } from "@/features/preflight/rules";
@@ -69,10 +68,6 @@ function TicketPage() {
     <>
       <AppHeader />
       <main className="arrival-main mx-auto w-full max-w-3xl px-5 pt-9 pb-[max(3rem,env(safe-area-inset-bottom))] sm:px-8 sm:pt-12">
-        <p className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase text-primary">
-          <Ticket className="size-4" />
-          {t("ticket.eyebrow")}
-        </p>
         <h1 className="font-display text-5xl font-normal leading-[1.05] sm:text-6xl">{t("ticket.title")}</h1>
         <p className="mt-4 max-w-xl leading-relaxed text-muted-foreground">{t("ticket.subtitle")}</p>
         <div className="mt-8">

@@ -98,7 +98,6 @@ export function ArrivalAssistant({ iata, embedded = false, onIataChange }: { iat
           <img src={cityImage} alt="" width={1920} height={1088} fetchPriority="high" className="arrival-hero-image" />
           <div className="arrival-hero-shade" />
           <div className="arrival-hero-content">
-            <p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase"><Plane className="h-4 w-4" />{t("design.eyebrow")}</p>
             <h1 className="font-display text-5xl font-normal leading-[1.05] sm:text-7xl">{t("app.title")}</h1>
             <p className="mt-5 max-w-md text-base leading-relaxed text-hero-foreground/90">{t("app.tagline")}</p>
             <a href="#airport-search" className="mt-7 inline-flex min-h-11 items-center gap-3 text-sm font-medium">{t("design.begin")}<ArrowDown className="h-4 w-4" /></a>
