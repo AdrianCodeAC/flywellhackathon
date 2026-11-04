@@ -77,7 +77,7 @@ export function AccountPage() {
     const d = row.data as TripData;
     sessionStorage.setItem(CHOSEN_FLIGHT_KEY, JSON.stringify(d.input));
     localStorage.setItem("flywell:tab", "plan");
-    void navigate({ to: "/", search: { runTrip: true } });
+    void navigate({ to: "/search", search: { runTrip: true } });
   }
   function openChecklist(row: SavedRow) {
     const d = row.data as ChecklistData;

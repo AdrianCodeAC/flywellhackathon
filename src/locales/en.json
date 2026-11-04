@@ -153,11 +153,15 @@
     "footer": "A little less planning. A lot more exploring.",
     "photoCredit": "Photo: Sandri 90 · Wikimedia Commons · CC BY-SA 3.0"
   },
+  "landing": {
+    "title": "Not just a ticket. The whole journey.",
+    "subtitle": "Flights, official rules and help on arrival, all in one app.",
+    "recommended": "Recommended flights"
+  },
   "trip": {
     "navigation": "Travel mode",
     "planTab": "Plan a trip",
     "arrivalTab": "I already have a ticket",
-    "eyebrow": "A new place. A fresh perspective.",
     "title": "Plan a trip",
     "subtitle": "Your next escape, from the first flight to the last evening.",
     "where": "Where",
@@ -288,11 +292,6 @@
     "bestDay": "Lowest",
     "loadingPrices": "Loading recent prices…",
     "calendarNote": "Recent cached fares, not flight schedules. — means no cached price; availability must be checked.",
-    "recommended": "Recommended flights from {{city}}",
-    "group_month": "Cheapest this month",
-    "group_weekend": "Weekend getaways",
-    "group_direct": "Direct flights",
-    "group_dropped": "Price dropped",
     "noRecommendations": "No recent recommendations from this airport.",
     "fromPrice": "from {{price}}",
     "directFlight": "Direct",

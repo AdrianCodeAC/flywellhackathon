@@ -22,6 +22,10 @@
 @theme inline {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-poster: "Anton", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-header: var(--header);
+  --color-cta: var(--cta);
+  --color-cta-foreground: var(--cta-foreground);
   --color-hero-foreground: var(--hero-foreground);
   --color-food-tone: var(--food-tone);
   --color-ride-tone: var(--ride-tone);
@@ -74,26 +78,20 @@
  *    Base palette — change a value here and every element that uses it follows.
  * ========================================================================== */
 :root {
-  --palette-navy: oklch(0.311 0.038 267.4);     /* #283044 Midnight Navy (text, butoane) */
-  --palette-steel: oklch(0.688 0.059 236.6);    /* #78A1BB Steel Blue (culoarea de bază) */
-  --palette-cream: oklch(0.948 0.0177 81.3);    /* #F4EDE1 Crem (fundal de pagină) */
-  --palette-cream-soft: oklch(0.974 0.0143 84.6); /* #FBF6EC Crem foarte deschis (carduri) */
-  --palette-cream-deep: oklch(0.931 0.0234 82.1); /* #F0E7D7 Crem mai închis (câmpuri de completat) */
-  --palette-pine: oklch(0.536 0.082 175.3);     /* #2E7D6B Pine (accent rece, folosit puțin) */
-  --palette-gold: oklch(0.810 0.158 78.9);      /* #F7B32B Gold (accent cald principal) */
-  --palette-white: oklch(1 0 0);                /* #FFFFFF Alb (text pe fundal închis) */
+  --palette-ink: oklch(0.327 0.054 227.0); /* #0F3A4A text, butoane de bază */
+  --palette-lagoon: oklch(0.850 0.097 211.3); /* #7BDFF2 Lagoon Blue, culoarea de bază */
+  --palette-cloud: oklch(0.998 0.003 197.1); /* #FCFFFF Cloud White, fundal de pagină */
+  --palette-pink: oklch(0.838 0.081 347.1); /* #F2B5D4 Bubblegum Pink, accentul puternic */
+  --palette-white: oklch(1.000 0.000 89.9); /* #FFFFFF carduri, text pe fundal închis */
 
   /* Nuanțe derivate (aceeași culoare, mai închisă/deschisă) pentru text lizibil și fundaluri. */
-  --palette-steel-soft: oklch(0.955 0.012 250); /* fundaluri ușoare răcoroase (transport, hartă) */
-  --palette-line: oklch(0.892 0.0322 82.8);     /* #E6DAC4 contururi crem */
-  --palette-deep: oklch(0.50 0.075 245);        /* linkuri, etichete, butoane secundare */
-  --palette-muted: oklch(0.528 0.0235 81.7);    /* #726A5C text secundar, cald */
-  --palette-gold-soft: oklch(0.965 0.045 85);   /* fundal auriu foarte deschis */
-  --palette-gold-deep: oklch(0.55 0.12 72);     /* text auriu / amber */
-  --palette-pine-soft: oklch(0.936 0.027 170.3); /* #D9F0E7 fundal pin very deschis */
-  --palette-pine-deep: oklch(0.424 0.068 175.2); /* #1B5A4C text pin */
+  --palette-lagoon-soft: oklch(0.970 0.018 209.4); /* #E8F9FC câmpuri de completat, butoane secundare */
+  --palette-line: oklch(0.925 0.040 212.2); /* #C9EEF6 contururi */
+  --palette-deep: oklch(0.498 0.088 219.6); /* #0B6E85 linkuri, etichete */
+  --palette-muted: oklch(0.422 0.053 223.6); /* #2A5463 text secundar */
+  --palette-pink-soft: oklch(0.962 0.018 345.6); /* #FCEEF5 fundal roz foarte deschis */
+  --palette-pink-deep: oklch(0.501 0.168 352.9); /* #A62C6C text roz */
   --palette-alert: oklch(0.501 0.145 31.5);      /* #A63B2A avertizări (roșu cărămidă) */
-
 }
 
 /* ==========================================================================
@@ -102,42 +100,46 @@
  * ========================================================================== */
 :root {
   /* Pagină și text */
-  --ui-page: var(--palette-cream);
-  --ui-text: var(--palette-navy);
+  --ui-page: var(--palette-cloud);
+  --ui-text: var(--palette-ink);
   --ui-text-muted: var(--palette-muted);
-  --ui-card: var(--palette-cream-soft);
+  --ui-card: var(--palette-white);
   --ui-border: var(--palette-line);
-  --ui-focus: var(--palette-steel);
-  --ui-input: var(--palette-cream-deep);
-  /* Butoane principale, linkuri, elemente active */
-  --ui-button: var(--palette-navy);
+  --ui-focus: var(--palette-lagoon);
+  --ui-input: var(--palette-lagoon-soft);
+  /* Bara de sus și butoanele de acțiune */
+  --ui-header: var(--palette-lagoon);
+  --ui-cta: var(--palette-pink);
+  --ui-cta-text: var(--palette-ink);
+  /* Linkuri, elemente active */
+  --ui-button: var(--palette-ink);
   --ui-button-text: var(--palette-white);
   /* Butoane/etichete secundare */
-  --ui-button-soft: var(--palette-cream-deep);
+  --ui-button-soft: var(--palette-lagoon-soft);
   --ui-button-soft-text: var(--palette-deep);
   /* Evidențieri (hover, selecție, chip-uri) */
-  --ui-highlight: color-mix(in oklab, var(--palette-steel) 22%, var(--palette-cream-soft));
-  --ui-highlight-text: var(--palette-navy);
+  --ui-highlight: color-mix(in oklab, var(--palette-lagoon) 22%, var(--palette-white));
+  --ui-highlight-text: var(--palette-ink);
   /* Accent cald și pericol */
-  --ui-warm: var(--palette-gold);
-  --ui-warm-soft: var(--palette-gold-soft);
+  --ui-warm: var(--palette-pink);
+  --ui-warm-soft: var(--palette-pink-soft);
   --ui-danger: var(--palette-alert);
   --ui-danger-text: var(--palette-white);
   /* Banner (imaginea de sus) */
-  --ui-hero-overlay: oklch(0.311 0.038 267.4 / 62%);
+  --ui-hero-overlay: oklch(0.327 0.054 227.0 / 62%);
   --ui-hero-text: var(--palette-white);
   /* Cele patru opțiuni de sosire: mâncare, transport, vizite, întreabă AI */
-  --ui-food: var(--palette-gold-deep);
-  --ui-food-soft: var(--palette-gold-soft);
+  --ui-food: var(--palette-pink-deep);
+  --ui-food-soft: var(--palette-pink-soft);
   --ui-ride: var(--palette-deep);
-  --ui-ride-soft: var(--palette-cream-deep);
-  --ui-visit: var(--palette-pine-deep);
-  --ui-visit-soft: color-mix(in oklab, var(--palette-pine) 12%, var(--palette-cream-soft));
+  --ui-ride-soft: var(--palette-lagoon-soft);
+  --ui-visit: var(--palette-deep);
+  --ui-visit-soft: color-mix(in oklab, var(--palette-lagoon) 12%, var(--palette-white));
 
-  --ui-ask: var(--palette-navy);
-  --ui-ask-soft: color-mix(in oklab, var(--palette-cream) 70%, var(--palette-white));
+  --ui-ask: var(--palette-ink);
+  --ui-ask-soft: color-mix(in oklab, var(--palette-cloud) 70%, var(--palette-white));
   /* Umbră */
-  --ui-shadow: 0 12px 35px oklch(0.311 0.038 267.4 / 10%);
+  --ui-shadow: 0 12px 35px oklch(0.327 0.054 227.0 / 10%);
 
   /* Legături către componentele de bază (nu e nevoie să le schimbi). */
   --radius: 0.5rem;
@@ -147,11 +149,14 @@
   --card-foreground: var(--ui-text);
   --popover: var(--ui-card);
   --popover-foreground: var(--ui-text);
+  --header: var(--ui-header);
+  --cta: var(--ui-cta);
+  --cta-foreground: var(--ui-cta-text);
   --primary: var(--ui-button);
   --primary-foreground: var(--ui-button-text);
   --secondary: var(--ui-button-soft);
   --secondary-foreground: var(--ui-button-soft-text);
-  --muted: var(--palette-cream-deep);
+  --muted: var(--palette-lagoon-soft);
   --muted-foreground: var(--ui-text-muted);
   --accent: var(--ui-highlight);
   --accent-foreground: var(--ui-highlight-text);
@@ -160,10 +165,10 @@
   --border: var(--ui-border);
   --input: var(--ui-input);
   --ring: var(--ui-focus);
-  --chart-1: var(--palette-navy);
-  --chart-2: var(--palette-steel);
-  --chart-3: var(--palette-gold);
-  --chart-4: var(--palette-pine);
+  --chart-1: var(--palette-ink);
+  --chart-2: var(--palette-lagoon);
+  --chart-3: var(--palette-pink);
+  --chart-4: var(--palette-lagoon);
   --chart-5: var(--palette-deep);
   --sidebar: var(--ui-card);
   --sidebar-foreground: var(--ui-text);
@@ -194,8 +199,8 @@
   --ui-card: oklch(0.28 0.03 267);
   --ui-border: oklch(0.4 0.03 267);
   --ui-input: oklch(0.45 0.04 267);
-  --ui-button: var(--palette-steel);
-  --ui-button-text: var(--palette-navy);
+  --ui-button: var(--palette-lagoon);
+  --ui-button-text: var(--palette-ink);
   --ui-button-soft: oklch(0.33 0.04 267);
   --ui-button-soft-text: oklch(0.85 0.05 230);
   --ui-highlight: oklch(0.36 0.05 250);
@@ -203,7 +208,7 @@
   --ui-danger: oklch(0.62 0.13 30);
   --ui-food: oklch(0.82 0.11 82);
   --ui-food-soft: oklch(0.32 0.05 82);
-  --ui-ride: var(--palette-steel);
+  --ui-ride: var(--palette-lagoon);
   --ui-ride-soft: oklch(0.32 0.04 250);
   --ui-visit: oklch(0.78 0.07 175);
   --ui-visit-soft: oklch(0.32 0.04 175);
@@ -247,7 +252,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .option-icon { height: 44px; width: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--option-soft); color: var(--option-tone); }
 .option-icon svg { width: 21px; height: 21px; }
 .option-arrow { color: var(--muted-foreground); }
-.option-number { position: absolute; bottom: 16px; right: 16px; font-size: 10px; color: color-mix(in oklab, var(--palette-steel) 75%, var(--palette-white)); }
+.option-number { position: absolute; bottom: 16px; right: 16px; font-size: 10px; color: color-mix(in oklab, var(--palette-lagoon) 75%, var(--palette-white)); }
 .option-copy { padding-right: 2.2rem; }
 .photo-fallback { background: linear-gradient(135deg, color-mix(in oklab, var(--ui-highlight) 80%, var(--palette-white)), var(--ui-ask-soft)); }
 
@@ -277,9 +282,13 @@ h1, h2, h3 { letter-spacing: 0; }
   .arrival-option { transition: none; }
 }
 
-.trip-hero { height: 310px; }
-.trip-hero .arrival-hero-content { padding-top: 46px; }
 .trip-search { box-shadow: var(--shadow-travel); }
+/* Home page: the blue fades into the page behind the first row of flights. */
+.landing { background: linear-gradient(180deg, var(--ui-header) 0, var(--ui-header) 300px, var(--background) 720px); }
+.landing-band { background: linear-gradient(180deg, var(--ui-header), var(--background)); }
+.poster-title { font-family: var(--font-poster); font-weight: 400; line-height: 1.25; text-transform: uppercase; color: var(--palette-white); text-shadow: 0 2px 18px oklch(0.327 0.054 227.0 / 30%); }
+.fare-photo { border-radius: 12px; }
+.fare-card:nth-child(even) .fare-photo { border-radius: 999px 999px 12px 12px; }
 [data-slot="popover-content"]:has([data-slot="calendar"]) { background: var(--popover); opacity: 1; animation: none; }
 .trip-meter { appearance: none; border: 0; border-radius: 4px; background: var(--muted); --meter-tone: var(--primary); }
 .trip-meter::-webkit-meter-bar { background: var(--muted); border: 0; border-radius: 4px; }
@@ -288,7 +297,6 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-meter-food { --meter-tone: var(--food-tone); }
 .trip-meter-accommodation { --meter-tone: var(--visit-tone); }
 .trip-meter-activities { --meter-tone: var(--ask-tone); }
-@media (max-width: 639px) { .trip-hero { height: 295px; } .trip-hero .arrival-hero-content { padding: 32px 24px; } }
 .calendar-cheap { color: var(--primary); background: var(--secondary); }
 .calendar-expensive { color: var(--food-tone); background: var(--food-soft); }
 .calendar-no-price { color: var(--muted-foreground); }
@@ -304,7 +312,7 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-price-calendar [data-range-start="true"] .calendar-best,
 .trip-price-calendar [data-range-end="true"] .calendar-best,
 .trip-price-calendar [data-selected-single="true"] .calendar-best {
-  color: var(--palette-gold);
+  color: var(--palette-pink);
 }
 .trip-price-calendar button { min-height: 44px; }
 .trip-date-sheet { display:flex; flex-direction:column; }
@@ -321,38 +329,38 @@ h1, h2, h3 { letter-spacing: 0; }
 
 /* Airport guide: virtual airport map drawn from OpenStreetMap geometry. Colors come from the palette above. */
 :root {
-  --map-ground: color-mix(in oklab, var(--palette-cream) 65%, var(--palette-white));
+  --map-ground: color-mix(in oklab, var(--palette-cloud) 65%, var(--palette-white));
   --map-apron: oklch(0.93 0.012 220);
   --map-taxiway: oklch(0.88 0.02 220);
-  --map-runway: var(--palette-navy);
+  --map-runway: var(--palette-ink);
   --map-runway-line: var(--palette-white);
   --map-terminal: var(--palette-white);
   --map-terminal-edge: var(--palette-deep);
-  --map-departures: color-mix(in oklab, var(--palette-steel) 40%, var(--palette-white));
-  --map-arrivals: color-mix(in oklab, var(--palette-gold) 45%, var(--palette-white));
-  --map-gate: var(--palette-navy);
+  --map-departures: color-mix(in oklab, var(--palette-lagoon) 40%, var(--palette-white));
+  --map-arrivals: color-mix(in oklab, var(--palette-pink) 45%, var(--palette-white));
+  --map-gate: var(--palette-ink);
   --map-gate-text: var(--palette-white);
   --map-mine: var(--palette-alert);
   --map-step: var(--palette-deep);
   --map-step-text: var(--palette-white);
   --map-transport: var(--palette-deep);
-  --map-food: var(--palette-gold-deep);
-  --map-money: var(--palette-pine-deep);
+  --map-food: var(--palette-pink-deep);
+  --map-money: var(--palette-deep);
   --map-services: var(--palette-deep);
-  --map-toilets: var(--palette-navy);
+  --map-toilets: var(--palette-ink);
   --map-gates: var(--map-gate);
-  --map-grass-dot: color-mix(in oklab, var(--palette-steel) 45%, var(--palette-white));
+  --map-grass-dot: color-mix(in oklab, var(--palette-lagoon) 45%, var(--palette-white));
   --map-apron-edge: var(--palette-line);
-  --map-taxi-line: var(--palette-gold);
-  --map-terminal-shade: var(--palette-steel-soft);
-  --map-departures-shade: var(--palette-steel);
-  --map-arrivals-shade: var(--palette-gold);
-  --map-wall: color-mix(in oklab, var(--palette-deep) 70%, var(--palette-steel));
+  --map-taxi-line: var(--palette-pink);
+  --map-terminal-shade: var(--palette-lagoon-soft);
+  --map-departures-shade: var(--palette-lagoon);
+  --map-arrivals-shade: var(--palette-pink);
+  --map-wall: color-mix(in oklab, var(--palette-deep) 70%, var(--palette-lagoon));
   --map-skylight: oklch(1 0 0 / 0.25);
   --map-building-shadow: oklch(0.311 0.038 267.4 / 0.25);
   --map-plane: var(--palette-white);
   --map-plane-edge: var(--palette-muted);
-  --map-step-passed: color-mix(in oklab, var(--palette-deep) 55%, var(--palette-steel));
+  --map-step-passed: color-mix(in oklab, var(--palette-deep) 55%, var(--palette-lagoon));
   --map-frame-shadow: 0 12px 30px -16px oklch(0.311 0.038 267.4 / 0.45);
   --map-control-shadow: 0 4px 14px -4px oklch(0.311 0.038 267.4 / 0.35);
 }
@@ -364,8 +372,8 @@ h1, h2, h3 { letter-spacing: 0; }
   --map-terminal: oklch(0.38 0.03 267);
   --map-departures: oklch(0.42 0.05 250);
   --map-arrivals: oklch(0.42 0.05 45);
-  --map-gate: var(--palette-steel);
-  --map-gate-text: var(--palette-navy);
+  --map-gate: var(--palette-lagoon);
+  --map-gate-text: var(--palette-ink);
   --map-grass-dot: oklch(0.32 0.03 250);
   --map-apron-edge: oklch(0.37 0.02 267);
   --map-terminal-shade: oklch(0.33 0.03 267);
@@ -461,17 +469,17 @@ h1, h2, h3 { letter-spacing: 0; }
   --help-bg: oklch(0.24 0.032 267);
   --help-bg-2: oklch(0.36 0.05 250);
   --help-fg: var(--palette-white);
-  --help-muted: color-mix(in oklab, var(--palette-steel) 55%, var(--palette-white));
+  --help-muted: color-mix(in oklab, var(--palette-lagoon) 55%, var(--palette-white));
   --help-panel: oklch(1 0 0 / 8%);
   --help-panel-edge: oklch(1 0 0 / 16%);
-  --help-calm: var(--palette-steel);
-  --help-glow: var(--palette-gold);
+  --help-calm: var(--palette-lagoon);
+  --help-glow: var(--palette-pink);
   --help-alert: var(--palette-alert);
   --help-alert-soft: oklch(0.42 0.11 350 / 24%);
-  --help-care: var(--palette-gold);
-  --help-card: var(--palette-cream);
+  --help-care: var(--palette-pink);
+  --help-card: var(--palette-cloud);
   --help-crew-bg: var(--palette-white);
-  --help-crew-fg: var(--palette-navy);
+  --help-crew-fg: var(--palette-ink);
   --panic: var(--palette-alert);
   --panic-fg: var(--palette-white);
 }
@@ -528,12 +536,12 @@ h1, h2, h3 { letter-spacing: 0; }
 :root {
   --seat-body: var(--palette-white);
   --seat-edge: var(--palette-line);
-  --seat-wing: var(--palette-steel-soft);
+  --seat-wing: var(--palette-lagoon-soft);
   --seat-plain: oklch(0.9 0.012 220);
-  --seat-good: color-mix(in oklab, var(--palette-steel) 45%, var(--palette-white));
-  --seat-best: var(--palette-navy);
-  --seat-avoid: var(--palette-gold);
-  --seat-exit: var(--palette-pine);
+  --seat-good: color-mix(in oklab, var(--palette-lagoon) 45%, var(--palette-white));
+  --seat-best: var(--palette-ink);
+  --seat-avoid: var(--palette-pink);
+  --seat-exit: var(--palette-lagoon);
 }
 .dark {
   --seat-body: oklch(0.32 0.02 267);
@@ -584,9 +592,9 @@ h1, h2, h3 { letter-spacing: 0; }
 .trip-help-tile { display: flex; align-items: center; gap: 12px; min-height: 76px; padding: 14px; border-radius: 16px; border: 1px solid var(--border); background: var(--card); transition: border-color 160ms, transform 160ms; }
 .trip-help-tile:hover { border-color: var(--tile-tone); transform: translateY(-2px); }
 .trip-help-icon { display: flex; flex-shrink: 0; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; background: var(--tile-tone); color: var(--tile-text); }
-.trip-help-calm { --tile-tone: var(--palette-steel); --tile-text: var(--palette-navy); }
+.trip-help-calm { --tile-tone: var(--palette-lagoon); --tile-text: var(--palette-ink); }
 .trip-help-alert { --tile-tone: var(--ui-danger); --tile-text: var(--ui-danger-text); }
-.trip-help-care { --tile-tone: var(--palette-gold); --tile-text: var(--palette-navy); }
+.trip-help-care { --tile-tone: var(--palette-pink); --tile-text: var(--palette-ink); }
 @media (prefers-reduced-motion: reduce) { .trip-start, .trip-help-tile { transition: none; } }
 
 /* Checklist progress stays in view while scrolling; pages with sticky tabs raise --checklist-top. */

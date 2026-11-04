@@ -16,6 +16,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as FlightsRouteImport } from './routes/flights'
 import { Route as PreflightRouteImport } from './routes/preflight'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as ApiTripRouteImport } from './routes/api.trip'
 import { Route as ApiTripChatRouteImport } from './routes/api.trip-chat'
@@ -56,6 +57,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/flights': typeof FlightsRoute
   '/preflight': typeof PreflightRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/search': typeof SearchRoute
   '/account': typeof AuthenticatedAccountRoute
   '/api/trip': typeof ApiTripRoute
   '/api/trip-chat': typeof ApiTripChatRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/flights': typeof FlightsRoute
   '/preflight': typeof PreflightRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/search': typeof SearchRoute
   '/account': typeof AuthenticatedAccountRoute
   '/api/trip': typeof ApiTripRoute
   '/api/trip-chat': typeof ApiTripChatRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/flights': typeof FlightsRoute
   '/preflight': typeof PreflightRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/search': typeof SearchRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/api/trip': typeof ApiTripRoute
   '/api/trip-chat': typeof ApiTripChatRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/flights'
     | '/preflight'
     | '/reset-password'
+    | '/search'
     | '/account'
     | '/api/trip'
     | '/api/trip-chat'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
     | '/flights'
     | '/preflight'
     | '/reset-password'
+    | '/search'
     | '/account'
     | '/api/trip'
     | '/api/trip-chat'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/flights'
     | '/preflight'
     | '/reset-password'
+    | '/search'
     | '/_authenticated/account'
     | '/api/trip'
     | '/api/trip-chat'
@@ -174,6 +186,7 @@ export interface RootRouteChildren {
   FlightsRoute: typeof FlightsRoute
   PreflightRoute: typeof PreflightRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SearchRoute: typeof SearchRoute
   ApiTripRoute: typeof ApiTripRoute
   ApiTripChatRoute: typeof ApiTripChatRoute
   TripsTripIdRoute: typeof TripsTripIdRoute
@@ -229,6 +242,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/account': {
@@ -288,6 +308,7 @@ const rootRouteChildren: RootRouteChildren = {
   FlightsRoute: FlightsRoute,
   PreflightRoute: PreflightRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SearchRoute: SearchRoute,
   ApiTripRoute: ApiTripRoute,
   ApiTripChatRoute: ApiTripChatRoute,
   TripsTripIdRoute: TripsTripIdRoute,

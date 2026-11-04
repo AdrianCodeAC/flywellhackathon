@@ -153,11 +153,15 @@
     "footer": "Mai puține planuri. Mai multe descoperiri.",
     "photoCredit": "Foto: Sandri 90 · Wikimedia Commons · CC BY-SA 3.0"
   },
+  "landing": {
+    "title": "Nu doar un bilet. Toată călătoria.",
+    "subtitle": "Zboruri, reguli oficiale și ajutor la destinație, într-o singură aplicație.",
+    "recommended": "Zboruri recomandate"
+  },
   "trip": {
     "navigation": "Mod de călătorie",
     "planTab": "Planifică o călătorie",
     "arrivalTab": "Am deja bilet",
-    "eyebrow": "Un loc nou. O perspectivă nouă.",
     "title": "Planifică o călătorie",
     "subtitle": "Următoarea escapadă, de la primul zbor până la ultima seară.",
     "where": "Unde",
@@ -288,11 +292,6 @@
     "bestDay": "Minim",
     "loadingPrices": "Încărcăm prețurile recente…",
     "calendarNote": "Tarife recente salvate, nu orare de zbor. — înseamnă fără tarif salvat; disponibilitatea trebuie verificată.",
-    "recommended": "Zboruri recomandate din {{city}}",
-    "group_month": "Cele mai ieftine luna aceasta",
-    "group_weekend": "Escapade de weekend",
-    "group_direct": "Zboruri directe",
-    "group_dropped": "Preț redus",
     "noRecommendations": "Nu avem recomandări recente din acest aeroport.",
     "fromPrice": "de la {{price}}",
     "directFlight": "Direct",

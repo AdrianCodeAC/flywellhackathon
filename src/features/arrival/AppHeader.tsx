@@ -14,7 +14,7 @@ export function AppHeader() {
   const location = useLocation();
   const trips = location.pathname.startsWith("/trips");
   const ticket = location.pathname === "/preflight";
-  const plan = location.pathname === "/" || location.pathname === "/flights";
+  const plan = location.pathname === "/" || location.pathname === "/search" || location.pathname === "/flights";
   useFlightReminders();
 
   useEffect(() => { if (trips || ticket) localStorage.setItem("flywell:tab", trips ? "trips" : "preflight"); }, [trips, ticket]);
@@ -36,7 +36,7 @@ export function AppHeader() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 pt-[env(safe-area-inset-top)] backdrop-blur">
+    <header className="sticky top-0 z-40 bg-header pt-[env(safe-area-inset-top)] backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
         <Link to="/" onClick={() => localStorage.setItem("flywell:tab", "plan")} className="flex min-h-11 items-center gap-2.5" aria-label={t("design.brand")}>
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"><Plane className="h-5 w-5 -rotate-12" /></span>

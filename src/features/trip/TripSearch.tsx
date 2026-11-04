@@ -14,11 +14,10 @@ import { loadAirports } from "@/features/arrival/services";
 import type { Airport } from "@/features/arrival/types";
 import { nights, type TripInput } from "./types";
 import { getDiscovery } from "./discovery.functions";
-import { type Discovery, type RouteFare } from "./discovery";
+import { PICKED_FARE_KEY, type Discovery, type RouteFare } from "./discovery";
 import { TripDates } from "./TripDates";
-import { TripRecommendations } from "./TripRecommendations";
 
-export function TripSearch({initial,busy,onSearch,onOriginChange}:{initial?:TripInput|undefined;busy:boolean;onSearch:(input:TripInput)=>void;onOriginChange?:(airport:Airport|null)=>void}) {
+export function TripSearch({initial,busy,onSearch}:{initial?:TripInput|undefined;busy:boolean;onSearch:(input:TripInput)=>void}) {
   const {t,i18n}=useTranslation();
   const [destination,setDestination]=useState(initial?.destination??""),[iata,setIata]=useState<string|null>(initial?.destinationIata??null);
   const [range,setRange]=useState<DateRange|undefined>();const [adults,setAdults]=useState(initial?.adults??1),[children,setChildren]=useState(initial?.children??0);
@@ -36,9 +35,11 @@ export function TripSearch({initial,busy,onSearch,onOriginChange}:{initial?:Trip
   function submit(e:React.FormEvent){e.preventDefault();setError("");if(!iata||!from||!to||(!oneWay&&nights(from,to)<1)||!airports.some(a=>a.iata===origin)){setError(t("trip.invalidInput"));return;}
     onSearch({destination,destinationIata:iata,origin,departure:from,returnDate:to,adults,children,flexible,budget,direct:discovery?.routes.some(r=>r.destinationIata===iata&&r.stops===0)?direct:false,bag,oneWay,lang});
   }
+  // A fare picked on the home page fills in the form; kept in a ref so re-running the effect cannot lose it.
+  const picked=useRef<RouteFare|null>(null);
+  useEffect(()=>{try{const raw=sessionStorage.getItem(PICKED_FARE_KEY);if(raw){sessionStorage.removeItem(PICKED_FARE_KEY);picked.current=JSON.parse(raw) as RouteFare;}}catch{}if(picked.current)choose(picked.current);},[]);
   const originAirport=airports.find(a=>a.iata===origin)??null;
-  useEffect(()=>{if(airports.length)onOriginChange?.(originAirport);},[originAirport,airports.length,onOriginChange]);
-  return <><form ref={card} onSubmit={submit} className="trip-search rounded-lg border bg-card p-5 sm:p-7">
+  return <form ref={card} onSubmit={submit} className="trip-search rounded-lg border bg-card p-5 sm:p-7">
     <div className="grid gap-6 lg:grid-cols-2">
       <div><label className="mb-3 flex items-center gap-2 text-sm font-semibold"><Plane className="size-4 text-primary"/>{t('trip.from')}</label><AirportSearch selected={originAirport} onSelect={changeOrigin} onClear={()=>changeOrigin(null)} label={t('trip.from')}/></div>
       <div className="relative"><label htmlFor="trip-to" className="mb-3 flex items-center gap-2 text-sm font-semibold"><MapPin className="size-4 text-primary"/>{t('trip.to')}</label>
@@ -60,6 +61,6 @@ export function TripSearch({initial,busy,onSearch,onOriginChange}:{initial?:Trip
     <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t pt-4"><Button type="button" variant="ghost" className="min-h-11 px-0 text-muted-foreground" aria-expanded={more} onClick={()=>setMore(!more)}><SlidersHorizontal className="size-4"/>{t('trip.more')}</Button><Button type="button" variant="outline" className="min-h-12 w-full whitespace-normal sm:w-auto" disabled={!origin||!from||!to} onClick={()=>void navigate({to:"/flights",search:{origin,from,to,flexible,adults,children,lang}})}>{t("trip.seeAll")}</Button><Button type="submit" disabled={busy||!iata} className="min-h-12 w-full px-7 text-base sm:w-auto">{t('trip.find')}<ArrowRight className="size-4"/></Button></div>
     {more&&<div className="mt-4 grid gap-5 border-t pt-5 sm:grid-cols-2"><div><p className="mb-2 text-sm font-medium">{t('trip.budget')}</p><div className="flex" role="group" aria-label={t('trip.budget')}>{(['budget','medium','comfort'] as const).map(b=><Button type="button" key={b} variant={budget===b?'default':'outline'} aria-pressed={budget===b} className="min-h-11 flex-1 rounded-none first:rounded-l-md last:rounded-r-md px-2" onClick={()=>setBudget(b)}>{t(`trip.${b}`)}</Button>)}</div></div><label className="flex min-h-11 items-center justify-between gap-3"><span className="text-sm">{t('trip.direct')}</span><Switch checked={direct} onCheckedChange={setDirect}/></label><label className="flex min-h-11 items-center justify-between gap-3"><span className="text-sm">{t('trip.bag')}</span><Switch checked={bag} onCheckedChange={setBag}/></label></div>}
     {error&&<p role="alert" className="mt-3 text-sm text-destructive">{error}</p>}
-  </form><TripRecommendations fares={discovery?.fares??[]} city={originAirport?.city??origin} loading={loading} onPick={choose}/></>;
+  </form>;
 }
 function Stepper({label,value,min,max,onChange}:{label:string;value:number;min:number;max:number;onChange:(n:number)=>void}){const {t}=useTranslation();return <div className="flex min-h-12 items-center justify-between gap-2"><span className="text-sm">{label}</span><div className="flex items-center gap-1"><Button type="button" variant="ghost" size="icon" className="size-11" disabled={value<=min} aria-label={t('trip.decrease',{group:label})} onClick={()=>onChange(value-1)}><Minus className="size-4"/></Button><output className="w-6 text-center font-semibold">{value}</output><Button type="button" variant="ghost" size="icon" className="size-11" disabled={value>=max} aria-label={t('trip.increase',{group:label})} onClick={()=>onChange(value+1)}><Plus className="size-4"/></Button></div></div>;}
