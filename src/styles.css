@@ -287,8 +287,10 @@ h1, h2, h3 { letter-spacing: 0; }
 .landing { background: linear-gradient(180deg, var(--ui-header) 0, var(--ui-header) 300px, var(--background) 720px); }
 .landing-band { background: linear-gradient(180deg, var(--ui-header), var(--background)); }
 .poster-title { font-family: var(--font-poster); font-weight: 400; line-height: 1.25; text-transform: uppercase; color: var(--palette-white); text-shadow: 0 2px 18px oklch(0.327 0.054 227.0 / 30%); }
-.fare-photo { border-radius: 12px; }
-.fare-card:nth-child(even) .fare-photo { border-radius: 999px 999px 12px 12px; }
+.fare-card { border-color: color-mix(in oklab, var(--palette-lagoon) 55%, var(--palette-white)); box-shadow: var(--shadow-travel); }
+.fare-photo { border-radius: 10px; }
+/* Percent radii: 999px would shrink every corner in proportion and square off the bottom ones. */
+.fare-card:nth-child(even) .fare-photo { border-radius: 50% 50% 10px 10px / 85% 85% 10px 10px; }
 [data-slot="popover-content"]:has([data-slot="calendar"]) { background: var(--popover); opacity: 1; animation: none; }
 .trip-meter { appearance: none; border: 0; border-radius: 4px; background: var(--muted); --meter-tone: var(--primary); }
 .trip-meter::-webkit-meter-bar { background: var(--muted); border: 0; border-radius: 4px; }
